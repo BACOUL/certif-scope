@@ -37,7 +37,7 @@ export default function AssessmentForm() {
     setResults(calculation);
   };
 
-  /* 🔽 Auto-scroll vers les résultats */
+  /* Auto-scroll vers les résultats */
   useEffect(() => {
     if (results && resultsRef.current) {
       resultsRef.current.scrollIntoView({
@@ -215,4 +215,4 @@ export default function AssessmentForm() {
       )}
     </div>
   );
-            }
+              }
