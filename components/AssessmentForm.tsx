@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { loadStripe } from '@stripe/stripe-js';
 import {
   calculateCarbonFootprint,
   CarbonInput
@@ -37,6 +38,7 @@ export default function AssessmentForm() {
     setResults(calculation);
   };
 
+  // AUTO-SCROLL ON RESULTS
   useEffect(() => {
     if (results && resultsRef.current) {
       resultsRef.current.scrollIntoView({
@@ -45,6 +47,19 @@ export default function AssessmentForm() {
       });
     }
   }, [results]);
+
+  // STRIPE CHECKOUT HANDLER
+  const handleStripe = async () => {
+    const stripe = await loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
+
+    const res = await fetch('/api/checkout', {
+      method: "POST"
+    });
+
+    const data = await res.json();
+
+    await stripe?.redirectToCheckout({ sessionId: data.id });
+  };
 
   return (
     <div className="max-w-2xl mx-auto space-y-12">
@@ -133,7 +148,7 @@ export default function AssessmentForm() {
               <input
                 type="number"
                 placeholder="Fuel expenses (€)"
-                className="w-full px-4 py-3 rounded-xl border border-slate-300 bg-white focus:ring-2 focus:ring-[#1FB6C1] focus:border-[#1FB6C1] outline-none"
+                className="w-full px-4 py-3 rounded-xl border border-slate-300 bg-white"
                 onChange={(e) =>
                   setFormData({
                     ...formData,
@@ -141,10 +156,11 @@ export default function AssessmentForm() {
                   })
                 }
               />
+
               <input
                 type="number"
                 placeholder="Electricity expenses (€)"
-                className="w-full px-4 py-3 rounded-xl border border-slate-300 bg-white focus:ring-2 focus:ring-[#1FB6C1] focus:border-[#1FB6C1] outline-none"
+                className="w-full px-4 py-3 rounded-xl border border-slate-300 bg-white"
                 onChange={(e) =>
                   setFormData({
                     ...formData,
@@ -203,17 +219,15 @@ export default function AssessmentForm() {
             </p>
 
             {/* STRIPE BUTTON */}
-            <a
-              href="https://buy.stripe.com/test_5kQ9ATf031jK6EidNd1kA00"
-              target="_blank"
-              rel="noopener noreferrer"
+            <button
+              onClick={handleStripe}
               className="w-full inline-flex justify-center bg-[#1FB6C1] text-white font-bold py-4 rounded-xl hover:bg-[#17A2AC] transition"
             >
               Download official attestation (€99)
-            </a>
+            </button>
           </div>
         </div>
       )}
     </div>
   );
-              }
+}
