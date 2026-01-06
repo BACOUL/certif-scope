@@ -1,237 +1,254 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<title>Carbon Footprint Attestation — {{COMPANY_NAME}}</title>
+  <meta charset="UTF-8" />
+  <title>Carbon Footprint Attestation — Certif-Scope</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<style>
-  @page {
-    size: A4;
-    margin: 18mm;
-  }
+  <style>
+    :root {
+      --blue-dark: #0B3A63;
+      --blue-light: #1FB6C1;
+      --text-main: #1E293B;
+      --text-muted: #475569;
+      --border: #E2E8F0;
+      --bg-soft: #F8FAFC;
+    }
 
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI",
-                 Roboto, Helvetica, Arial, sans-serif;
-    color: #1E293B;
-    line-height: 1.45;
-    font-size: 11.5px;
-  }
+    * {
+      box-sizing: border-box;
+    }
 
-  h1, h2 {
-    margin: 0;
-    color: #0B3A63;
-  }
+    body {
+      margin: 0;
+      padding: 40px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, Helvetica, Arial, sans-serif;
+      color: var(--text-main);
+      background: white;
+      font-size: 14px;
+      line-height: 1.6;
+    }
 
-  h1 {
-    font-size: 22px;
-    margin-bottom: 4px;
-  }
+    h1, h2, h3 {
+      color: var(--blue-dark);
+      margin: 0 0 12px 0;
+      line-height: 1.3;
+    }
 
-  h2 {
-    font-size: 13px;
-    margin-bottom: 6px;
-    text-transform: uppercase;
-    letter-spacing: .04em;
-  }
+    h1 {
+      font-size: 26px;
+    }
 
-  .brand {
-    font-weight: 900;
-    font-size: 18px;
-    margin-bottom: 10px;
-  }
+    h2 {
+      font-size: 18px;
+      margin-top: 36px;
+    }
 
-  .brand span:first-child { color: #0B3A63; }
-  .brand span:last-child  { color: #1FB6C1; }
+    h3 {
+      font-size: 15px;
+    }
 
-  .badge {
-    display: inline-block;
-    padding: 4px 10px;
-    font-size: 10px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: .08em;
-    border-radius: 999px;
-    background: #E6F6F7;
-    color: #0B3A63;
-    margin-bottom: 14px;
-  }
+    p {
+      margin: 0 0 10px 0;
+    }
 
-  .section {
-    margin-top: 14px;
-  }
+    .muted {
+      color: var(--text-muted);
+      font-size: 13px;
+    }
 
-  .card {
-    background: #F8FAFC;
-    border: 1px solid #CBD5E1;
-    border-radius: 10px;
-    padding: 12px 14px;
-  }
+    .header {
+      border-bottom: 2px solid var(--border);
+      padding-bottom: 20px;
+      margin-bottom: 30px;
+    }
 
-  .grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-  }
+    .brand {
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
 
-  .meta p {
-    margin: 2px 0;
-  }
+    .brand span:first-child {
+      color: var(--blue-dark);
+    }
 
-  .total {
-    margin: 12px 0;
-    padding: 14px;
-    border-radius: 12px;
-    background: #0B3A63;
-    color: #FFFFFF;
-    text-align: center;
-  }
+    .brand span:last-child {
+      color: var(--blue-light);
+    }
 
-  .total span {
-    display: block;
-    font-size: 28px;
-    font-weight: 900;
-    color: #1FB6C1;
-  }
+    .meta {
+      margin-top: 8px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
 
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 11px;
-    margin-top: 6px;
-  }
+    .section {
+      margin-bottom: 28px;
+    }
 
-  th, td {
-    padding: 6px 8px;
-    border-bottom: 1px solid #CBD5E1;
-    text-align: left;
-  }
+    .box {
+      background: var(--bg-soft);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      margin-top: 12px;
+    }
 
-  th {
-    color: #0B3A63;
-    font-weight: 700;
-  }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+      font-size: 13px;
+    }
 
-  .note {
-    font-size: 10px;
-    color: #475569;
-    margin-top: 6px;
-  }
+    th, td {
+      border: 1px solid var(--border);
+      padding: 10px 12px;
+      text-align: left;
+    }
 
-  footer {
-    margin-top: 14px;
-    padding-top: 8px;
-    border-top: 1px solid #CBD5E1;
-    font-size: 9.5px;
-    color: #64748B;
-    text-align: center;
-  }
-</style>
+    th {
+      background: #F1F5F9;
+      font-weight: 600;
+    }
+
+    .total {
+      font-weight: 700;
+    }
+
+    .footer {
+      margin-top: 48px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+  </style>
 </head>
 
 <body>
 
-<!-- HEADER -->
-<div class="brand">
-  <span>Certif-</span><span>Scope</span>
-</div>
+  <!-- HEADER -->
+  <div class="header">
+    <div class="brand">
+      <span>Certif-</span><span>Scope</span>
+    </div>
+    <div class="meta">
+      Carbon Footprint Attestation (Methodological) · Version v3<br />
+      Document ID: {{ATTESTATION_ID}} · Issued {{ISSUE_DATE_UTC}} (UTC)
+    </div>
+  </div>
 
-<div class="badge">Carbon footprint attestation · Pre-compliance</div>
-
-<h1>Carbon Footprint Attestation</h1>
-
-<!-- IDENTIFICATION -->
-<div class="section card grid meta">
-  <div>
-    <p><strong>Company:</strong> {{COMPANY_NAME}}</p>
-    <p><strong>Sector:</strong> {{SECTOR}}</p>
+  <!-- SECTION 1 : IDENTIFICATION -->
+  <div class="section">
+    <h2>1. Entity identification</h2>
+    <p><strong>Company name:</strong> {{COMPANY_NAME}}</p>
+    <p><strong>Business sector:</strong> {{BUSINESS_SECTOR}}</p>
     <p><strong>Country:</strong> {{COUNTRY}}</p>
+    <p><strong>Assessment period:</strong> {{ASSESSMENT_PERIOD}}</p>
   </div>
-  <div>
-    <p><strong>Assessment date:</strong> {{ASSESSMENT_DATE}}</p>
-    <p><strong>Attestation ID:</strong> {{ATTESTATION_ID}}</p>
+
+  <!-- SECTION 2 : EXECUTIVE SUMMARY -->
+  <div class="section">
+    <h2>2. Executive summary</h2>
+    <p>
+      This document provides a <strong>methodological carbon footprint attestation</strong>
+      based on standardized estimation methods. It is intended to support ESG questionnaires,
+      partner requests, banking due diligence and pre-compliance reporting.
+    </p>
+
+    <div class="box">
+      <p><strong>Scope 1:</strong> {{SCOPE_1}} tCO₂e</p>
+      <p><strong>Scope 2:</strong> {{SCOPE_2}} tCO₂e</p>
+      <p><strong>Scope 3:</strong> {{SCOPE_3}} tCO₂e</p>
+      <p class="total"><strong>Total estimated emissions:</strong> {{TOTAL}} tCO₂e</p>
+    </div>
   </div>
-</div>
 
-<!-- TOTAL -->
-<div class="total">
-  Total estimated emissions
-  <span>{{TOTAL}} tCO₂e</span>
-</div>
+  <!-- SECTION 3 : RESULTS TABLE -->
+  <div class="section">
+    <h2>3. Emissions by scope</h2>
 
-<!-- SCOPES -->
-<div class="section">
-  <h2>Emissions by scope</h2>
-  <table>
-    <thead>
-      <tr>
-        <th>Scope</th>
-        <th>Description</th>
-        <th>Emissions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>Scope 1</td>
-        <td>Direct emissions</td>
-        <td>{{SCOPE1}} tCO₂e</td>
-      </tr>
-      <tr>
-        <td>Scope 2</td>
-        <td>Indirect energy emissions</td>
-        <td>{{SCOPE2}} tCO₂e</td>
-      </tr>
-      <tr>
-        <td>Scope 3</td>
-        <td>Value-chain emissions</td>
-        <td>{{SCOPE3}} tCO₂e</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+    <table>
+      <thead>
+        <tr>
+          <th>Scope</th>
+          <th>Description</th>
+          <th>Estimated emissions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Scope 1</td>
+          <td>Direct emissions</td>
+          <td>{{SCOPE_1}} tCO₂e</td>
+        </tr>
+        <tr>
+          <td>Scope 2</td>
+          <td>Indirect energy emissions</td>
+          <td>{{SCOPE_2}} tCO₂e</td>
+        </tr>
+        <tr>
+          <td>Scope 3</td>
+          <td>Value-chain emissions (screening level)</td>
+          <td>{{SCOPE_3}} tCO₂e</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
-<!-- METHODOLOGY -->
-<div class="section card">
-  <h2>Methodology</h2>
-  <p>
-    This assessment applies a <strong>spend-based estimation approach</strong>
-    inspired by the <strong>GHG Protocol – Corporate Standard</strong>.
-    Emission factors are derived from the <strong>ADEME Base Empreinte</strong>.
-  </p>
-  <p class="note">
-    The methodology is proportionate to SME data availability and consistent
-    with the <strong>VSME framework (EFRAG)</strong>.
-  </p>
-</div>
+  <!-- SECTION 4 : METHODOLOGY -->
+  <div class="section">
+    <h2>4. Methodology</h2>
+    <p>
+      This assessment applies a <strong>spend-based estimation approach</strong> inspired by the
+      <strong>GHG Protocol Corporate Standard</strong>.
+      Emission factors are derived from the <strong>ADEME Base Empreinte</strong>
+      (latest available version at the time of calculation).
+    </p>
+    <p class="muted">
+      The assessment covers Scope 1, Scope 2 and Scope 3 emissions at a screening level.
+    </p>
+  </div>
 
-<!-- INTENDED USE -->
-<div class="section card">
-  <h2>Intended use</h2>
-  <p>
-    This attestation is intended to support ESG questionnaires, banking and
-    financing requests, procurement processes and CSRD value-chain data
-    collection, where applicable.
-  </p>
-</div>
+  <!-- SECTION 5 : REGULATORY CONTEXT -->
+  <div class="section">
+    <h2>5. Regulatory context</h2>
+    <p>
+      This attestation is designed to support <strong>indirect ESG obligations</strong>
+      arising from the European Union <strong>CSRD</strong> framework,
+      notably Scope 3 value-chain reporting requests addressed to SMEs by regulated entities.
+    </p>
+    <p class="muted">
+      It does not constitute a statutory CSRD filing.
+    </p>
+  </div>
 
-<!-- LEGAL -->
-<div class="section card">
-  <h2>Legal notice & limitations</h2>
-  <p>
-    This document constitutes a <strong>methodological carbon footprint
-    attestation only</strong>. It does not constitute a statutory CSRD filing,
-    a certified carbon audit, or a regulatory approval.
-  </p>
-  <p class="note">
-    Results are indicative estimates provided solely for informational and
-    decision-support purposes.
-  </p>
-</div>
+  <!-- SECTION 6 : DATA & PRIVACY -->
+  <div class="section">
+    <h2>6. Data processing & confidentiality</h2>
+    <p>
+      All calculations are performed <strong>locally in the user’s browser</strong>.
+      No raw financial, accounting or operational data is transmitted to or stored on Certif-Scope servers.
+    </p>
+  </div>
 
-<footer>
-  Issued by Certif-Scope · Methodology v{{METHODOLOGY_VERSION}} ·
-  Generated {{TIMESTAMP}} (UTC)
-</footer>
+  <!-- SECTION 7 : LEGAL NOTICE -->
+  <div class="section">
+    <h2>7. Legal notice & limitations</h2>
+    <p>
+      This document is a <strong>methodological carbon footprint attestation</strong>.
+      It does not constitute a certified audit, a regulatory approval,
+      or a legally binding declaration.
+    </p>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    Issued by Certif-Scope · Methodology version {{METHODOLOGY_VERSION}}<br />
+    Generation timestamp (UTC): {{GENERATION_TIMESTAMP}}
+  </div>
 
 </body>
 </html>
