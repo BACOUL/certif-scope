@@ -1,52 +1,34 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
-import { randomUUID } from 'crypto';
-import { generatePdf } from '../../lib/generatePdf';
-import fs from 'fs';
-import path from 'path';
+// /pages/api/attestation.ts
+
+import type { NextApiRequest, NextApiResponse } from "next";
+import { generateAttestationPDF } from "../../lib/generatePdf";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  const {
-    companyName,
-    sector,
-    revenue,
-    fuelSpent,
-    electricitySpent,
-    scope1,
-    scope2,
-    scope3,
-    total
-  } = req.body;
+  try {
+    const { companyName, scope1, scope2, scope3, total } = req.body;
 
-  const id = randomUUID();
+    if (!companyName || total === undefined) {
+      return res.status(400).json({ error: "Missing fields" });
+    }
 
-  const pdfBuffer = await generatePdf({
-    id,
-    companyName,
-    sector,
-    revenue,
-    fuelSpent,
-    electricitySpent,
-    scope1,
-    scope2,
-    scope3,
-    total
-  });
+    const pdfStream = generateAttestationPDF({
+      companyName,
+      scope1,
+      scope2,
+      scope3,
+      total
+    });
 
-  const outputDir = path.join(process.cwd(), 'attestations');
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader("Content-Disposition", "attachment; filename=attestation.pdf");
 
-  if (!fs.existsSync(outputDir)) {
-    fs.mkdirSync(outputDir);
+    pdfStream.pipe(res);
+  } catch (error) {
+    console.error("PDF generation error:", error);
+    return res.status(500).json({ error: "Failed to generate PDF" });
   }
-
-  const pdfPath = path.join(outputDir, `${id}.pdf`);
-  fs.writeFileSync(pdfPath, pdfBuffer);
-
-  return res.status(200).json({
-    id,
-    downloadUrl: `/attestations/${id}.pdf`
-  });
 }
