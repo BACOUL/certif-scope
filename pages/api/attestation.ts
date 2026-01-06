@@ -6,7 +6,7 @@ import { attestationTemplate } from "../../lib/attestationTemplate";
 function fillTemplate(template: string, data: Record<string, string>) {
   let html = template;
   for (const key in data) {
-    html = html.replace(new RegExp(`\\[\\[${key}\\]\\]`, "g"), data[key]);
+    html = html.replace(new RegExp(`{{${key}}}`, "g"), data[key]);
   }
   return html;
 }
@@ -24,16 +24,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const filledHTML = fillTemplate(attestationTemplate, {
       ATTESTATION_ID: report.id || "N/A",
-      ISSUE_DATE: new Date().toISOString(),
+      ISSUE_DATE_UTC: new Date().toISOString(),
       COMPANY_NAME: report.companyName || "N/A",
       BUSINESS_SECTOR: report.sector || "N/A",
       COUNTRY: "France",
-      PERIOD: "FY2024",
-      SCOPE1: String(report.scope1 || 0),
-      SCOPE2: String(report.scope2 || 0),
-      SCOPE3: String(report.scope3 || 0),
+      ASSESSMENT_PERIOD: "FY2024",
+      SCOPE_1: String(report.scope1 || 0),
+      SCOPE_2: String(report.scope2 || 0),
+      SCOPE_3: String(report.scope3 || 0),
       TOTAL: String(report.total || 0),
-      GENERATED_AT: new Date().toISOString(),
+      METHODOLOGY_VERSION: "v3",
+      GENERATION_TIMESTAMP: new Date().toISOString(),
     });
 
     const executablePath =
@@ -51,7 +52,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     await page.setContent(filledHTML, { waitUntil: "networkidle0" });
 
     const pdfBuffer = await page.pdf({
-      format: "A4",
+      format: "a4",
       printBackground: true,
     });
 
