@@ -38,7 +38,6 @@ export default function AssessmentForm() {
     setResults(calculation);
   };
 
-  // AUTO-SCROLL ON RESULTS
   useEffect(() => {
     if (results && resultsRef.current) {
       resultsRef.current.scrollIntoView({
@@ -48,9 +47,16 @@ export default function AssessmentForm() {
     }
   }, [results]);
 
-  // STRIPE CHECKOUT HANDLER
+  // STRIPE CHECKOUT HANDLER — VERSION 100% COMPATIBLE
   const handleStripe = async () => {
-    const stripe = await loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
+    const stripe = await loadStripe(
+      process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string
+    );
+
+    if (!stripe) {
+      console.error("Stripe failed to load");
+      return;
+    }
 
     const res = await fetch('/api/checkout', {
       method: "POST"
@@ -58,7 +64,13 @@ export default function AssessmentForm() {
 
     const data = await res.json();
 
-    await stripe?.redirectToCheckout({ sessionId: data.id });
+    const result = await stripe.redirectToCheckout({
+      sessionId: data.id
+    });
+
+    if (result.error) {
+      console.error(result.error.message);
+    }
   };
 
   return (
@@ -218,7 +230,6 @@ export default function AssessmentForm() {
               {results.total} tCO₂e
             </p>
 
-            {/* STRIPE BUTTON */}
             <button
               onClick={handleStripe}
               className="w-full inline-flex justify-center bg-[#1FB6C1] text-white font-bold py-4 rounded-xl hover:bg-[#17A2AC] transition"
@@ -230,4 +241,4 @@ export default function AssessmentForm() {
       )}
     </div>
   );
-}
+            }
