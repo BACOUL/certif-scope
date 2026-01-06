@@ -14,7 +14,6 @@
     "react-dom": "latest",
     "lucide-react": "latest",
     "@tailwindcss/postcss": "latest",
-
     "puppeteer-core": "^21.6.0",
     "chrome-aws-lambda": "^10.1.0"
   },
