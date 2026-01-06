@@ -8,7 +8,7 @@ export default function Home() {
   return (
     <div id="top" className="min-h-screen bg-[#F8FAFC] font-sans text-[#1E293B]">
 
-      {/* HEADER */}
+      {/* ================= HEADER ================= */}
       <header className="bg-white border-b border-slate-200 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
 
@@ -55,7 +55,7 @@ export default function Home() {
         )}
       </header>
 
-      {/* HERO */}
+      {/* ================= HERO ================= */}
       <section className="max-w-5xl mx-auto px-6 py-24 text-center">
         <span className="inline-block mb-6 px-4 py-1 text-xs font-bold uppercase tracking-widest rounded-full bg-[#E6F6F7] text-[#0B3A63]">
           ESG pre-compliance for SMEs
@@ -84,7 +84,7 @@ export default function Home() {
         </p>
       </section>
 
-      {/* TRUST */}
+      {/* ================= TRUST ================= */}
       <section className="max-w-6xl mx-auto px-6 pb-20 grid grid-cols-1 md:grid-cols-3 gap-6">
         {[
           ['What this is', 'A standardized methodological carbon footprint attestation for ESG and procurement.'],
@@ -98,7 +98,7 @@ export default function Home() {
         ))}
       </section>
 
-      {/* REGULATORY CONTEXT */}
+      {/* ================= REGULATION ================= */}
       <section id="regulatory-context" className="bg-white py-20 px-6">
         <div className="max-w-4xl mx-auto text-center mb-14">
           <h2 className="text-2xl md:text-3xl font-black text-[#0B3A63] mb-4">
@@ -114,35 +114,29 @@ export default function Home() {
           <div className="bg-[#F8FAFC] border border-slate-200 rounded-xl p-6">
             <h3 className="font-bold text-[#0B3A63] mb-2">CSRD & Scope 3</h3>
             <p className="text-sm text-[#475569]">
-              Large companies must report Scope 3 emissions, including suppliers,
-              forcing SMEs to provide carbon indicators.
+              Large companies must report Scope 3 emissions, forcing suppliers and SMEs
+              to provide reliable carbon indicators.
             </p>
           </div>
 
           <div className="bg-[#F8FAFC] border border-slate-200 rounded-xl p-6">
             <h3 className="font-bold text-[#0B3A63] mb-2">Banks & ESG risk</h3>
             <p className="text-sm text-[#475569]">
-              Financial institutions increasingly request carbon data as part of
-              ESG risk analysis and financing decisions.
+              Financial institutions increasingly integrate carbon exposure
+              into credit and risk assessment.
             </p>
           </div>
 
           <div className="bg-[#F8FAFC] border border-slate-200 rounded-xl p-6">
             <h3 className="font-bold text-[#0B3A63] mb-2">VSME standard</h3>
             <p className="text-sm text-[#475569]">
-              The VSME framework provides a proportionate response for SMEs facing
-              indirect CSRD obligations.
+              A simplified and proportionate framework designed specifically for SMEs.
             </p>
           </div>
         </div>
-
-        <p className="mt-10 text-center text-sm text-[#64748B] max-w-3xl mx-auto">
-          This attestation supports pre-compliance, ESG questionnaires and
-          value-chain reporting. It is not a statutory CSRD filing.
-        </p>
       </section>
 
-      {/* HOW IT WORKS */}
+      {/* ================= HOW IT WORKS ================= */}
       <section id="how-it-works" className="bg-white py-20 px-6">
         <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
           {[
@@ -159,7 +153,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* METHODOLOGY */}
+      {/* ================= METHODOLOGY ================= */}
       <section id="methodology" className="bg-[#E6F6F7] py-20 px-6">
         <div className="max-w-4xl mx-auto space-y-8 text-[#334155]">
           <h2 className="text-2xl md:text-3xl font-black text-center text-[#0B3A63]">
@@ -167,9 +161,8 @@ export default function Home() {
           </h2>
 
           <p>
-            Certif-Scope applies a <strong>spend-based estimation methodology</strong>
-            inspired by the <strong>GHG Protocol – Corporate Standard</strong>,
-            using official emission factors from the <strong>ADEME Base Empreinte</strong>.
+            Spend-based estimation inspired by the <strong>GHG Protocol</strong>,
+            using official emission factors from <strong>ADEME Base Empreinte</strong>.
           </p>
 
           <ul className="bg-white border border-slate-200 rounded-xl p-6 list-disc pl-6 text-sm space-y-2">
@@ -177,20 +170,15 @@ export default function Home() {
             <li><strong>Scope 2:</strong> Indirect energy emissions</li>
             <li><strong>Scope 3:</strong> Value-chain emissions (screening level)</li>
           </ul>
-
-          <p className="text-sm text-[#475569]">
-            Results are indicative and intended for ESG questionnaires,
-            banking due diligence and value-chain reporting alignment.
-          </p>
         </div>
       </section>
 
-      {/* FORM */}
+      {/* ================= FORM ================= */}
       <section id="assessment" className="max-w-4xl mx-auto py-24 px-6">
         <AssessmentForm />
       </section>
 
-      {/* FAQ */}
+      {/* ================= FAQ ================= */}
       <section id="faq" className="max-w-4xl mx-auto px-6 pb-24">
         <h2 className="text-2xl md:text-3xl font-black text-center text-[#0B3A63] mb-10">
           FAQ
@@ -211,7 +199,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* FOOTER */}
+      {/* ================= FOOTER ================= */}
       <footer className="bg-[#0B3A63] text-[#CBD5E1] py-12 px-6 text-center">
         <p className="mb-4">
           © 2026 TimeProofs — Jeason Bacoul · SIREN 999 356 439
