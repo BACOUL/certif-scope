@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   calculateCarbonFootprint,
   CarbonInput
@@ -22,6 +22,7 @@ export default function AssessmentForm() {
   });
 
   const [results, setResults] = useState<any>(null);
+  const resultsRef = useRef<HTMLDivElement | null>(null);
 
   const handleCalculate = (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,8 +37,18 @@ export default function AssessmentForm() {
     setResults(calculation);
   };
 
+  /* 🔽 Auto-scroll vers les résultats */
+  useEffect(() => {
+    if (results && resultsRef.current) {
+      resultsRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
+  }, [results]);
+
   return (
-    <div className="max-w-2xl mx-auto space-y-10">
+    <div className="max-w-2xl mx-auto space-y-12">
 
       {/* FORM */}
       <form
@@ -157,8 +168,11 @@ export default function AssessmentForm() {
 
       {/* RESULTS */}
       {results && (
-        <div className="bg-[#0B3A63] rounded-2xl p-8 text-white shadow-xl">
-          <h3 className="text-xl font-bold mb-6 text-center">
+        <div
+          ref={resultsRef}
+          className="bg-white rounded-2xl border border-slate-200 shadow-lg p-8"
+        >
+          <h3 className="text-xl font-bold mb-6 text-center text-[#0B3A63]">
             Carbon footprint preview
           </h3>
 
@@ -170,12 +184,12 @@ export default function AssessmentForm() {
             ].map(([label, value]) => (
               <div
                 key={label}
-                className="bg-[#102E4A] rounded-xl p-4 text-center"
+                className="border border-slate-200 rounded-xl p-4 text-center bg-slate-50"
               >
-                <p className="text-xs uppercase text-slate-300 mb-1">
+                <p className="text-xs uppercase text-slate-500 mb-1">
                   {label}
                 </p>
-                <p className="text-xl font-bold">
+                <p className="text-xl font-bold text-[#0B3A63]">
                   {value} tCO₂e
                 </p>
               </div>
@@ -183,16 +197,16 @@ export default function AssessmentForm() {
           </div>
 
           <div className="text-center">
-            <p className="text-sm text-slate-300 mb-1">
+            <p className="text-sm text-slate-500 mb-1">
               Estimated total footprint
             </p>
-            <p className="text-3xl font-extrabold mb-6">
+            <p className="text-3xl font-extrabold text-[#0B3A63] mb-6">
               {results.total} tCO₂e
             </p>
 
             <button
               type="button"
-              className="w-full bg-white text-[#0B3A63] font-bold py-4 rounded-xl hover:bg-slate-100 transition"
+              className="w-full bg-[#1FB6C1] text-white font-bold py-4 rounded-xl hover:bg-[#17A2AC] transition"
             >
               Get the official attestation (€99)
             </button>
@@ -201,4 +215,4 @@ export default function AssessmentForm() {
       )}
     </div>
   );
-}
+            }
