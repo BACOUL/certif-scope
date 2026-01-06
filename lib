@@ -1,0 +1,45 @@
+// lib/carbonEngine.ts
+
+export const EMISSION_FACTORS = {
+  // Monetary factors (kgCO2e per € of revenue)
+  // Based on ADEME / EXIOBASE averages for 2025-2026
+  sectors: {
+    services: 0.054,
+    retail: 0.120,
+    construction: 0.280,
+    manufacturing: 0.450,
+    transport: 0.610,
+  },
+  // Energy factors
+  energy: {
+    fuel_liter: 2.65, // Diesel average kgCO2
+    electricity_kwh_eu: 0.25, // European mix average
+  }
+};
+
+export function calculateCarbonFootprint(data: {
+  sector: string;
+  revenue: number;
+  fuelSpent: number;
+  electricitySpent: number;
+}) {
+  // 1. Scope 1: Fuel estimation (Avg price 1.70€/L)
+  const fuelLiters = data.fuelSpent / 1.7;
+  const scope1 = fuelLiters * EMISSION_FACTORS.energy.fuel_liter;
+
+  // 2. Scope 2: Electricity estimation (Avg price 0.22€/kWh)
+  const electricityKwh = data.electricitySpent / 0.22;
+  const scope2 = electricityKwh * EMISSION_FACTORS.energy.electricity_kwh_eu;
+
+  // 3. Scope 3: Indirect emissions (Spend-based method on revenue)
+  // @ts-ignore
+  const factor = EMISSION_FACTORS.sectors[data.sector] || EMISSION_FACTORS.sectors.services;
+  const scope3 = data.revenue * factor;
+
+  return {
+    scope1: Math.round(scope1),
+    scope2: Math.round(scope2),
+    scope3: Math.round(scope3),
+    total: Math.round(scope1 + scope2 + scope3)
+  };
+}
