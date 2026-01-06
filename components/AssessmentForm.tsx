@@ -14,97 +14,180 @@ export default function AssessmentForm() {
 
   const handleCalculate = (e: React.FormEvent) => {
     e.preventDefault();
-    // Utilisation du moteur de calcul certifié
     const calculation = calculateCarbonFootprint(formData);
     setResults(calculation);
   };
 
   return (
-    <div className="max-w-2xl mx-auto space-y-8">
-      <form onSubmit={handleCalculate} className="bg-white shadow-2xl rounded-2xl overflow-hidden border border-gray-100">
-        <div className="bg-blue-900 p-6">
-          <h2 className="text-xl font-bold text-white">Carbon Footprint Calculator</h2>
-          <p className="text-blue-200 text-sm">Calculations based on GHG Protocol standards.</p>
+    <div className="max-w-2xl mx-auto space-y-10">
+      {/* FORM */}
+      <form
+        onSubmit={handleCalculate}
+        className="bg-white rounded-2xl overflow-hidden border border-slate-100 shadow-xl"
+      >
+        {/* HEADER */}
+        <div className="bg-blue-900 px-8 py-6">
+          <h2 className="text-xl font-bold text-white">
+            Carbon Footprint Assessment
+          </h2>
+          <p className="text-blue-200 text-sm mt-1">
+            Standardized estimation based on recognized methodologies.
+          </p>
         </div>
-        
-        <div className="p-8 space-y-6">
+
+        {/* BODY */}
+        <div className="p-8 space-y-8">
+          {/* COMPANY */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">Company Name</label>
-            <input 
-              type="text" 
-              required 
-              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none"
-              onChange={(e) => setFormData({...formData, companyName: e.target.value})}
+            <label className="block text-sm font-semibold text-slate-700 mb-2">
+              Company name
+            </label>
+            <input
+              type="text"
+              required
+              placeholder="Your company legal name"
+              className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 outline-none"
+              onChange={(e) =>
+                setFormData({ ...formData, companyName: e.target.value })
+              }
             />
           </div>
 
+          {/* SECTOR & REVENUE */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">Sector</label>
-              <select 
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white"
-                onChange={(e) => setFormData({...formData, sector: e.target.value})}
+              <label className="block text-sm font-semibold text-slate-700 mb-2">
+                Business sector
+              </label>
+              <select
+                className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white"
+                onChange={(e) =>
+                  setFormData({ ...formData, sector: e.target.value })
+                }
               >
                 <option value="services">Services</option>
                 <option value="retail">Retail</option>
                 <option value="manufacturing">Manufacturing</option>
               </select>
             </div>
+
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">Revenue (€)</label>
-              <input 
-                type="number" 
-                required 
-                className="w-full px-4 py-3 rounded-xl border border-gray-200"
-                onChange={(e) => setFormData({...formData, revenue: e.target.value})}
+              <label className="block text-sm font-semibold text-slate-700 mb-2">
+                Annual revenue (€)
+              </label>
+              <input
+                type="number"
+                required
+                placeholder="e.g. 500000"
+                className="w-full px-4 py-3 rounded-xl border border-slate-200"
+                onChange={(e) =>
+                  setFormData({ ...formData, revenue: e.target.value })
+                }
               />
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
-            <input type="number" placeholder="Fuel (€)" className="w-full px-4 py-3 rounded-xl border border-gray-200" onChange={(e) => setFormData({...formData, fuelSpent: e.target.value})} />
-            <input type="number" placeholder="Electricity (€)" className="w-full px-4 py-3 rounded-xl border border-gray-200" onChange={(e) => setFormData({...formData, electricitySpent: e.target.value})} />
+          {/* ENERGY */}
+          <div className="pt-2">
+            <p className="text-sm font-semibold text-slate-700 mb-3">
+              Energy-related expenses (annual)
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <input
+                type="number"
+                placeholder="Fuel expenses (€)"
+                className="w-full px-4 py-3 rounded-xl border border-slate-200"
+                onChange={(e) =>
+                  setFormData({ ...formData, fuelSpent: e.target.value })
+                }
+              />
+              <input
+                type="number"
+                placeholder="Electricity expenses (€)"
+                className="w-full px-4 py-3 rounded-xl border border-slate-200"
+                onChange={(e) =>
+                  setFormData({ ...formData, electricitySpent: e.target.value })
+                }
+              />
+            </div>
           </div>
 
-          <button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl shadow-lg transition-all">
-            Calculate My Footprint
+          {/* PRIVACY NOTE */}
+          <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 text-sm text-slate-600">
+            All calculations are performed locally in your browser.
+            <br />
+            No raw financial data is transmitted or stored on our servers.
+          </div>
+
+          {/* CTA */}
+          <button
+            type="submit"
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl shadow-lg transition"
+          >
+            Calculate my carbon footprint
           </button>
         </div>
       </form>
 
-      {/* AFFICHAGE DES RÉSULTATS (PREVIEW) */}
+      {/* RESULTS PREVIEW */}
       {results && (
-        <div className="bg-slate-900 rounded-2xl p-8 text-white shadow-2xl animate-fade-in">
-          <h3 className="text-2xl font-bold mb-6 flex items-center gap-2">
-            Your Carbon Report <span className="text-sm font-normal bg-blue-500 px-2 py-1 rounded text-white italic">Preview</span>
+        <div className="bg-slate-900 rounded-2xl p-8 text-white shadow-2xl">
+          <h3 className="text-2xl font-bold mb-6 flex items-center gap-3">
+            Carbon footprint preview
+            <span className="text-xs font-semibold bg-blue-500 px-3 py-1 rounded-full italic">
+              indicative
+            </span>
           </h3>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
             <div className="bg-slate-800 p-4 rounded-xl border border-slate-700 text-center">
-              <p className="text-slate-400 text-xs uppercase mb-1">Direct (Scope 1)</p>
-              <p className="text-xl font-bold">{results.scope1} tCO2e</p>
+              <p className="text-slate-400 text-xs uppercase mb-1">
+                Scope 1
+              </p>
+              <p className="text-xl font-bold">{results.scope1} tCO₂e</p>
             </div>
+
             <div className="bg-slate-800 p-4 rounded-xl border border-slate-700 text-center">
-              <p className="text-slate-400 text-xs uppercase mb-1">Energy (Scope 2)</p>
-              <p className="text-xl font-bold">{results.scope2} tCO2e</p>
+              <p className="text-slate-400 text-xs uppercase mb-1">
+                Scope 2
+              </p>
+              <p className="text-xl font-bold">{results.scope2} tCO₂e</p>
             </div>
+
             <div className="bg-slate-800 p-4 rounded-xl border border-slate-700 text-center">
-              <p className="text-slate-400 text-xs uppercase mb-1">Supply Chain (Scope 3)</p>
-              <p className="text-xl font-bold">{results.scope3} tCO2e</p>
+              <p className="text-slate-400 text-xs uppercase mb-1">
+                Scope 3
+              </p>
+              <p className="text-xl font-bold">{results.scope3} tCO₂e</p>
             </div>
           </div>
 
-          <div className="bg-blue-600 p-6 rounded-xl flex flex-col md:flex-row items-center justify-between gap-4">
+          <div className="bg-blue-600 p-6 rounded-xl flex flex-col md:flex-row items-center justify-between gap-6">
             <div>
-              <p className="text-blue-100 text-sm">Total Estimated Footprint</p>
-              <p className="text-4xl font-extrabold">{results.total} tCO2e</p>
+              <p className="text-blue-100 text-sm">
+                Total estimated emissions
+              </p>
+              <p className="text-4xl font-extrabold">
+                {results.total} tCO₂e
+              </p>
             </div>
-            <button className="bg-white text-blue-900 font-bold py-3 px-8 rounded-full hover:bg-blue-50 transition-all">
-              Get Official Certificate (99€)
-            </button>
+
+            <div className="text-center md:text-right">
+              <p className="text-blue-100 text-sm mb-2">
+                Generate your downloadable attestation
+              </p>
+              <button className="bg-white text-blue-900 font-bold py-3 px-8 rounded-full hover:bg-blue-50 transition">
+                Get attestation (€99)
+              </button>
+            </div>
           </div>
+
+          <p className="text-xs text-slate-400 mt-6">
+            This preview is provided for informational purposes only and does not
+            constitute a regulatory certification or an accredited carbon audit.
+          </p>
         </div>
       )}
     </div>
   );
-}
+              }
