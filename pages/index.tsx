@@ -58,14 +58,13 @@ export default function Home() {
         </span>
 
         <h1 className="text-3xl md:text-5xl font-black mb-6 text-[#0B3A63]">
-          A carbon footprint attestation<br />
-          <span className="text-[#1FB6C1]">for real-world decisions</span>
+          Official SME Carbon Footprint Estimation<br />
+          <span className="text-[#1FB6C1]">Instant · Accurate · Exportable</span>
         </h1>
 
         <p className="text-lg text-[#475569] max-w-3xl mx-auto mb-10">
-          Generate a standardized, spend-based carbon footprint attestation
-          aligned with the <strong>VSME standard</strong> and compatible with
-          <strong> CSRD value-chain expectations</strong>.
+          Instantly calculate your Scope 1, 2 & 3 emissions using a recognized spend-based methodology.
+          Get a professional PDF attestation for ESG questionnaires, banks and partners.
         </p>
 
         <a
@@ -75,19 +74,20 @@ export default function Home() {
           Start my assessment
         </a>
 
-        <div className="mt-6">
-          <a
-            href="https://buy.stripe.com/test_5kQ9ATf031jK6EidNd1kA00"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex bg-white border border-[#1FB6C1] text-[#1FB6C1] font-bold px-6 py-3 rounded-xl hover:bg-[#E6F6F7] transition"
-          >
-            Test Stripe payment (€99)
-          </a>
-        </div>
-
         <p className="mt-4 text-sm text-[#64748B]">
-          No account · No data storage · Payment only if you download the attestation
+          Free preview · No account required · Pay only to download the official PDF
+        </p>
+      </section>
+
+      {/* ================= WHY 99€ ================= */}
+      <section className="max-w-4xl mx-auto px-6 py-12 text-center">
+        <h3 className="text-xl font-bold text-[#0B3A63] mb-4">Why €99 ?</h3>
+        <p className="text-sm text-[#475569] max-w-2xl mx-auto">
+          The attestation is a professionally formatted PDF including:
+          <br/>• Scope 1, 2 & 3 calculation summary
+          <br/>• Methodology & regulatory context
+          <br/>• Timestamp and unique document identifier
+          <br/>• Ready to share with banks, partners and ESG questionnaires
         </p>
       </section>
 
@@ -220,4 +220,4 @@ export default function Home() {
 
     </div>
   );
-           }
+      }
