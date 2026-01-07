@@ -14,6 +14,7 @@ export const attestationTemplate = `
       --text-muted: #475569;
       --border: #E2E8F0;
       --bg-soft: #F8FAFC;
+      --green-dark: #0A7F4F;
     }
 
     body {
@@ -86,6 +87,42 @@ export const attestationTemplate = `
       font-weight: 600;
     }
 
+    /* CHART STYLE */
+    .chart {
+      margin-top: 20px;
+      width: 100%;
+    }
+
+    .chart-row {
+      display: flex;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .chart-label {
+      width: 80px;
+      font-size: 13px;
+      color: var(--blue-dark);
+      font-weight: 600;
+    }
+
+    .chart-bar {
+      height: 14px;
+      border-radius: 6px;
+      margin: 0 10px;
+    }
+
+    .bar-s1 { background-color: var(--blue-light); }
+    .bar-s2 { background-color: var(--blue-dark); }
+    .bar-s3 { background-color: var(--green-dark); }
+
+    .chart-value {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-main);
+      min-width: 80px;
+    }
+
     .footer {
       margin-top: 48px;
       padding-top: 16px;
@@ -98,7 +135,7 @@ export const attestationTemplate = `
 
 <body>
 
-  <!-- HEADER WITH QR -->
+  <!-- HEADER -->
   <div class="header">
     <div>
       <div class="brand">
@@ -173,33 +210,58 @@ export const attestationTemplate = `
     </table>
   </div>
 
-  <!-- 4. METHODOLOGY -->
+  <!-- 4. VISUAL CHART -->
   <div class="section">
-    <h2>4. Methodology</h2>
+    <h2>4. Visual breakdown of emissions</h2>
+
+    <div class="chart">
+      <div class="chart-row">
+        <div class="chart-label">Scope 1</div>
+        <div class="chart-bar bar-s1" style="width: calc({{SCOPE_1}} * 1%);"></div>
+        <div class="chart-value">{{SCOPE_1}} tCO₂e</div>
+      </div>
+
+      <div class="chart-row">
+        <div class="chart-label">Scope 2</div>
+        <div class="chart-bar bar-s2" style="width: calc({{SCOPE_2}} * 1%);"></div>
+        <div class="chart-value">{{SCOPE_2}} tCO₂e</div>
+      </div>
+
+      <div class="chart-row">
+        <div class="chart-label">Scope 3</div>
+        <div class="chart-bar bar-s3" style="width: calc({{SCOPE_3}} * 1%);"></div>
+        <div class="chart-value">{{SCOPE_3}} tCO₂e</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. METHODOLOGY -->
+  <div class="section">
+    <h2>5. Methodology</h2>
     <p>
       This assessment applies a <strong>spend-based estimation approach</strong> inspired by the GHG Protocol.
     </p>
   </div>
 
-  <!-- 5. REGULATORY CONTEXT -->
+  <!-- 6. REGULATORY CONTEXT -->
   <div class="section">
-    <h2>5. Regulatory context</h2>
+    <h2>6. Regulatory context</h2>
     <p>
-      This attestation supports ESG and CSRD Scope 3 data requests from banks and partners.
+      This attestation supports ESG and CSRD Scope 3 data requests from banks, insurers and partners.
     </p>
   </div>
 
-  <!-- 6. DATA PROCESSING -->
+  <!-- 7. DATA PROCESSING -->
   <div class="section">
-    <h2>6. Data processing & confidentiality</h2>
+    <h2>7. Data processing & confidentiality</h2>
     <p>
-      All calculations are performed <strong>locally</strong> on the user’s device. No raw business data is stored.
+      All calculations are performed <strong>locally</strong> and no raw business data is stored by Certif-Scope.
     </p>
   </div>
 
-  <!-- 7. LEGAL LIMITS -->
+  <!-- 8. LEGAL LIMITS -->
   <div class="section">
-    <h2>7. Legal notice & limitations</h2>
+    <h2>8. Legal notice & limitations</h2>
     <p>
       This attestation is a <strong>methodological estimation</strong>, not a certified audit and not a CSRD declaration.
     </p>
