@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import chromium from "chrome-aws-lambda";
 import puppeteerCore from "puppeteer-core";
+import { v4 as uuidv4 } from "uuid";                    // <-- UUID ajouté ici
 import { attestationTemplate } from "../../lib/attestationTemplate";
 
 function fillTemplate(template: string, data: Record<string, string>) {
@@ -17,13 +18,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
+    // ----------------------------
+    // 1) Générer l'UUID de l'attestation
+    // ----------------------------
+    const attestationId = uuidv4();
+
     const report = req.body;
     if (!report) {
       return res.status(400).json({ error: "Missing report data" });
     }
 
+    // ----------------------------
+    // 2) Injecter l'ID dans le HTML
+    // ----------------------------
     const filledHTML = fillTemplate(attestationTemplate, {
-      ATTESTATION_ID: report.id || "N/A",
+      ATTESTATION_ID: attestationId,
       ISSUE_DATE_UTC: new Date().toISOString(),
       COMPANY_NAME: report.companyName || "N/A",
       BUSINESS_SECTOR: report.sector || "N/A",
@@ -37,6 +46,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       GENERATION_TIMESTAMP: new Date().toISOString(),
     });
 
+    // ----------------------------
+    // 3) Puppeteer / Chromium pour générer le PDF
+    // ----------------------------
     const executablePath =
       process.env.NODE_ENV === "development"
         ? undefined
@@ -58,9 +70,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     await browser.close();
 
+    // ----------------------------
+    // 4) Retourner le PDF
+    // ----------------------------
     res.setHeader("Content-Type", "application/pdf");
     res.setHeader("Content-Disposition", "attachment; filename=attestation.pdf");
     return res.send(pdfBuffer);
+
   } catch (err) {
     console.error(err);
     return res.status(500).json({ error: "PDF generation failed", details: err });
