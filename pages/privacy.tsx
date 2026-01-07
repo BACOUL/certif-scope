@@ -18,6 +18,10 @@ export default function PrivacyPolicy() {
           Privacy Policy
         </h1>
 
+        <p className="text-sm text-slate-600 mb-10">
+          Certif-Scope is a service operated by <strong>TimeProofs</strong>.
+        </p>
+
         <div className="space-y-10">
 
           {/* 1. DATA MINIMIZATION */}
@@ -99,7 +103,7 @@ export default function PrivacyPolicy() {
               verifying the integrity of an attestation. No other data is stored.
               <br /><br />
               Users may request deletion of attestation metadata by contacting:
-              <strong> contact@timeproofs.io</strong>
+              <strong> support@certif-scope.com</strong>
             </p>
           </section>
 
@@ -126,7 +130,7 @@ export default function PrivacyPolicy() {
             <p className="text-sm text-slate-600 leading-relaxed">
               For privacy-related questions:
               <br />
-              <strong>contact@timeproofs.io</strong>
+              <strong>support@certif-scope.com</strong>
             </p>
           </section>
 
@@ -139,4 +143,4 @@ export default function PrivacyPolicy() {
       </div>
     </div>
   );
-        }
+            }
