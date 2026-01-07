@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import AssessmentForm from '../components/AssessmentForm';
-import Link from 'next/link';
+import { useState } from "react";
+import AssessmentForm from "../components/AssessmentForm";
+import Link from "next/link";
 
 export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -12,7 +12,6 @@ export default function Home() {
       <header className="bg-white border-b border-slate-200 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
 
-          {/* Logo with Hover */}
           <Link href="/" className="text-xl font-black tracking-tight hover:opacity-80 transition-opacity duration-200">
             <span className="text-[#0B3A63]">Certif-</span>
             <span className="text-[#1FB6C1]">Scope</span>
@@ -25,10 +24,11 @@ export default function Home() {
               <a href="#regulatory-context" className="hover:text-[#1FB6C1] transition-colors">CSRD Context</a>
               <a href="#methodology" className="hover:text-[#1FB6C1] transition-colors">Methodology</a>
               <a href="#faq" className="hover:text-[#1FB6C1] transition-colors">FAQ</a>
+              <Link href="/verify" className="text-[#1FB6C1] hover:text-[#17A2AC]">Verify</Link>
             </nav>
 
-            <a 
-              href="#assessment" 
+            <a
+              href="#assessment"
               className="bg-[#0D3152] text-white text-xs font-bold uppercase tracking-widest px-5 py-3 rounded-lg hover:bg-[#123d63] transition-colors"
             >
               Start Assessment
@@ -57,6 +57,7 @@ export default function Home() {
               <a href="#methodology" onClick={() => setMenuOpen(false)}>Methodology</a>
               <a href="#faq" onClick={() => setMenuOpen(false)}>FAQ</a>
               <Link href="/legal" onClick={() => setMenuOpen(false)}>Legal</Link>
+              <Link href="/verify" onClick={() => setMenuOpen(false)}>Verify</Link>
             </nav>
           </div>
         )}
@@ -69,7 +70,7 @@ export default function Home() {
         </span>
 
         <h1 className="text-3xl md:text-5xl font-black mb-6 text-[#0B3A63]">
-          Instant SME Carbon Footprint Attestation<br />
+          Instant SME Carbon Footprint Attestation<br/>
           <span className="text-[#1FB6C1]">Scope 1 · Scope 2 · Scope 3 estimation</span>
         </h1>
 
@@ -85,9 +86,16 @@ export default function Home() {
           >
             Start my assessment
           </a>
-          
+
           <Link href="/sample-pdf" className="text-sm text-[#64748B] underline decoration-dotted hover:text-[#0B3A63]">
             View sample PDF
+          </Link>
+
+          <Link
+            href="/verify"
+            className="text-sm text-[#64748B] underline decoration-dotted hover:text-[#0B3A63]"
+          >
+            Verify an existing attestation
           </Link>
         </div>
 
@@ -132,8 +140,8 @@ export default function Home() {
             Why this attestation is now required
           </h2>
           <p className="text-[#475569] max-w-3xl mx-auto">
-            Even when not directly subject to CSRD, SMEs are increasingly required
-            to provide carbon data due to regulatory pressure on larger entities.
+            Even when not directly subject to CSRD, SMEs must now respond to carbon data
+            requests from clients, banks, insurers and supply-chain partners.
           </p>
         </div>
 
@@ -141,23 +149,21 @@ export default function Home() {
           <div className="bg-[#F8FAFC] border border-slate-200 rounded-xl p-6">
             <h3 className="font-bold text-[#0B3A63] mb-2">CSRD & Scope 3</h3>
             <p className="text-sm text-[#475569]">
-              Large companies must report Scope 3 emissions. This creates a direct requirement 
-              for suppliers to provide standardized carbon data.
+              Large companies must report Scope 3 emissions. Suppliers must provide standardized carbon data.
             </p>
           </div>
 
           <div className="bg-[#F8FAFC] border border-slate-200 rounded-xl p-6">
             <h3 className="font-bold text-[#0B3A63] mb-2">Banks & ESG risk</h3>
             <p className="text-sm text-[#475569]">
-              Financial institutions increasingly integrate carbon exposure
-              into credit and risk assessment.
+              Banks increasingly integrate carbon exposure into credit scoring and risk assessment.
             </p>
           </div>
 
           <div className="bg-[#F8FAFC] border border-slate-200 rounded-xl p-6">
             <h3 className="font-bold text-[#0B3A63] mb-2">VSME standard</h3>
             <p className="text-sm text-[#475569]">
-              A simplified and proportionate framework (EU simplified standard) designed specifically for SMEs.
+              A simplified and proportionate EU framework enabling SMEs to provide consistent carbon indicators.
             </p>
           </div>
         </div>
@@ -168,7 +174,7 @@ export default function Home() {
         <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
           {[
             ['01', 'Enter your data', 'Only revenue and energy cost.'],
-            ['02', 'Instant estimation', 'Spend-based calculation runs locally on your device.'],
+            ['02', 'Instant estimation', 'Spend-based calculation runs locally.'],
             ['03', 'Download attestation', 'A ready-to-share PDF after payment.']
           ].map(([step, title, text]) => (
             <div key={step}>
@@ -188,14 +194,14 @@ export default function Home() {
           </h2>
 
           <p className="text-center max-w-2xl mx-auto">
-            Screening-level estimation for SMEs. Spend-based calculation inspired by the <strong>GHG Protocol</strong>,
-            using official emission factors from <strong>ADEME Base Empreinte</strong>.
+            Screening-level estimation based on GHG Protocol spend-based principles,
+            using emission factors from ADEME Base Empreinte.
           </p>
 
           <ul className="bg-white border border-slate-200 rounded-xl p-6 list-disc pl-6 text-sm space-y-2">
             <li><strong>Scope 1:</strong> Direct emissions</li>
             <li><strong>Scope 2:</strong> Indirect energy emissions</li>
-            <li><strong>Scope 3:</strong> Value-chain emissions (screening level)</li>
+            <li><strong>Scope 3:</strong> Upstream/Downstream screening</li>
           </ul>
         </div>
       </section>
@@ -207,11 +213,11 @@ export default function Home() {
             Private by design — data stays on your device
           </span>
         </div>
-        
+
         <div className="bg-white border border-slate-200 rounded-2xl shadow-sm p-1">
           <AssessmentForm />
         </div>
-        
+
         <div className="text-center mt-6">
           <span className="text-sm text-[#64748B]">
             No account required
@@ -228,8 +234,8 @@ export default function Home() {
         <div className="space-y-6">
           {[
             ['Is this legally binding?', 'No. This is a methodological attestation.'],
-            ['Is this accepted by banks?', 'Yes, it provides the standardized indicators they request.'],
-            ['Can I edit the PDF?', 'No, the file is locked to preserve authenticity.'],
+            ['Is this accepted by banks?', 'Yes, it provides the indicators they request.'],
+            ['Can I edit the PDF?', 'No. The file is locked to preserve authenticity.'],
             ['Is my data stored?', 'No. All calculations run locally.'],
             ['Who is this for?', 'SMEs responding to ESG and banking requests.'],
             ['What do I receive?', 'A downloadable PDF carbon footprint attestation.']
@@ -247,13 +253,15 @@ export default function Home() {
         <p className="mb-4 text-sm font-medium">
           © 2026 Certif-Scope — Independent ESG Service
         </p>
+
         <div className="flex justify-center gap-6 text-xs uppercase tracking-widest font-bold">
           <Link href="/legal" className="hover:text-white">Legal</Link>
+          <Link href="/refund-policy" className="hover:text-white">Refund Policy</Link>
+          <Link href="/verify" className="hover:text-white">Verify</Link>
           <a href="#top" className="hover:text-white">Back to top</a>
-          <a href="mailto:contact@certif-scope.com" className="hover:text-white">Contact</a>
         </div>
       </footer>
 
     </div>
   );
-        }
+              }
