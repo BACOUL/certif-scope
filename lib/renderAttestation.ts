@@ -57,6 +57,18 @@ export function renderAttestationHTML(data: AttestationData): string {
   <p>Scan the QR code below to verify authenticity:</p>
   <img src="{{QR_CODE}}" alt="Verification QR Code" style="width:180px; height:180px;" />
 
+  <hr style="margin-top:30px; margin-bottom:20px;">
+
+  <p style="font-size:13px; color:#444;">
+    <strong>Legal Notice:</strong><br>
+    This attestation is an indicative estimation based on data provided by the company.
+    It is not an audit, not a verified carbon footprint assessment, and not a CSRD-compliant
+    sustainability report. The results are calculated using a standardized spend-based model
+    and may differ from emissions measured through activity-based methodologies or certified
+    audits. Certif-Scope cannot be held responsible for incorrect inputs or interpretation
+    of the estimation.
+  </p>
+
 </body>
 </html>
 `;
