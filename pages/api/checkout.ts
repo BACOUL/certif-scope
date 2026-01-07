@@ -6,7 +6,7 @@ if (!process.env.STRIPE_SECRET_KEY) {
 }
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-  apiVersion: "2023-10-16",
+  apiVersion: "2025-12-15.clover",
 });
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -15,7 +15,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
-    // Use origin or fallback domain
     const origin =
       req.headers.origin ||
       process.env.NEXT_PUBLIC_BASE_URL ||
@@ -40,6 +39,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       ],
 
       allow_promotion_codes: false,
+
       payment_intent_data: {
         description: "Certif-Scope Carbon Attestation",
       },
