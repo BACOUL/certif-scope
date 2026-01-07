@@ -26,25 +26,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
-    // Unique attestation ID
-    const attestationId = uuidv4();
     const report = req.body;
-
     if (!report) {
       return res.status(400).json({ error: "Missing report data" });
     }
 
-    // Base URL for QR and registry API
-    const baseUrl = req.headers.origin || "https://certif-scope.vercel.app";
+    // Generate unique attestation ID
+    const attestationId = uuidv4();
 
-    // Verification URL (QR code points here)
-    const verifyUrl = `${baseUrl}/verify?id=${attestationId}&hash=__HASH__`;
-
-    // Generate QR code
-    const qrCodeDataUrl = await QRCode.toDataURL(verifyUrl);
-
-    // Fill HTML template
-    const filledHTML = fillTemplate(attestationTemplate, {
+    // Generate temporary HTML without QR
+    const initialHTML = fillTemplate(attestationTemplate, {
       ATTESTATION_ID: attestationId,
       ISSUE_DATE_UTC: new Date().toISOString(),
       COMPANY_NAME: report.companyName || "N/A",
@@ -57,27 +48,61 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       TOTAL: String(report.total || 0),
       METHODOLOGY_VERSION: "v3",
       GENERATION_TIMESTAMP: new Date().toISOString(),
-      QR_CODE: qrCodeDataUrl
+      QR_CODE: ""
     });
 
-    // Determine chromium executable path for Vercel
+    // Setup Chromium for Vercel
     const executablePath =
       process.env.NODE_ENV === "development"
         ? undefined
         : await chromium.executablePath;
 
-    // Launch headless browser
     const browser = await puppeteer.launch({
       args: chromium.args,
       executablePath,
-      headless: chromium.headless
+      headless: true
     });
 
     const page = await browser.newPage();
-    await page.setContent(filledHTML, { waitUntil: "networkidle0" });
+    await page.setContent(initialHTML, { waitUntil: "networkidle0" });
 
-    // Render PDF
-    const pdfBuffer = await page.pdf({
+    // Render initial PDF to compute hash
+    const tmpPdf = await page.pdf({
+      format: "a4",
+      printBackground: true,
+      margin: { top: "10mm", right: "10mm", bottom: "10mm", left: "10mm" }
+    });
+
+    // Compute final hash
+    const pdfHash = computeHash(tmpPdf);
+
+    const verifyUrl = `https://certif-scope.com/verify?id=${attestationId}&hash=${pdfHash}`;
+
+    // Generate QR code with full URL
+    const qrCodeDataUrl = await QRCode.toDataURL(verifyUrl);
+
+    // Create final HTML
+    const finalHTML = fillTemplate(attestationTemplate, {
+      ATTESTATION_ID: attestationId,
+      ISSUE_DATE_UTC: new Date().toISOString(),
+      COMPANY_NAME: report.companyName || "N/A",
+      BUSINESS_SECTOR: report.sector || "N/A",
+      COUNTRY: "France",
+      ASSESSMENT_PERIOD: "FY2024",
+      SCOPE_1: String(report.scope1 || 0),
+      SCOPE_2: String(report.scope2 || 0),
+      SCOPE_3: String(report.scope3 || 0),
+      TOTAL: String(report.total || 0),
+      METHODOLOGY_VERSION: "v3",
+      GENERATION_TIMESTAMP: new Date().toISOString(),
+      QR_CODE: `<img src="${qrCodeDataUrl}" style="width:140px"/>`,
+      HASH: pdfHash,
+      VERIFY_URL: verifyUrl
+    });
+
+    // Render final PDF
+    await page.setContent(finalHTML, { waitUntil: "networkidle0" });
+    const finalPdf = await page.pdf({
       format: "a4",
       printBackground: true,
       margin: { top: "10mm", right: "10mm", bottom: "10mm", left: "10mm" }
@@ -85,36 +110,25 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     await browser.close();
 
-    // Compute SHA-256 hash
-    const pdfHash = computeHash(pdfBuffer);
-
-    // Register attestation in GitHub
-    const registerRes = await fetch(`${baseUrl}/api/register-attestation`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
+    // Register in GitHub registry
+    await fetch("https://api.github.com/repos/BACOUL/certif-scope/contents/attestations.json", {
+      method: "PUT",
+      headers: {
+        "Authorization": `Bearer ${process.env.GITHUB_TOKEN}`,
+        "Content-Type": "application/json"
+      },
       body: JSON.stringify({
         id: attestationId,
-        hash: pdfHash
+        hash: pdfHash,
+        timestamp: new Date().toISOString()
       })
     });
 
-    if (!registerRes.ok) {
-      return res.status(500).json({
-        error: "Attestation generated but registry update failed",
-        id: attestationId,
-        hash: pdfHash
-      });
-    }
-
-    // Replace placeholder hash inside verifyUrl returned to frontend
-    const finalVerifyUrl = verifyUrl.replace("__HASH__", pdfHash);
-
-    // Deliver PDF + metadata
     return res.status(200).json({
       id: attestationId,
       hash: pdfHash,
-      verifyUrl: finalVerifyUrl,
-      pdfBase64: pdfBuffer.toString("base64")
+      verifyUrl,
+      pdfBase64: finalPdf.toString("base64")
     });
 
   } catch (err: any) {
@@ -124,4 +138,4 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       details: err.message
     });
   }
-}
+    }
