@@ -1,5 +1,4 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import fetch from "node-fetch";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== "POST") {
@@ -15,35 +14,48 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   try {
     const token = process.env.GITHUB_TOKEN;
 
-    // 1) Charger le fichier existant depuis GitHub
+    if (!token) {
+      return res.status(500).json({ error: "Missing GitHub token" });
+    }
+
+    // === 1) Get current attestations.json ===
     const raw = await fetch(
       "https://api.github.com/repos/BACOUL/certif-scope/contents/attestations.json",
-      { headers: { Authorization: `token ${token}` } }
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: "application/vnd.github+json",
+        },
+      }
     );
+
+    if (!raw.ok) {
+      return res.status(500).json({ error: "Unable to fetch attestations.json" });
+    }
 
     const file = await raw.json();
 
-    // 2) Décoder le contenu base64
-    const existingContent = Buffer.from(file.content, "base64").toString();
+    const existingContent = Buffer.from(file.content, "base64").toString("utf8");
     const json = JSON.parse(existingContent);
 
-    // 3) Ajouter la nouvelle attestation
+    // === 2) Add entry ===
     json.attestations.push({
       id,
       hash,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
 
-    // 4) Encoder en base64
+    // === 3) Encode new content ===
     const updatedContent = Buffer.from(JSON.stringify(json, null, 2)).toString("base64");
 
-    // 5) Commit sur GitHub via API
-    await fetch(
+    // === 4) Commit update to GitHub ===
+    const commitRes = await fetch(
       "https://api.github.com/repos/BACOUL/certif-scope/contents/attestations.json",
       {
         method: "PUT",
         headers: {
-          Authorization: `token ${token}`,
+          Authorization: `Bearer ${token}`,
+          Accept: "application/vnd.github+json",
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
@@ -54,8 +66,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
     );
 
+    if (!commitRes.ok) {
+      const text = await commitRes.text();
+      return res.status(500).json({ error: "GitHub commit failed", details: text });
+    }
+
     return res.status(200).json({ success: true });
-  } catch (err) {
-    return res.status(500).json({ error: "GitHub update failed", details: err });
+  } catch (err: any) {
+    return res.status(500).json({ error: "Unexpected error", details: err.message });
   }
 }
