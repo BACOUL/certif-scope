@@ -1,9 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
 /**
- * This endpoint writes (ID, SHA-256) into GitHub attestations.json.
- * It is called server-side by /api/attestation only.
- * It must be POST-only, atomic and consistent.
+ * Secure registry writer for (ID + SHA256) => GitHub attestations.json
+ * Called ONLY by /api/attestation after PDF generation.
  */
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -11,135 +10,177 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  const { id, hash } = req.body;
+  // ---------------------------------------------------------
+  // 1) Validate request origin
+  // ---------------------------------------------------------
+  const origin = req.headers.origin || "";
+  const allowed =
+    origin.includes("certif-scope") ||
+    origin.includes("localhost");
 
-  // -----------------------------
-  // 1) Basic validation
-  // -----------------------------
+  if (!allowed) {
+    return res.status(403).json({ error: "Forbidden origin" });
+  }
+
+  // ---------------------------------------------------------
+  // 2) Validate inputs
+  // ---------------------------------------------------------
+  let { id, hash } = req.body;
+
   if (typeof id !== "string" || typeof hash !== "string") {
-    return res.status(400).json({ error: "Invalid ID or hash format" });
+    return res.status(400).json({ error: "ID and hash must be strings" });
   }
 
-  if (!/^[a-fA-F0-9]{64}$/.test(hash)) {
-    return res.status(400).json({ error: "Invalid SHA-256 hash" });
+  if (id.trim().length < 20) {
+    return res.status(400).json({ error: "Invalid attestation ID format" });
   }
 
-  if (id.length < 20) {
-    return res.status(400).json({ error: "Invalid attestation ID" });
+  hash = hash.toLowerCase();
+
+  if (!/^[a-f0-9]{64}$/.test(hash)) {
+    return res.status(400).json({ error: "Invalid SHA-256 hash format" });
   }
 
-  // -----------------------------
-  // 2) Ensure GitHub token exists
-  // -----------------------------
+  // ---------------------------------------------------------
+  // 3) GitHub token
+  // ---------------------------------------------------------
   const token = process.env.GITHUB_TOKEN;
   if (!token) {
-    return res.status(500).json({ error: "Missing GitHub token" });
+    return res.status(500).json({ error: "GitHub token missing" });
   }
 
   const GH_URL =
     "https://api.github.com/repos/BACOUL/certif-scope/contents/attestations.json";
 
   try {
-    // -----------------------------
-    // 3) Get existing file
-    // -----------------------------
+    // ---------------------------------------------------------
+    // 4) Fetch existing file
+    // ---------------------------------------------------------
     const raw = await fetch(GH_URL, {
       headers: {
         Authorization: `Bearer ${token}`,
-        Accept: "application/vnd.github+json",
+        Accept: "application/vnd.github+json"
       },
-      cache: "no-store",
+      cache: "no-store"
     });
 
     let file;
-    let existingJson;
+    let existing;
 
     if (raw.status === 404) {
-      // File does not exist yet → create structure
-      existingJson = { attestations: [] };
+      existing = { attestations: [] };
       file = null;
-    } else if (!raw.ok) {
-      return res.status(500).json({
-        error: "Unable to fetch attestations.json",
-        githubStatus: raw.status,
-      });
-    } else {
+    } else if (raw.ok) {
       file = await raw.json();
-
       try {
         const decoded = Buffer.from(file.content, "base64").toString("utf8");
-        existingJson = JSON.parse(decoded);
+        existing = JSON.parse(decoded);
       } catch {
-        existingJson = { attestations: [] };
+        existing = { attestations: [] };
       }
-    }
-
-    // -----------------------------
-    // 4) De-duplicate entries
-    // -----------------------------
-    const exists = existingJson.attestations.find((item: any) => item.id === id);
-    if (exists) {
-      return res.status(200).json({
-        success: true,
-        note: "Already registered",
-        id,
-        hash,
+    } else {
+      return res.status(500).json({
+        error: "Unable to read registry",
+        status: raw.status
       });
     }
 
-    // -----------------------------
-    // 5) Append new entry
-    // -----------------------------
-    existingJson.attestations.push({
+    // ---------------------------------------------------------
+    // 5) Deduplication and consistency
+    // ---------------------------------------------------------
+    const alreadyById = existing.attestations.find((a: any) => a.id === id);
+    if (alreadyById) {
+      return res.status(200).json({
+        success: true,
+        info: "ID already registered",
+        id,
+        hash
+      });
+    }
+
+    const alreadyByHash = existing.attestations.find((a: any) => a.hash === hash);
+    if (alreadyByHash) {
+      return res.status(400).json({
+        error: "Hash already registered with another attestation",
+        existingId: alreadyByHash.id
+      });
+    }
+
+    // ---------------------------------------------------------
+    // 6) Write updated file
+    // ---------------------------------------------------------
+    existing.attestations.push({
       id,
       hash,
-      timestamp: new Date().toISOString(),
+      timestamp: new Date().toISOString()
     });
 
     const newContent = Buffer.from(
-      JSON.stringify(existingJson, null, 2)
+      JSON.stringify(existing, null, 2)
     ).toString("base64");
 
-    // -----------------------------
-    // 6) Commit updated file
-    // -----------------------------
     const commitBody: any = {
-      message: `Register attestation ${id}`,
+      message: `Add attestation ${id}`,
       content: newContent,
+      sha: file?.sha
     };
 
-    if (file?.sha) {
-      commitBody.sha = file.sha;
-    }
-
-    const commitRes = await fetch(GH_URL, {
+    // Try commit
+    let commitRes = await fetch(GH_URL, {
       method: "PUT",
       headers: {
         Authorization: `Bearer ${token}`,
         Accept: "application/vnd.github+json",
-        "Content-Type": "application/json",
+        "Content-Type": "application/json"
       },
-      body: JSON.stringify(commitBody),
+      body: JSON.stringify(commitBody)
     });
 
-    if (!commitRes.ok) {
-      const details = await commitRes.text();
-      return res.status(500).json({
-        error: "GitHub commit failed",
-        githubStatus: commitRes.status,
-        details,
+    if (commitRes.status === 409) {
+      // SHA conflict -> retry once
+      const latest = await fetch(GH_URL, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: "application/vnd.github+json"
+        }
+      });
+
+      const newFile = await latest.json();
+      commitBody.sha = newFile.sha;
+
+      commitRes = await fetch(GH_URL, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: "application/vnd.github+json",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(commitBody)
       });
     }
 
-    // -----------------------------
-    // 7) Success
-    // -----------------------------
-    return res.status(200).json({ success: true, id, hash });
+    if (!commitRes.ok) {
+      const text = await commitRes.text();
+      return res.status(500).json({
+        error: "GitHub commit failed",
+        details: text
+      });
+    }
+
+    // ---------------------------------------------------------
+    // SUCCESS
+    // ---------------------------------------------------------
+    return res.status(200).json({
+      success: true,
+      id,
+      hash
+    });
+
   } catch (err: any) {
-    console.error("REGISTER-ERROR:", err);
+    console.error("REGISTER ERROR:", err);
     return res.status(500).json({
-      error: "Unexpected server error",
-      details: err.message,
+      error: "Unexpected error",
+      details: err.message
     });
   }
-}
+      }
