@@ -193,22 +193,26 @@ export const attestationTemplate = `
   <div class="section">
     <h2>6. Data processing & confidentiality</h2>
     <p>
-      All calculations are performed <strong>locally</strong> in the user’s device. No raw data is stored.
+      All calculations are performed <strong>locally</strong> on the user’s device. No raw business data is stored.
     </p>
   </div>
 
-  <!-- 7. LEGAL -->
+  <!-- 7. LEGAL LIMITS -->
   <div class="section">
     <h2>7. Legal notice & limitations</h2>
     <p>
-      This is a <strong>methodological attestation</strong>, not a certified audit nor a CSRD filing.
+      This attestation is a <strong>methodological estimation</strong>, not a certified audit and not a CSRD declaration.
+    </p>
+    <p>
+      It is intended for ESG questionnaires, banking due-diligence and supply-chain pre-compliance.
     </p>
   </div>
 
   <!-- FOOTER -->
   <div class="footer">
-    Issued by Certif-Scope · Methodology version {{METHODOLOGY_VERSION}}<br />
-    Generation timestamp (UTC): {{GENERATION_TIMESTAMP}}
+    Issued by Certif-Scope — A subsidiary of TimeProofs<br />
+    Official contact: support@certif-scope.com<br />
+    Methodology version {{METHODOLOGY_VERSION}} · Generated {{GENERATION_TIMESTAMP}} (UTC)
   </div>
 
 </body>
