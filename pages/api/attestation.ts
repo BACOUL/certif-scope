@@ -34,10 +34,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const s3 = Number(report.scope3 || 0);
     const total = Number(report.total || 0);
 
-    const pct1 = total > 0 ? ((s1 / total) * 100).toFixed(1) : "0";
-    const pct2 = total > 0 ? ((s2 / total) * 100).toFixed(1) : "0";
-    const pct3 = total > 0 ? ((s3 / total) * 100).toFixed(1) : "0";
-
     // FIRST PASS — HTML WITHOUT QR/HASH
     const htmlInitial = fillAttestationTemplate({
       attestationId,
@@ -50,9 +46,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       scope2: s2,
       scope3: s3,
       total,
-      scope1Percent: pct1,
-      scope2Percent: pct2,
-      scope3Percent: pct3,
       preparedOn: now.toISOString(),
       qrCodeUrl: "",
       hash: ""
@@ -82,7 +75,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     // HASH BASED ON FIRST PDF
     const pdfHash = computeHash(tmpPdfBuffer);
-    const shortHash = pdfHash.substring(0, 8) + "...";
+    const shortHash = pdfHash.substring(0, 8);
 
     // QR CODE generation
     const verifyUrl = `${baseUrl}/verify?id=${attestationId}&hash=${pdfHash}`;
@@ -100,9 +93,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       scope2: s2,
       scope3: s3,
       total,
-      scope1Percent: pct1,
-      scope2Percent: pct2,
-      scope3Percent: pct3,
       preparedOn: now.toISOString(),
       qrCodeUrl: qrDataUrl,
       hash: pdfHash
@@ -125,7 +115,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     await browser2.close();
 
-    // OPTIONAL: Register the attestation in storage
+    // SAVE ID + HASH in registry
     await fetch(`${baseUrl}/api/register-attestation`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -147,4 +137,4 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       details: err.message
     });
   }
-        }
+      }
