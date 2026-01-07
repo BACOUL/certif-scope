@@ -1,7 +1,7 @@
-import React from 'react';
-import Link from 'next/link';
+import React from "react";
+import Link from "next/link";
 
-export default function LegalScope() {
+export default function Legal() {
   return (
     <div className="min-h-screen bg-[#F8FAFC] text-[#1E293B]">
       <div className="max-w-3xl mx-auto px-6 py-20">
@@ -16,138 +16,101 @@ export default function LegalScope() {
 
         {/* TITLE */}
         <h1 className="text-3xl md:text-4xl font-black mb-12 text-[#0B3A63]">
-          Legal Scope & Limitations
+          Legal Notice (Mentions légales)
         </h1>
 
         <div className="space-y-10">
 
-          {/* 1. NATURE OF THE ATTESTATION */}
+          {/* 1. EDITOR */}
           <section className="bg-white rounded-2xl border border-slate-200 p-8 shadow-sm">
             <h2 className="text-lg font-bold text-[#0B3A63] mb-4">
-              1. Nature of the Attestation
+              1. Website Editor
             </h2>
             <p className="text-sm text-slate-600 leading-relaxed">
-              The Certif-Scope attestation is an <strong>indicative estimation</strong> of
-              greenhouse gas emissions based on financial expenditure data voluntarily
-              submitted by the user. Calculations are performed using a standardized
-              <strong>spend-based methodology</strong>, commonly used for rapid carbon
-              screening and pre-compliance reporting.
+              This website is published by:
               <br /><br />
-              This attestation is <strong>not</strong> an official certification, audit,
-              or regulatory declaration.
-            </p>
-          </section>
-
-          {/* 2. NON-AUDIT / NON-CSRD */}
-          <section className="bg-white rounded-2xl border border-slate-200 p-8 shadow-sm">
-            <h2 className="text-lg font-bold text-[#0B3A63] mb-4">
-              2. Non-audit / Non-CSRD Statement
-            </h2>
-            <p className="text-sm text-slate-600 leading-relaxed">
-              Certif-Scope does <strong>not</strong> provide CSRD-compliant sustainability
-              statements, certified GHG Protocol audits, or ISO 14064 verifications.
+              <strong>TimeProofs — Jeason Alexandre Bacoul</strong><br />
+              Entrepreneur individuel<br />
+              SIREN: 999356439<br />
+              Address: 3 rue de l’Église de Louppy, 55000 Les Hauts-de-Chée, France
               <br /><br />
-              Companies subject to regulatory reporting must rely on accredited
-              third-party auditors or certified carbon assessors.
+              Contact email: <strong>contact@timeproofs.io</strong>
             </p>
           </section>
 
-          {/* 3. LIMITATIONS OF THE METHODOLOGY */}
+          {/* 2. HOSTING */}
           <section className="bg-white rounded-2xl border border-slate-200 p-8 shadow-sm">
             <h2 className="text-lg font-bold text-[#0B3A63] mb-4">
-              3. Methodological Limitations
+              2. Hosting Provider
             </h2>
             <p className="text-sm text-slate-600 leading-relaxed">
-              The spend-based method provides a high-level estimation and may differ
-              from activity-based methods requiring precise quantities (kWh, litres,
-              kilometres, tonnes, etc.).
+              This site is hosted by Vercel Inc.
               <br /><br />
-              Sectors such as manufacturing, heavy industry, construction, and transport
-              may exhibit higher variability due to operational intensity and supply
-              chain structure.
+              Vercel Inc.<br />
+              340 S Lemon Ave #4133<br />
+              Walnut, CA 91789, USA<br />
+              <a
+                href="https://vercel.com"
+                target="_blank"
+                className="text-[#1FB6C1]"
+              >
+                https://vercel.com
+              </a>
             </p>
           </section>
 
-          {/* 4. LIABILITY & RESPONSIBILITY */}
+          {/* 3. RESPONSIBILITY */}
           <section className="bg-white rounded-2xl border border-slate-200 p-8 shadow-sm">
             <h2 className="text-lg font-bold text-[#0B3A63] mb-4">
-              4. Liability & User Responsibility
+              3. Responsibility & Liability
             </h2>
             <p className="text-sm text-slate-600 leading-relaxed">
-              Certif-Scope cannot be held liable for incorrect, incomplete, or misleading
-              information provided by the user. The accuracy of the estimation is
-              entirely dependent on the validity of the input data.
+              The publisher cannot be held responsible for direct or indirect damage
+              resulting from access to the site or use of the information displayed.
+              Content may evolve at any time without notice.
+            </p>
+          </section>
+
+          {/* 4. INTELLECTUAL PROPERTY */}
+          <section className="bg-white rounded-2xl border border-slate-200 p-8 shadow-sm">
+            <h2 className="text-lg font-bold text-[#0B3A63] mb-4">
+              4. Intellectual Property
+            </h2>
+            <p className="text-sm text-slate-600 leading-relaxed">
+              All text, graphics, logos, icons, and structure of the site are protected
+              under intellectual property law. Any reproduction or distribution,
+              in whole or in part, without authorization is prohibited.
+            </p>
+          </section>
+
+          {/* 5. PERSONAL DATA */}
+          <section className="bg-white rounded-2xl border border-slate-200 p-8 shadow-sm">
+            <h2 className="text-lg font-bold text-[#0B3A63] mb-4">
+              5. Personal Data
+            </h2>
+            <p className="text-sm text-slate-600 leading-relaxed">
+              Certif-Scope does not store user financial or operational data.
+              Calculations are processed locally in the user’s browser.
               <br /><br />
-              The attestation must not be used as legally binding evidence of emissions
-              or regulatory compliance without independent verification.
-            </p>
-          </section>
-
-          {/* 5. USE OF THE ATTESTATION */}
-          <section className="bg-white rounded-2xl border border-slate-200 p-8 shadow-sm">
-            <h2 className="text-lg font-bold text-[#0B3A63] mb-4">
-              5. Permitted Uses
-            </h2>
-            <p className="text-sm text-slate-600 leading-relaxed">
-              This attestation may be shared with:
-            </p>
-            <ul className="list-disc list-inside text-sm text-slate-600 leading-relaxed mt-2">
-              <li>Banks and financial partners</li>
-              <li>Insurers</li>
-              <li>Clients and procurement platforms</li>
-              <li>Investors or ESG evaluators</li>
-              <li>Business partners requesting carbon information</li>
-            </ul>
-            <p className="text-sm text-slate-600 leading-relaxed mt-4">
-              It serves solely as an <strong>informative indicator</strong> or
-              <strong> pre-compliance document</strong>, not as a certified verification.
-            </p>
-          </section>
-
-          {/* 6. DATA HANDLING & CONFIDENTIALITY */}
-          <section className="bg-white rounded-2xl border border-slate-200 p-8 shadow-sm">
-            <h2 className="text-lg font-bold text-[#0B3A63] mb-4">
-              6. Data Handling & Confidentiality
-            </h2>
-            <p className="text-sm text-slate-600 leading-relaxed">
-              Certif-Scope does not permanently store personal or financial data.
-              Calculations are processed ephemerally. Only technical identifiers
-              (attestation ID + hash) may be retained to enable document integrity
-              verification.
+              Only technical metadata (attestation ID + hash) may be stored to allow
+              document authenticity verification.
               <br /><br />
-              No business data is stored, resold, or transferred to third parties.
+              For more details, see our{" "}
+              <Link href="/privacy" className="text-[#1FB6C1] underline">
+                Privacy Policy
+              </Link>.
             </p>
           </section>
 
-          {/* 7. VERIFICATION LOGIC */}
+          {/* 6. CONTACT */}
           <section className="bg-white rounded-2xl border border-slate-200 p-8 shadow-sm">
             <h2 className="text-lg font-bold text-[#0B3A63] mb-4">
-              7. Document Verification
+              6. Contact
             </h2>
             <p className="text-sm text-slate-600 leading-relaxed">
-              Each attestation includes:
-            </p>
-            <ul className="list-disc list-inside text-sm text-slate-600 leading-relaxed mt-2">
-              <li>A unique identifier (UUID)</li>
-              <li>A SHA-256 cryptographic hash</li>
-              <li>A verification QR code linking to the integrity check page</li>
-            </ul>
-            <p className="text-sm text-slate-600 leading-relaxed mt-4">
-              Verification confirms that the document has not been altered, but does
-              not validate input accuracy.
-            </p>
-          </section>
-
-          {/* 8. THIRD-PARTY REVIEW DISCLAIMER */}
-          <section className="bg-white rounded-2xl border border-slate-200 p-8 shadow-sm">
-            <h2 className="text-lg font-bold text-[#0B3A63] mb-4">
-              8. Third-Party Review Disclaimer
-            </h2>
-            <p className="text-sm text-slate-600 leading-relaxed">
-              Banks, insurers, procurement teams, or investors must interpret the
-              attestation as an <strong>estimate only</strong>.  
-              Any certified reporting must be based on an independently verified
-              carbon assessment.
+              For any legal or administrative inquiries, contact:
+              <br />
+              <strong>contact@timeproofs.io</strong>
             </p>
           </section>
 
@@ -160,4 +123,4 @@ export default function LegalScope() {
       </div>
     </div>
   );
-            }
+          }
