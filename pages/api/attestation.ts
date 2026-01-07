@@ -1,10 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import chromium from "chrome-aws-lambda";
 import puppeteerCore from "puppeteer-core";
-import { v4 as uuidv4 } from "uuid";
 import crypto from "crypto";
+import { v4 as uuidv4 } from "uuid";
 import { attestationTemplate } from "../../lib/attestationTemplate";
 
+/* Replace placeholders in HTML template */
 function fillTemplate(template: string, data: Record<string, string>) {
   let html = template;
   for (const key in data) {
@@ -13,6 +14,7 @@ function fillTemplate(template: string, data: Record<string, string>) {
   return html;
 }
 
+/* Compute SHA-256 hash of PDF buffer */
 function computeHash(buffer: Buffer) {
   return crypto.createHash("sha256").update(buffer).digest("hex");
 }
@@ -68,23 +70,33 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const pdfHash = computeHash(pdfBuffer);
 
-    // 🔥 NEW: Register hash + ID on GitHub (persistent)
-    await fetch(`${req.headers.origin}/api/register-attestation`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        id: attestationId,
-        hash: pdfHash
-      })
+    // Register attestation in GitHub registry
+    const registerRes = await fetch(
+      "https://certif-scope.vercel.app/api/register-attestation",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: attestationId, hash: pdfHash })
+      }
+    );
+
+    if (!registerRes.ok) {
+      return res.status(500).json({
+        error: "Attestation generated but registry update failed"
+      });
+    }
+
+    // Return id + hash + PDF in base64 for frontend
+    const pdfBase64 = pdfBuffer.toString("base64");
+
+    return res.status(200).json({
+      id: attestationId,
+      hash: pdfHash,
+      pdfBase64
     });
-
-    res.setHeader("Content-Type", "application/pdf");
-    res.setHeader("Content-Disposition", "attachment; filename=attestation.pdf");
-
-    return res.send(pdfBuffer);
 
   } catch (err) {
     console.error(err);
     return res.status(500).json({ error: "PDF generation failed", details: err });
   }
-}
+      }
