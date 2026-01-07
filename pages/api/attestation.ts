@@ -3,9 +3,10 @@ import chromium from "chrome-aws-lambda";
 import puppeteer from "puppeteer-core";
 import crypto from "crypto";
 import { v4 as uuidv4 } from "uuid";
+import QRCode from "qrcode";
 import { attestationTemplate } from "../../lib/attestationTemplate";
 
-/* Replace placeholders in HTML template */
+/* Replace placeholders */
 function fillTemplate(template: string, data: Record<string, string>) {
   let html = template;
   for (const key in data) {
@@ -14,19 +15,17 @@ function fillTemplate(template: string, data: Record<string, string>) {
   return html;
 }
 
-/* Compute SHA-256 hash of PDF buffer */
+/* SHA-256 hash generator */
 function computeHash(buffer: Buffer) {
   return crypto.createHash("sha256").update(buffer).digest("hex");
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  // Enforce POST only
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
   try {
-    // Generate attestation ID
     const attestationId = uuidv4();
     const report = req.body;
 
@@ -34,7 +33,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(400).json({ error: "Missing report data" });
     }
 
-    // Fill HTML template
+    // ---------------------------
+    // 1) Verification URL
+    // ---------------------------
+    const baseUrl = req.headers.origin || "https://certif-scope.vercel.app";
+    const verifyUrl = `${baseUrl}/verify?id=${attestationId}`;
+
+    // ---------------------------
+    // 2) Generate QR Code
+    // ---------------------------
+    const qrCodeDataUrl = await QRCode.toDataURL(verifyUrl);
+
+    // ---------------------------
+    // 3) Generate full HTML
+    ---------------------------
     const filledHTML = fillTemplate(attestationTemplate, {
       ATTESTATION_ID: attestationId,
       ISSUE_DATE_UTC: new Date().toISOString(),
@@ -47,23 +59,24 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       SCOPE_3: String(report.scope3 || 0),
       TOTAL: String(report.total || 0),
       METHODOLOGY_VERSION: "v3",
-      GENERATION_TIMESTAMP: new Date().toISOString()
+      GENERATION_TIMESTAMP: new Date().toISOString(),
+      QR_CODE: qrCodeDataUrl
     });
 
-    // Determine Chromium executable path
+    // ---------------------------
+    // 4) Launch Chromium
+    // ---------------------------
     const executablePath =
       process.env.NODE_ENV === "development"
         ? undefined
         : await chromium.executablePath;
 
-    // Launch browser
     const browser = await puppeteer.launch({
       args: chromium.args,
       executablePath,
       headless: chromium.headless
     });
 
-    // Generate PDF
     const page = await browser.newPage();
     await page.setContent(filledHTML, { waitUntil: "networkidle0" });
 
@@ -74,12 +87,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     await browser.close();
 
-    // Compute SHA-256 hash
+    // ---------------------------
+    // 5) SHA-256 hash
+    // ---------------------------
     const pdfHash = computeHash(pdfBuffer);
 
-    // LOCAL CALL to register-attestation (important)
-    const apiBase = req.headers.origin ?? "";
-    const registerRes = await fetch(`${apiBase}/api/register-attestation`, {
+    // ---------------------------
+    // 6) Register in GitHub registry
+    // ---------------------------
+    const registerRes = await fetch(`${baseUrl}/api/register-attestation`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ id: attestationId, hash: pdfHash })
@@ -93,7 +109,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       });
     }
 
-    // Return PDF base64 + metadata
+    // ---------------------------
+    // 7) Return metadata + PDF
+    // ---------------------------
     return res.status(200).json({
       id: attestationId,
       hash: pdfHash,
@@ -107,4 +125,4 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       details: err.message
     });
   }
-}
+      }
