@@ -1,126 +1,147 @@
-import React from "react";
-import Link from "next/link";
-
 export default function Legal() {
   return (
-    <div className="min-h-screen bg-[#F8FAFC] text-[#1E293B]">
-      <div className="max-w-3xl mx-auto px-6 py-20">
+    <>
+      <div className="w-full min-h-screen bg-white text-[#334155] font-sans" id="top">
 
-        {/* BACK */}
-        <Link
-          href="/"
-          className="inline-block mb-10 text-sm font-semibold text-[#1FB6C1] hover:text-[#17A2AC]"
-        >
-          ← Back to Certif-Scope
-        </Link>
+        {/* HEADER */}
+        <div className="sticky top-0 bg-white border-b border-[#E2E8F0] py-4 px-6 md:px-12 z-40 shadow-sm">
+          <div className="max-w-[1200px] mx-auto flex items-center justify-between">
+            <a href="/" className="text-[#0B3A63] font-semibold hover:text-[#1FB6C1] transition flex items-center gap-2">
+              <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M12 4L6 9L12 14" />
+              </svg>
+              Back to Certif-Scope
+            </a>
+            <a href="/verify" className="text-sm text-[#1FB6C1] font-bold hover:text-[#0B3A63]">
+              Verify Attestation
+            </a>
+          </div>
+        </div>
 
-        {/* TITLE */}
-        <h1 className="text-3xl md:text-4xl font-black mb-12 text-[#0B3A63]">
-          Legal Notice (Mentions légales)
-        </h1>
+        {/* CONTENT */}
+        <div className="max-w-[900px] mx-auto pt-14 px-6 md:px-12 pb-28">
 
-        <div className="space-y-10">
+          <h1 className="text-3xl md:text-4xl font-black text-center text-[#0B3A63] mb-10">
+            Legal Notice
+          </h1>
 
-          {/* 1. EDITOR */}
-          <section className="bg-white rounded-2xl border border-slate-200 p-8 shadow-sm">
-            <h2 className="text-lg font-bold text-[#0B3A63] mb-4">
-              1. Website Editor
+          <p className="text-center text-[#475569] max-w-[700px] mx-auto mb-12">
+            Mandatory legal information for the Certif-Scope service, published in accordance with Articles 6-III and 19 of Law n°2004-575 (LCEN).
+          </p>
+
+          {/* 1 — Operator */}
+          <section className="mb-14">
+            <h2 className="text-2xl font-black text-[#0B3A63] mb-4">
+              Operator of the website
             </h2>
-            <p className="text-sm text-slate-600 leading-relaxed">
-              Certif-Scope is a service operated by:
+            <p className="text-[#475569] leading-relaxed text-sm">
+              Certif-Scope is operated by:
               <br /><br />
-              <strong>TimeProofs — Jeason Alexandre Bacoul</strong><br />
-              Entrepreneur individuel<br />
-              SIREN: 999356439<br />
-              Address: 3 rue de l’Église de Louppy, 55000 Les Hauts-de-Chée, France
-              <br /><br />
-              Contact email: <strong>support@certif-scope.com</strong>
+              <strong>Jeason Alexandre Bacoul</strong><br />
+              Entrepreneur Individuel<br />
+              SIREN : <strong>999356439</strong><br />
+              Adresse : 3 rue de l’Église de Louppy, 55000 Les Hauts-de-Chée, France<br />
+              Régime TVA : franchise en base – TVA non applicable (article 293 B du CGI)<br />
+              Email de contact : <a href="mailto:contact@timeproofs.io" className="text-[#1FB6C1]">contact@timeproofs.io</a>
             </p>
           </section>
 
-          {/* 2. HOSTING */}
-          <section className="bg-white rounded-2xl border border-slate-200 p-8 shadow-sm">
-            <h2 className="text-lg font-bold text-[#0B3A63] mb-4">
-              2. Hosting Provider
+          {/* 2 — Hosting */}
+          <section className="mb-14">
+            <h2 className="text-2xl font-black text-[#0B3A63] mb-4">
+              Hosting provider
             </h2>
-            <p className="text-sm text-slate-600 leading-relaxed">
-              This site is hosted by Vercel Inc.
+            <p className="text-[#475569] leading-relaxed text-sm">
+              The website is hosted by:
               <br /><br />
-              Vercel Inc.<br />
-              340 S Lemon Ave #4133<br />
-              Walnut, CA 91789, USA<br />
-              <a
-                href="https://vercel.com"
-                target="_blank"
-                className="text-[#1FB6C1]"
-              >
-                https://vercel.com
+              <strong>Vercel Inc.</strong><br />
+              440 N Barranca Ave #4133<br />
+              Covina, CA 91723 – United States<br />
+              Website: <a href="https://vercel.com" className="text-[#1FB6C1]" target="_blank">vercel.com</a>
+            </p>
+          </section>
+
+          {/* 3 — Intellectual Property */}
+          <section className="mb-14">
+            <h2 className="text-2xl font-black text-[#0B3A63] mb-4">
+              Intellectual property
+            </h2>
+            <p className="text-[#475569] leading-relaxed text-sm">
+              All content published on Certif-Scope (texts, structure, layout, trademarks, logos, design elements) 
+              is protected by applicable intellectual property law.  
+              Any reproduction, modification or redistribution is prohibited without explicit authorization.
+            </p>
+          </section>
+
+          {/* 4 — Purpose of the service */}
+          <section className="mb-14">
+            <h2 className="text-2xl font-black text-[#0B3A63] mb-4">
+              Purpose and nature of the service
+            </h2>
+            <p className="text-[#475569] leading-relaxed text-sm">
+              Certif-Scope provides a simplified carbon estimation based on user-submitted information.  
+              The attestation generated is an <strong>informative, non-audited estimation</strong> intended for pre-compliance, vendor qualification, 
+              banking ESG scoring, and supply-chain documentation.
+              <br /><br />
+              It is <strong>not</strong> an official CO₂ audit, <strong>not</strong> a CSRD report, <strong>not</strong> a certification and <strong>not</strong> a regulated assessment.
+              It relies entirely on data provided by the user, which the operator cannot verify independently.
+            </p>
+          </section>
+
+          {/* 5 — Responsibility */}
+          <section className="mb-14">
+            <h2 className="text-2xl font-black text-[#0B3A63] mb-4">
+              Liability disclaimer
+            </h2>
+            <p className="text-[#475569] leading-relaxed text-sm">
+              The operator cannot be held responsible for:
+            </p>
+
+            <ul className="list-disc ml-6 mt-3 text-sm text-[#475569] leading-relaxed">
+              <li>incorrect, incomplete, or fraudulent data entered by the user,</li>
+              <li>misuse or misinterpretation of the attestation by third parties,</li>
+              <li>decisions made by banks, insurers, clients or partners based on the document,</li>
+              <li>service interruptions caused by hosting or network failures.</li>
+            </ul>
+
+            <p className="text-[#475569] leading-relaxed text-sm mt-3">
+              The responsibility of the operator is limited to providing the generated document and maintaining 
+              the independent verification system.
+            </p>
+          </section>
+
+          {/* 6 — External Links */}
+          <section className="mb-14">
+            <h2 className="text-2xl font-black text-[#0B3A63] mb-4">
+              External links
+            </h2>
+            <p className="text-[#475569] leading-relaxed text-sm">
+              The website may contain links to external websites.  
+              The operator declines any responsibility for their content or accessibility.
+            </p>
+          </section>
+
+          {/* 7 — Contact */}
+          <section className="mb-20 text-center">
+            <h2 className="text-2xl font-black text-[#0B3A63] mb-4">
+              Contact
+            </h2>
+            <p className="text-[#475569] text-sm">
+              For any legal request, you may contact:<br />
+              <a href="mailto:contact@timeproofs.io" className="text-[#1FB6C1] font-semibold">
+                contact@timeproofs.io
               </a>
             </p>
           </section>
 
-          {/* 3. RESPONSIBILITY */}
-          <section className="bg-white rounded-2xl border border-slate-200 p-8 shadow-sm">
-            <h2 className="text-lg font-bold text-[#0B3A63] mb-4">
-              3. Responsibility & Liability
-            </h2>
-            <p className="text-sm text-slate-600 leading-relaxed">
-              The publisher cannot be held responsible for direct or indirect damage
-              resulting from access to the site or use of the information displayed.
-              Content may evolve at any time without notice.
-            </p>
-          </section>
-
-          {/* 4. INTELLECTUAL PROPERTY */}
-          <section className="bg-white rounded-2xl border border-slate-200 p-8 shadow-sm">
-            <h2 className="text-lg font-bold text-[#0B3A63] mb-4">
-              4. Intellectual Property
-            </h2>
-            <p className="text-sm text-slate-600 leading-relaxed">
-              All text, graphics, logos, icons, and structure of the site are protected
-              under intellectual property law. Any reproduction or distribution,
-              in whole or in part, without authorization is prohibited.
-            </p>
-          </section>
-
-          {/* 5. PERSONAL DATA */}
-          <section className="bg-white rounded-2xl border border-slate-200 p-8 shadow-sm">
-            <h2 className="text-lg font-bold text-[#0B3A63] mb-4">
-              5. Personal Data
-            </h2>
-            <p className="text-sm text-slate-600 leading-relaxed">
-              Certif-Scope does not store user financial or operational data.
-              Calculations are processed locally in the user’s browser.
-              <br /><br />
-              Only technical metadata (attestation ID + hash) may be stored to allow
-              document authenticity verification.
-              <br /><br />
-              For more details, see our{" "}
-              <Link href="/privacy" className="text-[#1FB6C1] underline">
-                Privacy Policy
-              </Link>.
-            </p>
-          </section>
-
-          {/* 6. CONTACT */}
-          <section className="bg-white rounded-2xl border border-slate-200 p-8 shadow-sm">
-            <h2 className="text-lg font-bold text-[#0B3A63] mb-4">
-              6. Contact
-            </h2>
-            <p className="text-sm text-slate-600 leading-relaxed">
-              For legal or administrative inquiries, contact:
-              <br />
-              <strong>support@certif-scope.com</strong>
-            </p>
-          </section>
-
-        </div>
-
-        {/* FOOTER */}
-        <div className="mt-16 pt-8 border-t border-slate-200 text-center text-xs text-slate-400">
-          Last updated: January 2026
+          {/* Back to top */}
+          <div className="text-center mt-10 mb-16">
+            <a href="#top" className="text-[#1FB6C1] hover:text-[#0B3A63] font-semibold">
+              Back to top ↑
+            </a>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
-      }
+}
