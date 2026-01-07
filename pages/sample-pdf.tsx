@@ -19,7 +19,7 @@ export default function SamplePDF() {
         </h1>
 
         <p className="text-slate-600 text-sm leading-relaxed mb-6">
-          Below is a preview of the official attestation PDF that you receive
+          Below is a preview of the official attestation you receive
           after completing the assessment and processing payment.
         </p>
 
@@ -49,14 +49,28 @@ export default function SamplePDF() {
           </p>
         </div>
 
-        {/* DOWNLOAD BUTTON */}
-        <a
-          href="/sample-attestation.png"
-          download="sample-attestation.png"
-          className="block w-full text-center bg-[#1FB6C1] text-white font-bold py-4 rounded-xl hover:bg-[#17A2AC] transition"
-        >
-          Download sample PDF
-        </a>
+        {/* DOWNLOAD BUTTONS */}
+        <div className="flex flex-col gap-4">
+
+          {/* Image download */}
+          <a
+            href="/sample-attestation.png"
+            download="sample-attestation.png"
+            className="block w-full text-center bg-[#E2E8F0] text-[#1E293B] font-semibold py-3 rounded-xl hover:bg-[#CBD5E1] transition"
+          >
+            Download preview image
+          </a>
+
+          {/* PDF download (réel PDF à ajouter plus tard) */}
+          <a
+            href="/sample-attestation.pdf"
+            download="sample-attestation.pdf"
+            className="block w-full text-center bg-[#1FB6C1] text-white font-bold py-4 rounded-xl hover:bg-[#17A2AC] transition"
+          >
+            Download sample PDF
+          </a>
+
+        </div>
 
       </div>
     </div>
