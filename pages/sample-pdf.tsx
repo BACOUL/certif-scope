@@ -19,8 +19,7 @@ export default function SamplePDF() {
         </h1>
 
         <p className="text-slate-600 text-sm leading-relaxed mb-6">
-          Below is a preview of the official attestation you receive
-          after completing the assessment and processing payment.
+          Below is a preview of the official attestation generated after payment.
         </p>
 
         <ul className="text-sm text-slate-700 space-y-1 mb-10">
@@ -28,14 +27,14 @@ export default function SamplePDF() {
           <li>• Scope 1, Scope 2 and Scope 3 indicators</li>
           <li>• Methodology summary</li>
           <li>• Regulatory context</li>
-          <li>• Unique attestation ID</li>
-          <li>• Timestamp and SHA-256 verification hash</li>
+          <li>• Unique attestation ID & timestamp</li>
+          <li>• SHA-256 verification hash</li>
         </ul>
 
-        {/* PREVIEW IMAGE */}
+        {/* PREVIEW = SAME IMAGE AS DOWNLOAD */}
         <div className="bg-white border border-slate-200 rounded-xl p-4 shadow-sm mb-8">
           <h2 className="text-center font-bold text-[#0B3A63] mb-4">
-            Visual preview (low resolution)
+            Visual preview
           </h2>
 
           <img
@@ -45,32 +44,18 @@ export default function SamplePDF() {
           />
 
           <p className="text-center text-xs text-slate-500 mt-2">
-            This is a visual extract for demonstration only.
+            Watermarked preview of the attestation.
           </p>
         </div>
 
-        {/* DOWNLOAD BUTTONS */}
-        <div className="flex flex-col gap-4">
-
-          {/* Image download */}
-          <a
-            href="/sample-attestation.png"
-            download="sample-attestation.png"
-            className="block w-full text-center bg-[#E2E8F0] text-[#1E293B] font-semibold py-3 rounded-xl hover:bg-[#CBD5E1] transition"
-          >
-            Download preview image
-          </a>
-
-          {/* PDF download (réel PDF à ajouter plus tard) */}
-          <a
-            href="/sample-attestation.pdf"
-            download="sample-attestation.pdf"
-            className="block w-full text-center bg-[#1FB6C1] text-white font-bold py-4 rounded-xl hover:bg-[#17A2AC] transition"
-          >
-            Download sample PDF
-          </a>
-
-        </div>
+        {/* DOWNLOAD BUTTON → SAME FILE */}
+        <a
+          href="/sample-attestation.png"
+          download="sample-attestation.png"
+          className="block w-full text-center bg-[#1FB6C1] text-white font-bold py-4 rounded-xl hover:bg-[#17A2AC] transition"
+        >
+          Download sample attestation
+        </a>
 
       </div>
     </div>
