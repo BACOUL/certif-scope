@@ -1,7 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import chromium from "chrome-aws-lambda";
 import puppeteerCore from "puppeteer-core";
-import { v4 as uuidv4 } from "uuid";                    // <-- UUID ajouté ici
+import { v4 as uuidv4 } from "uuid";
+import crypto from "crypto";
 import { attestationTemplate } from "../../lib/attestationTemplate";
 
 function fillTemplate(template: string, data: Record<string, string>) {
@@ -12,15 +13,22 @@ function fillTemplate(template: string, data: Record<string, string>) {
   return html;
 }
 
+// ---------------------------------------------
+// HASH SHA-256
+// ---------------------------------------------
+function computeHash(buffer: Buffer) {
+  return crypto.createHash("sha256").update(buffer).digest("hex");
+}
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
   try {
-    // ----------------------------
-    // 1) Générer l'UUID de l'attestation
-    // ----------------------------
+    // ---------------------------------------------
+    // 1) Générer l'ID unique
+    // ---------------------------------------------
     const attestationId = uuidv4();
 
     const report = req.body;
@@ -28,9 +36,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(400).json({ error: "Missing report data" });
     }
 
-    // ----------------------------
-    // 2) Injecter l'ID dans le HTML
-    // ----------------------------
+    // ---------------------------------------------
+    // 2) Injecter données + ID dans le template HTML
+    // ---------------------------------------------
     const filledHTML = fillTemplate(attestationTemplate, {
       ATTESTATION_ID: attestationId,
       ISSUE_DATE_UTC: new Date().toISOString(),
@@ -46,9 +54,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       GENERATION_TIMESTAMP: new Date().toISOString(),
     });
 
-    // ----------------------------
-    // 3) Puppeteer / Chromium pour générer le PDF
-    // ----------------------------
+    // ---------------------------------------------
+    // 3) Générer le PDF avec Chromium / Puppeteer
+    // ---------------------------------------------
     const executablePath =
       process.env.NODE_ENV === "development"
         ? undefined
@@ -70,9 +78,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     await browser.close();
 
-    // ----------------------------
-    // 4) Retourner le PDF
-    // ----------------------------
+    // ---------------------------------------------
+    // 4) Calculer le hash du PDF
+    // ---------------------------------------------
+    const pdfHash = computeHash(pdfBuffer);
+    console.log("PDF HASH:", pdfHash);
+    console.log("ATTESTATION ID:", attestationId);
+
+    // (Étape suivante : stocker ID + hash dans un JSON)
+
+    // ---------------------------------------------
+    // 5) Retourner le PDF au client
+    // ---------------------------------------------
     res.setHeader("Content-Type", "application/pdf");
     res.setHeader("Content-Disposition", "attachment; filename=attestation.pdf");
     return res.send(pdfBuffer);
@@ -81,4 +98,4 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     console.error(err);
     return res.status(500).json({ error: "PDF generation failed", details: err });
   }
-}
+      }
