@@ -20,11 +20,23 @@ export default function Home() {
           {/* Desktop Nav */}
           <div className="hidden md:flex items-center gap-8">
             <nav className="flex gap-8 text-xs font-bold uppercase tracking-widest text-[#64748B]">
+
               <a href="#how-it-works" className="hover:text-[#1FB6C1] transition-colors">How it works</a>
               <a href="#regulatory-context" className="hover:text-[#1FB6C1] transition-colors">CSRD Context</a>
               <a href="#methodology" className="hover:text-[#1FB6C1] transition-colors">Methodology</a>
               <a href="#faq" className="hover:text-[#1FB6C1] transition-colors">FAQ</a>
+
+              {/* Legal pages */}
+              <Link href="/legal" className="hover:text-[#1FB6C1]">Legal</Link>
+              <Link href="/privacy" className="hover:text-[#1FB6C1]">Privacy</Link>
+              <Link href="/terms" className="hover:text-[#1FB6C1]">Terms</Link>
+              <Link href="/legal-scope" className="hover:text-[#1FB6C1]">Legal Scope</Link>
               <Link href="/refund-policy" className="hover:text-[#1FB6C1]">Refund Policy</Link>
+
+              {/* Context page for banks/supply-chain */}
+              <Link href="/why-companies-ask" className="hover:text-[#1FB6C1]">Why Companies Ask</Link>
+
+              {/* Verification */}
               <Link href="/verify" className="text-[#1FB6C1] hover:text-[#17A2AC]">Verify</Link>
             </nav>
 
@@ -50,15 +62,23 @@ export default function Home() {
           </button>
         </div>
 
+        {/* MOBILE MENU */}
         {menuOpen && (
           <div className="md:hidden bg-white border-t border-slate-200">
             <nav className="flex flex-col px-6 py-6 gap-4 text-sm font-semibold text-[#475569]">
+
               <a href="#how-it-works" onClick={() => setMenuOpen(false)}>How it works</a>
               <a href="#regulatory-context" onClick={() => setMenuOpen(false)}>CSRD Context</a>
               <a href="#methodology" onClick={() => setMenuOpen(false)}>Methodology</a>
               <a href="#faq" onClick={() => setMenuOpen(false)}>FAQ</a>
+
               <Link href="/legal" onClick={() => setMenuOpen(false)}>Legal</Link>
+              <Link href="/privacy" onClick={() => setMenuOpen(false)}>Privacy</Link>
+              <Link href="/terms" onClick={() => setMenuOpen(false)}>Terms</Link>
+              <Link href="/legal-scope" onClick={() => setMenuOpen(false)}>Legal Scope</Link>
               <Link href="/refund-policy" onClick={() => setMenuOpen(false)}>Refund Policy</Link>
+              <Link href="/why-companies-ask" onClick={() => setMenuOpen(false)}>Why Companies Ask</Link>
+
               <Link href="/verify" onClick={() => setMenuOpen(false)}>Verify</Link>
             </nav>
           </div>
@@ -258,12 +278,15 @@ export default function Home() {
 
         <div className="flex justify-center gap-6 text-xs uppercase tracking-widest font-bold">
           <Link href="/legal" className="hover:text-white">Legal</Link>
+          <Link href="/privacy" className="hover:text-white">Privacy</Link>
+          <Link href="/terms" className="hover:text-white">Terms</Link>
+          <Link href="/legal-scope" className="hover:text-white">Legal Scope</Link>
           <Link href="/refund-policy" className="hover:text-white">Refund Policy</Link>
+          <Link href="/why-companies-ask" className="hover:text-white">Why Companies Ask</Link>
           <Link href="/verify" className="hover:text-white">Verify</Link>
           <a href="#top" className="hover:text-white">Back to top</a>
         </div>
       </footer>
-
     </div>
   );
-      }
+                }
