@@ -6,7 +6,6 @@ import { v4 as uuidv4 } from "uuid";
 import QRCode from "qrcode";
 import { attestationTemplate } from "../../lib/attestationTemplate";
 
-/* Replace placeholders in HTML */
 function fillTemplate(template: string, data: Record<string, string>) {
   let html = template;
   for (const key in data) {
@@ -15,7 +14,6 @@ function fillTemplate(template: string, data: Record<string, string>) {
   return html;
 }
 
-/* Compute SHA-256 hash */
 function computeHash(buffer: Buffer) {
   return crypto.createHash("sha256").update(buffer).digest("hex");
 }
@@ -31,13 +29,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(400).json({ error: "Missing report data" });
     }
 
-    // Generate unique attestation ID
+    // 1) Unique ID
     const attestationId = uuidv4();
+    const now = new Date();
 
-    // Generate temporary HTML without QR
-    const initialHTML = fillTemplate(attestationTemplate, {
+    // 2) HTML sans QR pour premier PDF
+    const htmlInitial = fillTemplate(attestationTemplate, {
       ATTESTATION_ID: attestationId,
-      ISSUE_DATE_UTC: new Date().toISOString(),
+      ISSUE_DATE_UTC: now.toISOString(),
       COMPANY_NAME: report.companyName || "N/A",
       BUSINESS_SECTOR: report.sector || "N/A",
       COUNTRY: "France",
@@ -47,44 +46,46 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       SCOPE_3: String(report.scope3 || 0),
       TOTAL: String(report.total || 0),
       METHODOLOGY_VERSION: "v3",
-      GENERATION_TIMESTAMP: new Date().toISOString(),
-      QR_CODE: ""
+      GENERATION_TIMESTAMP: now.toISOString(),
+      QR_CODE: "" // placeholder
     });
 
-    // Setup Chromium for Vercel
+    // Chromium path (Vercel compatible)
     const executablePath =
       process.env.NODE_ENV === "development"
         ? undefined
         : await chromium.executablePath;
 
-    const browser = await puppeteer.launch({
+    const browser1 = await puppeteer.launch({
       args: chromium.args,
       executablePath,
-      headless: true
+      headless: chromium.headless
     });
 
-    const page = await browser.newPage();
-    await page.setContent(initialHTML, { waitUntil: "networkidle0" });
+    const page1 = await browser1.newPage();
+    await page1.setContent(htmlInitial, { waitUntil: "networkidle0" });
 
-    // Render initial PDF to compute hash
-    const tmpPdf = await page.pdf({
+    const tmpPdfBuffer = await page1.pdf({
       format: "a4",
       printBackground: true,
       margin: { top: "10mm", right: "10mm", bottom: "10mm", left: "10mm" }
     });
 
-    // Compute final hash
-    const pdfHash = computeHash(tmpPdf);
+    await browser1.close();
 
+    // 3) SHA-256
+    const pdfHash = computeHash(tmpPdfBuffer);
+
+    // 4) URL de vérification (produit)
     const verifyUrl = `https://certif-scope.com/verify?id=${attestationId}&hash=${pdfHash}`;
 
-    // Generate QR code with full URL
-    const qrCodeDataUrl = await QRCode.toDataURL(verifyUrl);
+    // 5) QR (DATA URL)
+    const qrDataUrl = await QRCode.toDataURL(verifyUrl);
 
-    // Create final HTML
-    const finalHTML = fillTemplate(attestationTemplate, {
+    // 6) HTML final avec QR
+    const htmlFinal = fillTemplate(attestationTemplate, {
       ATTESTATION_ID: attestationId,
-      ISSUE_DATE_UTC: new Date().toISOString(),
+      ISSUE_DATE_UTC: now.toISOString(),
       COMPANY_NAME: report.companyName || "N/A",
       BUSINESS_SECTOR: report.sector || "N/A",
       COUNTRY: "France",
@@ -94,41 +95,41 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       SCOPE_3: String(report.scope3 || 0),
       TOTAL: String(report.total || 0),
       METHODOLOGY_VERSION: "v3",
-      GENERATION_TIMESTAMP: new Date().toISOString(),
-      QR_CODE: `<img src="${qrCodeDataUrl}" style="width:140px"/>`,
-      HASH: pdfHash,
-      VERIFY_URL: verifyUrl
+      GENERATION_TIMESTAMP: now.toISOString(),
+      QR_CODE: qrDataUrl
     });
 
-    // Render final PDF
-    await page.setContent(finalHTML, { waitUntil: "networkidle0" });
-    const finalPdf = await page.pdf({
+    // 7) Deuxième PDF final
+    const browser2 = await puppeteer.launch({
+      args: chromium.args,
+      executablePath,
+      headless: chromium.headless
+    });
+
+    const page2 = await browser2.newPage();
+    await page2.setContent(htmlFinal, { waitUntil: "networkidle0" });
+
+    const finalPdfBuffer = await page2.pdf({
       format: "a4",
       printBackground: true,
       margin: { top: "10mm", right: "10mm", bottom: "10mm", left: "10mm" }
     });
 
-    await browser.close();
+    await browser2.close();
 
-    // Register in GitHub registry
-    await fetch("https://api.github.com/repos/BACOUL/certif-scope/contents/attestations.json", {
-      method: "PUT",
-      headers: {
-        "Authorization": `Bearer ${process.env.GITHUB_TOKEN}`,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        id: attestationId,
-        hash: pdfHash,
-        timestamp: new Date().toISOString()
-      })
+    // 8) Enregistrement GitHub via endpoint sécurisé
+    await fetch(`${req.headers.origin}/api/register-attestation`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: attestationId, hash: pdfHash })
     });
 
+    // 9) Réponse finale
     return res.status(200).json({
       id: attestationId,
       hash: pdfHash,
       verifyUrl,
-      pdfBase64: finalPdf.toString("base64")
+      pdfBase64: finalPdfBuffer.toString("base64")
     });
 
   } catch (err: any) {
@@ -138,4 +139,4 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       details: err.message
     });
   }
-    }
+      }
