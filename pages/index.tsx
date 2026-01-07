@@ -10,21 +10,32 @@ export default function Home() {
 
       {/* ================= HEADER ================= */}
       <header className="bg-white border-b border-slate-200 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
 
-          <Link href="/" className="text-xl font-black tracking-tight">
+          {/* Logo with Hover */}
+          <Link href="/" className="text-xl font-black tracking-tight hover:opacity-80 transition-opacity duration-200">
             <span className="text-[#0B3A63]">Certif-</span>
             <span className="text-[#1FB6C1]">Scope</span>
           </Link>
 
-          <nav className="hidden md:flex gap-8 text-xs font-bold uppercase tracking-widest text-[#64748B]">
-            <a href="#how-it-works" className="hover:text-[#1FB6C1]">How it works</a>
-            <a href="#regulatory-context" className="hover:text-[#1FB6C1]">Regulation</a>
-            <a href="#methodology" className="hover:text-[#1FB6C1]">Methodology</a>
-            <a href="#faq" className="hover:text-[#1FB6C1]">FAQ</a>
-            <Link href="/legal" className="hover:text-[#1FB6C1]">Legal</Link>
-          </nav>
+          {/* Desktop Nav */}
+          <div className="hidden md:flex items-center gap-8">
+            <nav className="flex gap-8 text-xs font-bold uppercase tracking-widest text-[#64748B]">
+              <a href="#how-it-works" className="hover:text-[#1FB6C1] transition-colors">How it works</a>
+              <a href="#regulatory-context" className="hover:text-[#1FB6C1] transition-colors">CSRD Context</a>
+              <a href="#methodology" className="hover:text-[#1FB6C1] transition-colors">Methodology</a>
+              <a href="#faq" className="hover:text-[#1FB6C1] transition-colors">FAQ</a>
+            </nav>
 
+            <a 
+              href="#assessment" 
+              className="bg-[#0D3152] text-white text-xs font-bold uppercase tracking-widest px-5 py-3 rounded-lg hover:bg-[#123d63] transition-colors"
+            >
+              Start Assessment
+            </a>
+          </div>
+
+          {/* Mobile Menu Button */}
           <button
             className="md:hidden text-[#0B3A63]"
             onClick={() => setMenuOpen(!menuOpen)}
@@ -42,7 +53,7 @@ export default function Home() {
           <div className="md:hidden bg-white border-t border-slate-200">
             <nav className="flex flex-col px-6 py-6 gap-4 text-sm font-semibold text-[#475569]">
               <a href="#how-it-works" onClick={() => setMenuOpen(false)}>How it works</a>
-              <a href="#regulatory-context" onClick={() => setMenuOpen(false)}>Regulation</a>
+              <a href="#regulatory-context" onClick={() => setMenuOpen(false)}>CSRD Context</a>
               <a href="#methodology" onClick={() => setMenuOpen(false)}>Methodology</a>
               <a href="#faq" onClick={() => setMenuOpen(false)}>FAQ</a>
               <Link href="/legal" onClick={() => setMenuOpen(false)}>Legal</Link>
@@ -58,43 +69,52 @@ export default function Home() {
         </span>
 
         <h1 className="text-3xl md:text-5xl font-black mb-6 text-[#0B3A63]">
-          Official SME Carbon Footprint Estimation<br />
-          <span className="text-[#1FB6C1]">Instant · Accurate · Exportable</span>
+          Instant SME Carbon Footprint Attestation<br />
+          <span className="text-[#1FB6C1]">Scope 1 · Scope 2 · Scope 3 estimation</span>
         </h1>
 
         <p className="text-lg text-[#475569] max-w-3xl mx-auto mb-10">
-          Instantly calculate your Scope 1, 2 & 3 emissions using a recognized spend-based methodology.
+          Instantly calculate your emissions using a recognized spend-based methodology.
           Get a professional PDF attestation for ESG questionnaires, banks and partners.
         </p>
 
-        <a
-          href="#assessment"
-          className="inline-flex bg-[#1FB6C1] text-white font-bold px-8 py-4 rounded-xl shadow hover:bg-[#17A2AC] transition"
-        >
-          Start my assessment
-        </a>
+        <div className="flex flex-col items-center gap-4">
+          <a
+            href="#assessment"
+            className="inline-flex bg-[#1FB6C1] text-white font-bold px-8 py-4 rounded-xl shadow hover:bg-[#17A2AC] transition"
+          >
+            Start my assessment
+          </a>
+          
+          <Link href="/sample-pdf" className="text-sm text-[#64748B] underline decoration-dotted hover:text-[#0B3A63]">
+            View sample PDF
+          </Link>
+        </div>
 
-        <p className="mt-4 text-sm text-[#64748B]">
+        <p className="mt-8 text-sm text-[#64748B]">
           Free preview · No account required · Pay only to download the official PDF
         </p>
       </section>
 
       {/* ================= WHY 99€ ================= */}
       <section className="max-w-4xl mx-auto px-6 py-12 text-center">
-        <h3 className="text-xl font-bold text-[#0B3A63] mb-4">Why €99 ?</h3>
-        <p className="text-sm text-[#475569] max-w-2xl mx-auto">
-          The attestation is a professionally formatted PDF including:
-          <br/>• Scope 1, 2 & 3 calculation summary
-          <br/>• Methodology & regulatory context
-          <br/>• Timestamp and unique document identifier
-          <br/>• Ready to share with banks, partners and ESG questionnaires
-        </p>
+        <h3 className="text-xl font-bold text-[#0B3A63] mb-6">Why €99 ?</h3>
+        <div className="text-sm text-[#475569] max-w-2xl mx-auto space-y-2 leading-relaxed">
+          <p>The attestation is a professionally formatted PDF including:</p>
+          <div className="font-medium text-[#334155] space-y-1">
+            <p>Scope 1, 2 & 3 calculation summary</p>
+            <p>Methodology & regulatory context</p>
+            <p>Bank-ready format</p>
+            <p>Timestamp and unique document identifier</p>
+            <p>Ready to share with banks, partners and ESG questionnaires</p>
+          </div>
+        </div>
       </section>
 
       {/* ================= TRUST ================= */}
-      <section className="max-w-6xl mx-auto px-6 pb-20 grid grid-cols-1 md:grid-cols-3 gap-6">
+      <section className="max-w-6xl mx-auto px-6 py-24 grid grid-cols-1 md:grid-cols-3 gap-6">
         {[
-          ['What this is', 'A standardized methodological carbon footprint attestation for ESG and procurement.'],
+          ['What this is', 'A standardized methodological carbon footprint attestation using a recognized spend-based method.'],
           ['What this is not', 'Not a CSRD filing. Not a certified audit. Not a regulatory declaration.'],
           ['Privacy-first', 'All calculations are performed locally. No raw data is stored.']
         ].map(([title, text]) => (
@@ -121,8 +141,8 @@ export default function Home() {
           <div className="bg-[#F8FAFC] border border-slate-200 rounded-xl p-6">
             <h3 className="font-bold text-[#0B3A63] mb-2">CSRD & Scope 3</h3>
             <p className="text-sm text-[#475569]">
-              Large companies must report Scope 3 emissions, forcing suppliers and SMEs
-              to provide reliable carbon indicators.
+              Large companies must report Scope 3 emissions. This creates a direct requirement 
+              for suppliers to provide standardized carbon data.
             </p>
           </div>
 
@@ -137,7 +157,7 @@ export default function Home() {
           <div className="bg-[#F8FAFC] border border-slate-200 rounded-xl p-6">
             <h3 className="font-bold text-[#0B3A63] mb-2">VSME standard</h3>
             <p className="text-sm text-[#475569]">
-              A simplified and proportionate framework designed specifically for SMEs.
+              A simplified and proportionate framework (EU simplified standard) designed specifically for SMEs.
             </p>
           </div>
         </div>
@@ -147,8 +167,8 @@ export default function Home() {
       <section id="how-it-works" className="bg-white py-20 px-6">
         <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
           {[
-            ['01', 'Enter your data', 'Revenue and energy expenses only.'],
-            ['02', 'Instant estimation', 'Spend-based calculation using recognized factors.'],
+            ['01', 'Enter your data', 'Only revenue and energy cost.'],
+            ['02', 'Instant estimation', 'Spend-based calculation runs locally on your device.'],
             ['03', 'Download attestation', 'A ready-to-share PDF after payment.']
           ].map(([step, title, text]) => (
             <div key={step}>
@@ -167,8 +187,8 @@ export default function Home() {
             Methodology
           </h2>
 
-          <p>
-            Spend-based estimation inspired by the <strong>GHG Protocol</strong>,
+          <p className="text-center max-w-2xl mx-auto">
+            Screening-level estimation for SMEs. Spend-based calculation inspired by the <strong>GHG Protocol</strong>,
             using official emission factors from <strong>ADEME Base Empreinte</strong>.
           </p>
 
@@ -182,7 +202,21 @@ export default function Home() {
 
       {/* ================= FORM ================= */}
       <section id="assessment" className="max-w-4xl mx-auto py-24 px-6">
-        <AssessmentForm />
+        <div className="text-center mb-6">
+          <span className="text-xs font-bold text-[#1FB6C1] uppercase tracking-widest">
+            Private by design — data stays on your device
+          </span>
+        </div>
+        
+        <div className="bg-white border border-slate-200 rounded-2xl shadow-sm p-1">
+          <AssessmentForm />
+        </div>
+        
+        <div className="text-center mt-6">
+          <span className="text-sm text-[#64748B]">
+            No account required
+          </span>
+        </div>
       </section>
 
       {/* ================= FAQ ================= */}
@@ -194,6 +228,8 @@ export default function Home() {
         <div className="space-y-6">
           {[
             ['Is this legally binding?', 'No. This is a methodological attestation.'],
+            ['Is this accepted by banks?', 'Yes, it provides the standardized indicators they request.'],
+            ['Can I edit the PDF?', 'No, the file is locked to preserve authenticity.'],
             ['Is my data stored?', 'No. All calculations run locally.'],
             ['Who is this for?', 'SMEs responding to ESG and banking requests.'],
             ['What do I receive?', 'A downloadable PDF carbon footprint attestation.']
@@ -208,16 +244,16 @@ export default function Home() {
 
       {/* ================= FOOTER ================= */}
       <footer className="bg-[#0B3A63] text-[#CBD5E1] py-12 px-6 text-center">
-        <p className="mb-4">
-          © 2026 TimeProofs — Jeason Bacoul · SIREN 999 356 439
+        <p className="mb-4 text-sm font-medium">
+          © 2026 Certif-Scope — Independent ESG Service
         </p>
         <div className="flex justify-center gap-6 text-xs uppercase tracking-widest font-bold">
-          <Link href="/legal" className="hover:text-white">Legal notice</Link>
+          <Link href="/legal" className="hover:text-white">Legal</Link>
           <a href="#top" className="hover:text-white">Back to top</a>
-          <a href="mailto:contact@timeproofs.io" className="hover:text-white">Contact</a>
+          <a href="mailto:contact@certif-scope.com" className="hover:text-white">Contact</a>
         </div>
       </footer>
 
     </div>
   );
-      }
+        }
