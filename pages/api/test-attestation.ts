@@ -29,7 +29,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   try {
     const report = req.body;
-
     if (!report) {
       return res.status(400).json({ error: "Missing report data" });
     }
@@ -37,24 +36,37 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const attestationId = uuidv4();
     const issueDate = new Date().toISOString();
 
-    // 1️⃣ HTML sans QR code
+    const s1 = Number(report.scope1 || 0);
+    const s2 = Number(report.scope2 || 0);
+    const s3 = Number(report.scope3 || 0);
+    const total = Number(report.total || 0);
+
+    const pct1 = total > 0 ? ((s1 / total) * 100).toFixed(1) : "0";
+    const pct2 = total > 0 ? ((s2 / total) * 100).toFixed(1) : "0";
+    const pct3 = total > 0 ? ((s3 / total) * 100).toFixed(1) : "0";
+
     const tempHTML = fillTemplate(attestationTemplate, {
       ATTESTATION_ID: attestationId,
       ISSUE_DATE_UTC: issueDate,
       COMPANY_NAME: report.companyName || "N/A",
       BUSINESS_SECTOR: report.sector || "N/A",
-      COUNTRY: "France",
-      ASSESSMENT_PERIOD: "FY2024",
-      SCOPE_1: String(report.scope1 || 0),
-      SCOPE_2: String(report.scope2 || 0),
-      SCOPE_3: String(report.scope3 || 0),
-      TOTAL: String(report.total || 0),
+      COUNTRY: report.country || "France",
+      ASSESSMENT_PERIOD: report.period || "N/A",
+      SCOPE_1: s1.toString(),
+      SCOPE_2: s2.toString(),
+      SCOPE_3: s3.toString(),
+      TOTAL: total.toString(),
+      SCOPE_1_PERCENT: pct1,
+      SCOPE_2_PERCENT: pct2,
+      SCOPE_3_PERCENT: pct3,
       METHODOLOGY_VERSION: "v3",
       GENERATION_TIMESTAMP: issueDate,
-      QR_CODE: ""
+      PREPARED_ON: issueDate,
+      QR_CODE: "",
+      HASH: "",
+      HASH_SHORT: ""
     });
 
-    // 2️⃣ Générer premier PDF pour hash
     const pdf1 = await fetch(`https://chrome.browserless.io/pdf?token=${BROWSERLESS_KEY}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -65,29 +77,33 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }).then(r => r.arrayBuffer());
 
     const hash = computeHash(Buffer.from(pdf1));
+    const hashShort = hash.substring(0, 8) + "...";
 
-    // 3️⃣ QR code avec URL de vérification
     const verifyUrl = `https://certif-scope.com/verify?id=${attestationId}&hash=${hash}`;
     const qrDataURL = await QRCode.toDataURL(verifyUrl);
 
-    // 4️⃣ HTML final avec QR code
     const finalHTML = fillTemplate(attestationTemplate, {
       ATTESTATION_ID: attestationId,
       ISSUE_DATE_UTC: issueDate,
       COMPANY_NAME: report.companyName || "N/A",
       BUSINESS_SECTOR: report.sector || "N/A",
-      COUNTRY: "France",
-      ASSESSMENT_PERIOD: "FY2024",
-      SCOPE_1: String(report.scope1 || 0),
-      SCOPE_2: String(report.scope2 || 0),
-      SCOPE_3: String(report.scope3 || 0),
-      TOTAL: String(report.total || 0),
+      COUNTRY: report.country || "France",
+      ASSESSMENT_PERIOD: report.period || "N/A",
+      SCOPE_1: s1.toString(),
+      SCOPE_2: s2.toString(),
+      SCOPE_3: s3.toString(),
+      TOTAL: total.toString(),
+      SCOPE_1_PERCENT: pct1,
+      SCOPE_2_PERCENT: pct2,
+      SCOPE_3_PERCENT: pct3,
       METHODOLOGY_VERSION: "v3",
       GENERATION_TIMESTAMP: issueDate,
-      QR_CODE: `<img src="${qrDataURL}" style="width:140px"/>`
+      PREPARED_ON: issueDate,
+      QR_CODE: `<img src="${qrDataURL}" width="110" height="110" />`,
+      HASH: hash,
+      HASH_SHORT: hashShort
     });
 
-    // 5️⃣ Générer PDF final
     const pdf2 = await fetch(`https://chrome.browserless.io/pdf?token=${BROWSERLESS_KEY}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -97,13 +113,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       })
     }).then(r => r.arrayBuffer());
 
-    // 6️⃣ Retour JSON
     res.status(200).json({
       id: attestationId,
       hash,
+      hashShort,
       verifyUrl,
-      pdfBase64: Buffer.from(pdf2).toString("base64"),
-      test: true
+      pdfBase64: Buffer.from(pdf2).toString("base64")
     });
 
   } catch (error: any) {
@@ -113,4 +128,4 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       details: error?.message || String(error)
     });
   }
-}
+      }
