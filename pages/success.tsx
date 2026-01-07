@@ -42,7 +42,6 @@ export default function Success() {
       setHash(data.hash);
       setPdfBase64(data.pdfBase64);
 
-      // remove local report so it cannot be re-used
       localStorage.removeItem("certif-scope-report");
     } catch (err) {
       alert("Unexpected error. Try again later.");
@@ -56,7 +55,7 @@ export default function Success() {
 
     const link = document.createElement("a");
     link.href = "data:application/pdf;base64," + pdfBase64;
-    link.download = "certif-scope-attestation.pdf";
+    link.download = `certif-scope-attestation-${attestationId}.pdf`;
     link.click();
   }
 
@@ -71,14 +70,18 @@ export default function Success() {
         Your official carbon footprint attestation is ready for generation.
       </p>
 
+      <p className="mt-1 text-xs text-slate-500">
+        Certif-Scope is operated by <strong>TimeProofs</strong>.
+      </p>
+
       {/* Card summary */}
       <div className="mt-10 bg-white border rounded-xl p-6 shadow-md">
         <p className="text-sm text-slate-500">Company</p>
-        <p className="font-bold text-[#0B3A63]">{report.companyName}</p>
+        <p className="font-bold text-[#0B3A63]">{report?.companyName}</p>
 
         <p className="mt-4 text-sm text-slate-500">Total footprint</p>
         <p className="text-3xl font-extrabold text-[#0B3A63]">
-          {report.total} tCO₂e
+          {report?.total ?? "—"} tCO₂e
         </p>
       </div>
 
@@ -128,6 +131,17 @@ export default function Success() {
       <p className="mt-6 text-sm text-slate-500">
         Your attestation includes a unique ID, timestamp and SHA-256 verification.
       </p>
+
+      {/* CONTACT + LEGAL */}
+      <div className="mt-10 text-center text-xs text-[#64748B] space-y-1">
+        <p>Support: <strong>contact@certif-scope.com</strong></p>
+        <p>
+          <Link href="/legal" className="text-[#1FB6C1]">Legal Notice</Link> ·{" "}
+          <Link href="/privacy" className="text-[#1FB6C1]">Privacy Policy</Link> ·{" "}
+          <Link href="/refund-policy" className="text-[#1FB6C1]">Refund Policy</Link>
+        </p>
+      </div>
+
     </div>
   );
       }
