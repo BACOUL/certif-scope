@@ -1,10 +1,5 @@
 import { useState } from "react";
-import * as pdfjsLib from "pdfjs-dist/legacy/build/pdf";
-import pdfjsWorker from "pdfjs-dist/legacy/build/pdf.worker.entry";
 
-// ------------------------------------------------------------
-// 1) Compute SHA-256 hash from uploaded PDF
-// ------------------------------------------------------------
 async function computeHash(file: File): Promise<string> {
   const arrayBuffer = await file.arrayBuffer();
   const digest = await crypto.subtle.digest("SHA-256", arrayBuffer);
@@ -12,10 +7,14 @@ async function computeHash(file: File): Promise<string> {
   return hashArray.map(b => b.toString(16).padStart(2, "0")).join("");
 }
 
-// ------------------------------------------------------------
-// 2) Extract text from PDF (client-side using pdf.js)
-// ------------------------------------------------------------
 async function extractTextFromPDF(file: File): Promise<string> {
+  // Ensure browser-only
+  if (typeof window === "undefined") return "";
+
+  // Dynamic import to avoid server-side resolution
+  const pdfjsLib = await import("pdfjs-dist/build/pdf");
+  const pdfjsWorker = await import("pdfjs-dist/build/pdf.worker.entry");
+
   pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorker;
 
   const buffer = await file.arrayBuffer();
@@ -32,9 +31,6 @@ async function extractTextFromPDF(file: File): Promise<string> {
   return fullText;
 }
 
-// ------------------------------------------------------------
-// 3) React Page Component
-// ------------------------------------------------------------
 export default function VerifyPage() {
   const [file, setFile] = useState<File | null>(null);
   const [status, setStatus] = useState<null | "valid" | "invalid">(null);
@@ -47,28 +43,24 @@ export default function VerifyPage() {
   const handleVerify = async () => {
     if (!file) return;
 
-    setStatus(null);
     setLoading(true);
+    setStatus(null);
 
-    // Step 1: Compute real hash
-    const hash = await computeHash(file);
-    setComputedHash(hash);
+    const realHash = await computeHash(file);
+    setComputedHash(realHash);
 
-    // Step 2: Extract text content
     const text = await extractTextFromPDF(file);
 
-    // Extract ID
     const idMatch = text.match(/ATTESTATION ID[:\s]+([A-Za-z0-9\-]+)/i);
-    const id = idMatch ? idMatch[1] : "";
-    setExtractedId(id);
-
-    // Extract expected hash
     const hashMatch = text.match(/SHA-256[:\s]+([a-f0-9]{64})/i);
+
+    const docId = idMatch ? idMatch[1] : "";
     const docHash = hashMatch ? hashMatch[1] : "";
+
+    setExtractedId(docId);
     setExtractedHash(docHash);
 
-    // Step 3: Compare
-    if (docHash && docHash.toLowerCase() === hash.toLowerCase()) {
+    if (docHash && docHash.toLowerCase() === realHash.toLowerCase()) {
       setStatus("valid");
     } else {
       setStatus("invalid");
@@ -78,19 +70,16 @@ export default function VerifyPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] text-[#1E293B] px-6 py-16">
+    <div className="min-h-screen bg-[#F8FAFC] px-6 py-16">
       <div className="max-w-3xl mx-auto">
-
-        <h1 className="text-3xl md:text-4xl font-black text-[#0B3A63] mb-6">
+        <h1 className="text-3xl font-black text-[#0B3A63] mb-6">
           Verify Attestation
         </h1>
 
         <p className="text-sm text-slate-600 mb-8">
-          Upload an attestation PDF to verify its authenticity.
-          Verification is done locally in your browser — no data is uploaded.
+          Upload an attestation PDF to verify authenticity. No data is uploaded — verification runs locally.
         </p>
 
-        {/* Upload UI */}
         <div className="bg-white border border-slate-200 p-8 rounded-xl shadow-sm space-y-6">
           <input
             type="file"
@@ -102,29 +91,24 @@ export default function VerifyPage() {
           <button
             onClick={handleVerify}
             disabled={!file || loading}
-            className="w-full bg-[#1FB6C1] hover:bg-[#17A2AC] text-white font-semibold py-3 rounded-lg shadow-md transition"
+            className="w-full bg-[#1FB6C1] text-white py-3 rounded-lg"
           >
-            {loading ? "Verifying..." : "Verify PDF"}
+            {loading ? "Verifying…" : "Verify PDF"}
           </button>
         </div>
 
-        {/* Results */}
-        {(status === "valid" || status === "invalid") && (
-          <div className="mt-10 bg-white border border-slate-300 p-6 rounded-xl shadow-sm">
+        {status && (
+          <div className="mt-10 bg-white border p-6 rounded-xl">
             {status === "valid" ? (
-              <p className="text-green-600 font-bold text-xl mb-4">
-                ✔ VALID — Authentic Attestation
-              </p>
+              <p className="text-green-600 font-bold text-xl mb-4">✔ VALID — Authentic</p>
             ) : (
-              <p className="text-red-600 font-bold text-xl mb-4">
-                ✖ INVALID — PDF Tampered or Modified
-              </p>
+              <p className="text-red-600 font-bold text-xl mb-4">✖ INVALID — Modified</p>
             )}
 
             <div className="text-sm text-slate-700 space-y-2">
-              <p><strong>Extracted Attestation ID:</strong> {extractedId || "Not found"}</p>
-              <p><strong>Hash inside PDF:</strong> {extractedHash || "Not found"}</p>
-              <p><strong>Computed hash:</strong> {computedHash || "Not computed"}</p>
+              <p><strong>Extracted ID:</strong> {extractedId || "Not found"}</p>
+              <p><strong>Hash printed:</strong> {extractedHash || "Not found"}</p>
+              <p><strong>Hash computed:</strong> {computedHash}</p>
             </div>
           </div>
         )}
