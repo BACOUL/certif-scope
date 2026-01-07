@@ -8,7 +8,7 @@ export default function VerifyPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  // Load query params when page loads
+  // Load query params
   useEffect(() => {
     if (typeof window === "undefined") return;
 
@@ -19,23 +19,21 @@ export default function VerifyPage() {
     if (qid) setId(qid);
     if (qhash) setHash(qhash);
 
-    // auto-verify only if parameters are complete
-    if (qid && qhash && qhash.length === 64) {
+    if (qid && qhash && /^[a-f0-9]{64}$/i.test(qhash)) {
       verify(qid, qhash);
     }
   }, []);
 
   async function verify(customId?: string, customHash?: string) {
     const finalId = (customId || id).trim();
-    const finalHash = (customHash || hash).trim();
+    const finalHash = (customHash || hash).trim().toLowerCase();
 
-    // Basic client-side checks
+    // Validation formats
     if (finalId.length < 20) {
       setError("Invalid Attestation ID.");
       return;
     }
-
-    if (!/^[a-fA-F0-9]{64}$/.test(finalHash)) {
+    if (!/^[a-f0-9]{64}$/i.test(finalHash)) {
       setError("Invalid SHA-256 hash format.");
       return;
     }
@@ -47,16 +45,16 @@ export default function VerifyPage() {
     try {
       const sources = [
         "https://raw.githubusercontent.com/BACOUL/certif-scope/main/attestations.json",
-        "/attestations.json",
+        "/attestations.json"
       ];
 
-      let json: any = null;
+      let registry: any = null;
 
       for (const src of sources) {
         try {
-          const res = await fetch(src, { cache: "no-store" });
-          if (res.ok) {
-            json = await res.json();
+          const r = await fetch(src, { cache: "no-store" });
+          if (r.ok) {
+            registry = await r.json();
             break;
           }
         } catch {
@@ -64,32 +62,28 @@ export default function VerifyPage() {
         }
       }
 
-      if (!json || !Array.isArray(json.attestations)) {
+      if (!registry || !Array.isArray(registry.attestations)) {
         setError("Verification service unavailable.");
         setLoading(false);
         return;
       }
 
-      const match = json.attestations.find(
-        (item: any) =>
-          String(item.id).trim() === finalId &&
-          String(item.hash).trim().toLowerCase() === finalHash.toLowerCase()
+      const match = registry.attestations.find(
+        (a: any) =>
+          String(a.id).trim() === finalId &&
+          String(a.hash).trim().toLowerCase() === finalHash
       );
 
-      setResult(
-        match
-          ? { valid: true, item: match }
-          : { valid: false }
-      );
-    } catch (err) {
-      setError("Unexpected server error. Please try later.");
+      setResult(match ? { valid: true, item: match } : { valid: false });
+    } catch {
+      setError("Unexpected server error.");
     }
 
     setLoading(false);
   }
 
   const ready =
-    id.trim().length >= 20 && /^[a-fA-F0-9]{64}$/.test(hash.trim());
+    id.trim().length >= 20 && /^[a-f0-9]{64}$/i.test(hash.trim());
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] text-[#1E293B] px-6 py-16">
@@ -97,7 +91,7 @@ export default function VerifyPage() {
 
         <Link
           href="/"
-          className="inline-block mb-10 text-sm font-semibold text-[#1FB6C1] hover:text-[#17A2AC]"
+          className="inline-block mb-10 text-sm font-semibold text-[#1FB6C1]"
         >
           ← Back to Certif-Scope
         </Link>
@@ -107,38 +101,37 @@ export default function VerifyPage() {
         </h1>
 
         <p className="text-xs text-slate-500 mb-6">
-          Certif-Scope is operated by TimeProofs. Support: <strong>contact@certif-scope.com</strong>
+          Certif-Scope — Independent automated verification system.
         </p>
 
-        {/* INPUT CARD */}
         <div className="bg-white rounded-xl border border-slate-200 p-8 shadow-sm space-y-6">
 
           <div>
-            <label className="text-sm font-semibold text-slate-700">Attestation ID</label>
+            <label className="text-sm font-semibold">Attestation ID</label>
             <input
               type="text"
-              placeholder="e.g. 123e4567-e89b-12d3-a456..."
               value={id}
               onChange={(e) => setId(e.target.value)}
               className="mt-2 w-full border border-slate-300 rounded-lg p-3 text-sm"
+              placeholder="UUID (auto-filled if using QR code)"
             />
           </div>
 
           <div>
-            <label className="text-sm font-semibold text-slate-700">SHA-256 Hash</label>
+            <label className="text-sm font-semibold">SHA-256 Hash</label>
             <input
               type="text"
-              placeholder="64-character SHA-256 hash"
               value={hash}
               onChange={(e) => setHash(e.target.value)}
               className="mt-2 w-full border border-slate-300 rounded-lg p-3 text-sm"
+              placeholder="64 characters"
             />
           </div>
 
           <button
             onClick={() => verify()}
-            disabled={loading || !ready}
-            className={`w-full py-3 rounded-lg text-white font-semibold shadow-md transition ${
+            disabled={!ready || loading}
+            className={`w-full py-3 rounded-lg text-white font-semibold ${
               ready
                 ? "bg-[#1FB6C1] hover:bg-[#17A2AC]"
                 : "bg-slate-300 cursor-not-allowed"
@@ -148,44 +141,37 @@ export default function VerifyPage() {
           </button>
         </div>
 
-        {/* ERROR */}
         {error && (
-          <p className="mt-6 text-red-600 font-semibold text-center">
-            {error}
-          </p>
+          <p className="mt-6 text-red-600 font-semibold text-center">{error}</p>
         )}
 
-        {/* RESULT */}
         {result && (
           <div className="mt-10 p-6 bg-white border border-slate-300 rounded-xl shadow-sm">
-
             {result.valid ? (
               <>
                 <p className="text-green-600 font-bold text-xl mb-2">
-                  ✔ VALID — Attestation Authentic
+                  ✔ VALID — Official Record Found
+                </p>
+                <p className="text-sm mb-4">
+                  This attestation is registered in the Certif-Scope registry.
                 </p>
 
-                <p className="text-sm text-slate-700 mb-4">
-                  The ID and SHA-256 hash match the official registry.
-                </p>
-
-                <div className="mt-4 text-sm text-slate-700 space-y-1">
+                <div className="text-sm space-y-1">
                   <p><strong>ID:</strong> {id}</p>
                   <p><strong>SHA-256:</strong> {hash}</p>
-                  <p><strong>Timestamp:</strong> {result.item.timestamp}</p>
+                  <p><strong>Registered:</strong> {result.item.timestamp}</p>
                 </div>
               </>
             ) : (
               <>
                 <p className="text-red-600 font-bold text-xl mb-2">
-                  ✖ INVALID — No match found
+                  ✖ INVALID — No matching record
                 </p>
-                <p className="text-sm text-slate-700">
-                  The provided ID and hash do not appear in the registry.
+                <p className="text-sm">
+                  The provided ID and hash are not registered. The document may be altered or not issued by Certif-Scope.
                 </p>
               </>
             )}
-
           </div>
         )}
 
