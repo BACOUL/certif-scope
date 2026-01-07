@@ -1,201 +1,204 @@
-<div class="w-full min-h-screen bg-white text-[#334155] font-sans" id="top">
+export default function Methodology() {
+  return (
+    <>
+      <div className="w-full min-h-screen bg-white text-[#334155] font-sans" id="top">
 
-  <div class="sticky top-0 bg-white border-b border-[#E2E8F0] py-4 px-6 md:px-12 z-40 shadow-sm">
-    <div class="max-w-[1200px] mx-auto flex items-center justify-between">
-      <a href="/" class="text-[#0B3A63] font-semibold hover:text-[#1FB6C1] transition flex items-center gap-2">
-        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M12 4L6 9L12 14" />
-        </svg>
-        Back to Certif-Scope
-      </a>
-      <a href="/verify" class="text-sm text-[#1FB6C1] font-bold hover:text-[#0B3A63]">
-        Verify Attestation
-      </a>
-    </div>
-  </div>
+        <header className="sticky top-0 bg-white border-b border-[#E2E8F0] py-4 px-6 md:px-12 z-40 shadow-sm">
+          <div className="max-w-[1200px] mx-auto flex items-center justify-between">
+            <a href="/" className="text-[#0B3A63] font-semibold hover:text-[#1FB6C1] transition flex items-center gap-2">
+              <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M12 4L6 9L12 14" />
+              </svg>
+              Back to Certif-Scope
+            </a>
+            <a href="/verify" className="text-sm text-[#1FB6C1] font-bold hover:text-[#0B3A63]">
+              Verify Attestation
+            </a>
+          </div>
+        </header>
 
-  <div class="max-w-[1200px] mx-auto flex flex-col gap-10 pt-10 px-6 md:px-12">
+        <div className="max-w-[1200px] mx-auto flex flex-col gap-10 pt-10 px-6 md:px-12">
 
-    <h1 class="text-3xl md:text-4xl font-black text-center text-[#0B3A63] mb-4">
-      Methodology & Calculation Principles
-    </h1>
+          <h1 className="text-3xl md:text-4xl font-black text-center text-[#0B3A63]">
+            Methodology & Calculation Principles
+          </h1>
 
-    <p class="text-sm text-center text-[#1FB6C1] uppercase tracking-widest font-bold mb-4">
-      Transparent, traceable and aligned with European standards
-    </p>
+          <p className="text-sm text-center text-[#1FB6C1] uppercase tracking-widest font-bold">
+            Standardized CO₂ estimation based on GHG Protocol
+          </p>
 
-    <div class="text-center mb-6">
-      <a href="/#assessment"
-         class="inline-block bg-[#1FB6C1] text-white px-6 py-3 rounded-xl font-semibold hover:bg-[#17A2AC]">
-        Generate my CO₂ attestation
-      </a>
-    </div>
+          <div className="text-center mb-6">
+            <a
+              href="/#assessment"
+              className="inline-block bg-[#1FB6C1] text-white px-6 py-3 rounded-xl font-semibold hover:bg-[#17A2AC]"
+            >
+              Generate my CO₂ attestation
+            </a>
+          </div>
 
-    <p class="text-center text-[#475569] max-w-[800px] mx-auto mb-8">
-      This methodology follows the European CSRD/ESRS proportionality rules for SMEs and relies on 
-      recognized emission factors from ADEME, the GHG Protocol and industry databases.  
-      It provides an indicative, structured and verifiable CO₂ estimation.
-    </p>
+          <p className="text-center text-[#475569] max-w-[800px] mx-auto leading-relaxed">
+            Certif-Scope applies a standardized spend-based CO₂ estimation methodology aligned with the
+            GHG Protocol and recognized European emission factors (ADEME Base Carbone / monetary
+            intensity ratios). This approach provides a proportional and accessible estimation for SMEs
+            without requiring audits or detailed activity reports.
+          </p>
 
-    <div class="bg-[#F1F5F9] border border-[#CBD5E1] rounded-xl p-6 text-sm leading-relaxed shadow-sm">
-      <strong>Important:</strong><br>
-      This attestation is an estimation based on data provided by the company.  
-      It is not an audit, not a certified carbon report and not a CSRD filing.
-      It follows the EU principle of proportionality: SMEs may provide simplified indicators.
-    </div>
+          <div className="bg-[#F1F5F9] border border-[#CBD5E1] rounded-xl p-6 text-sm shadow-sm leading-relaxed">
+            <strong>TL;DR:</strong><br />
+            Certif-Scope uses a simplified spend-based model: fuel × factor, electricity × factor, revenue ×
+            sector coefficient. This produces a screening-level estimate valid for banking, supply-chain and ESG requests.
+          </div>
 
-    <div class="flex flex-wrap justify-center gap-4 text-sm font-semibold mt-6">
-      <a href="#sources" class="text-[#1FB6C1] hover:text-[#0B3A63]">Sources</a>
-      <a href="#calculation" class="text-[#1FB6C1] hover:text-[#0B3A63]">Calculation Model</a>
-      <a href="#factors" class="text-[#1FB6C1] hover:text-[#0B3A63]">Emission Factors</a>
-      <a href="#verification" class="text-[#1FB6C1] hover:text-[#0B3A63]">Verification</a>
-      <a href="#legal" class="text-[#1FB6C1] hover:text-[#0B3A63]">Legal Notes</a>
-      <a href="#top" class="text-[#1FB6C1] hover:text-[#0B3A63]">Top ↑</a>
-    </div>
+          <div className="flex flex-wrap justify-center gap-4 text-sm font-semibold mt-6">
+            <a href="#calculation" className="text-[#1FB6C1] hover:text-[#0B3A63]">Calculation</a>
+            <a href="#factors" className="text-[#1FB6C1] hover:text-[#0B3A63]">Emission factors</a>
+            <a href="#limitations" className="text-[#1FB6C1] hover:text-[#0B3A63]">Limitations</a>
+            <a href="#legal" className="text-[#1FB6C1] hover:text-[#0B3A63]">Legal scope</a>
+          </div>
 
-    <style>
-      #sources, #calculation, #factors, #verification, #legal {
-        scroll-margin-top: 120px;
-      }
-    </style>
+          {/* SECTION 1 - CALCULATION LOGIC */}
+          <section id="calculation" className="bg-[#F8FAFC] py-20 px-6 md:px-12 rounded-xl">
+            <h2 className="text-2xl font-black text-[#0B3A63] mb-10">
+              1. Calculation Logic
+            </h2>
 
-    <section id="sources" class="bg-[#F8FAFC] py-20 px-6 md:px-12 rounded-xl">
-      <h2 class="text-2xl font-black text-[#0B3A63] mb-6">
-        Official Data Sources
-      </h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {[
+                ["Scope 1 — Direct emissions", "Fuel expenses × standard emission factor."],
+                ["Scope 2 — Electricity", "Electricity cost × national energy factor (kWh equivalent)."],
+                ["Scope 3 — Value-chain emissions", "Annual revenue × sector intensity coefficient."]
+              ].map(([title, text]) => (
+                <div key={title} className="bg-white border border-[#E2E8F0] rounded-xl p-5 shadow-sm">
+                  <h3 className="font-bold text-[#0B3A63] mb-2">{title}</h3>
+                  <p className="text-sm text-[#475569]">{text}</p>
+                </div>
+              ))}
+            </div>
 
-      <p class="text-[#475569] mb-6">The CO₂ estimation relies on recognized and publicly documented datasets:</p>
+            <div className="mt-10 bg-white border border-[#E2E8F0] rounded-xl p-6 text-sm text-[#475569] leading-relaxed">
+              <strong>Formula summary:</strong><br />
+              Total CO₂e = (Fuel × EF1) + (Electricity × EF2) + (Revenue × SectorIntensity)
+            </div>
+          </section>
 
-      <ul class="space-y-4 text-sm text-[#475569]">
-        <li class="p-4 bg-white border border-[#E2E8F0] rounded-xl">
-          ADEME Base Carbone — Official French emission factors database (spend-based & physical factors)
-        </li>
-        <li class="p-4 bg-white border border-[#E2E8F0] rounded-xl">
-          GHG Protocol — International reference methodology for emissions reporting
-        </li>
-        <li class="p-4 bg-white border border-[#E2E8F0] rounded-xl">
-          Eurostat & industry coefficients — For sector-specific energy and transport data
-        </li>
-      </ul>
-    </section>
+          {/* SECTION 2 - EMISSION FACTORS */}
+          <section id="factors" className="bg-white py-20 px-6 md:px-12 rounded-xl">
+            <h2 className="text-2xl font-black text-[#0B3A63] mb-10">
+              2. Emission Factors & Data Sources
+            </h2>
 
-    <section id="calculation" class="bg-white py-20 px-6 md:px-12 rounded-xl">
-      <h2 class="text-2xl font-black text-[#0B3A63] mb-6">
-        Calculation Model
-      </h2>
+            <p className="text-[#475569] mb-10">
+              Certif-Scope uses recognized public databases and monetary ratios validated by environmental
+              agencies. Factors are periodically updated.
+            </p>
 
-      <p class="text-[#475569] mb-6">
-        Certif-Scope uses a standardized spend-based model, aligned with the GHG Protocol methodology.  
-        Each cost category is multiplied by an emission factor from ADEME or equivalent sources.
-      </p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {[
+                ["ADEME Base Carbone", "Used for fuel, gas and electricity reference factors."],
+                ["European Energy Mix Factors", "Conversion from monetary electricity cost to kWh equivalent."],
+                ["Sector Intensity Ratios", "Revenue-based emission coefficients derived from European datasets."],
+                ["GHG Protocol Spend-Based Model", "International reference for screening-level carbon estimates."]
+              ].map(([title, desc]) => (
+                <div key={title} className="p-5 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl shadow-sm">
+                  <h3 className="font-bold text-[#0B3A63] mb-2">{title}</h3>
+                  <p className="text-sm text-[#475569]">{desc}</p>
+                </div>
+              ))}
+            </div>
 
-      <div class="bg-[#F1F5F9] border border-[#CBD5E1] rounded-xl p-6 text-sm leading-relaxed">
-        CO₂e = Σ (Amount Spent × Emission Factor)
+            <div className="mt-10 bg-[#E6F6F7] border border-[#BAE6FD] text-[#0B3A63] rounded-xl p-6 text-sm leading-relaxed">
+              Factors updated: <strong>Methodology v3</strong>  
+            </div>
+          </section>
+
+          {/* SECTION 3 - LIMITATIONS */}
+          <section id="limitations" className="bg-[#F8FAFC] py-20 px-6 md:px-12 rounded-xl">
+            <h2 className="text-2xl font-black text-[#0B3A63] mb-6">
+              3. Purpose & Limitations
+            </h2>
+
+            <p className="text-[#475569] max-w-[800px] mx-auto mb-10 text-center">
+              This methodology provides a screening-level estimation suited for banking compliance,
+              vendor qualification and internal awareness. It is not a substitute for a full physical carbon audit.
+            </p>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {[
+                ["Suitable for:", [
+                  "Banking compliance reviews",
+                  "Procurement questionnaires",
+                  "Supply-chain requests",
+                  "Internal baseline estimation"
+                ]],
+                ["Not suitable for:", [
+                  "Regulated CSRD reporting for large entities",
+                  "ISO 14064 certified audits",
+                  "Detailed activity-based carbon accounting"
+                ]]
+              ].map(([title, list]) => (
+                <div key={title} className="p-5 bg-white border border-[#E2E8F0] rounded-xl">
+                  <h3 className="font-bold text-[#0B3A63] mb-2">{title}</h3>
+                  <ul className="text-sm text-[#475569] list-disc ml-4">
+                    {(list as string[]).map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* SECTION 4 - LEGAL SCOPE */}
+          <section id="legal" className="bg-white py-20 px-6 md:px-12 rounded-xl">
+            <h2 className="text-2xl font-black text-[#0B3A63] mb-6">
+              4. Legal Disclaimer & Compliance
+            </h2>
+
+            <p className="text-[#475569] mb-6 leading-relaxed">
+              This attestation is a methodological estimate provided “as is”. It is not an audited document,
+              nor a regulatory CSRD-compliant report. It is intended for informative and voluntary disclosure.
+            </p>
+
+            <blockquote className="border-l-4 border-[#1FB6C1] bg-[#F8FAFC] rounded-md p-4 text-sm text-[#475569] italic">
+              “SMEs may provide simplified and proportionate estimates. No mandatory audit can be required.”
+              — ESRS E1 Appendix B
+            </blockquote>
+
+            <p className="text-[#475569] mt-8 text-sm italic">
+              Any modification of the document invalidates its integrity.
+            </p>
+          </section>
+
+          {/* FOOTER ACTIONS */}
+          <div className="text-center mt-16">
+            <a
+              href="/#assessment"
+              className="inline-block bg-[#1FB6C1] text-white px-8 py-4 rounded-xl font-bold hover:bg-[#17A2AC]"
+            >
+              Generate my CO₂ attestation
+            </a>
+          </div>
+
+          <div className="text-center mt-4">
+            <a href="/verify" className="text-[#1FB6C1] font-semibold hover:text-[#0B3A63]">
+              Verify an attestation →
+            </a>
+          </div>
+
+          <div className="text-center mt-6 mb-14">
+            <a href="#top" className="text-[#1FB6C1] hover:text-[#0B3A63] font-semibold">
+              Back to top ↑
+            </a>
+          </div>
+
+        </div>
       </div>
 
-      <p class="text-[#475569] mt-6">
-        This model is recognized for estimating Scope 3 emissions when activity data is limited, which is the case for most SMEs.
-      </p>
-    </section>
-
-    <section id="factors" class="bg-[#F8FAFC] py-20 px-6 md:px-12 rounded-xl">
-      <h2 class="text-2xl font-black text-[#0B3A63] mb-10">
-        Main Emission Factors Used
-      </h2>
-
-      <table class="w-full text-sm border border-[#E2E8F0] rounded-xl overflow-hidden">
-        <thead class="bg-[#E6F6F7] text-[#0B3A63] font-bold">
-          <tr>
-            <th class="p-3 border-r border-[#E2E8F0]">Category</th>
-            <th class="p-3 border-r border-[#E2E8F0]">Factor (kg CO₂e / €)</th>
-            <th class="p-3">Source</th>
-          </tr>
-        </thead>
-        <tbody class="text-[#475569]">
-          <tr>
-            <td class="p-3 border-r border-[#E2E8F0]">Energy / Electricity</td>
-            <td class="p-3 border-r border-[#E2E8F0]">0.053</td>
-            <td class="p-3">ADEME Base Carbone</td>
-          </tr>
-          <tr>
-            <td class="p-3 border-r border-[#E2E8F0]">Fuel / Heating</td>
-            <td class="p-3 border-r border-[#E2E8F0]">0.267</td>
-            <td class="p-3">GHG Protocol</td>
-          </tr>
-          <tr>
-            <td class="p-3 border-r border-[#E2E8F0]">Purchases / Services</td>
-            <td class="p-3 border-r border-[#E2E8F0]">0.420</td>
-            <td class="p-3">ADEME</td>
-          </tr>
-          <tr>
-            <td class="p-3 border-r border-[#E2E8F0]">Transport / Logistics</td>
-            <td class="p-3 border-r border-[#E2E8F0]">0.310</td>
-            <td class="p-3">Industry coefficients</td>
-          </tr>
-        </tbody>
-      </table>
-
-      <p class="text-[#475569] mt-6 text-center">
-        These factors may be updated to reflect regulatory and scientific changes.
-      </p>
-    </section>
-
-    <section id="verification" class="bg-white py-20 px-6 md:px-12 rounded-xl">
-      <h2 class="text-2xl font-black text-[#0B3A63] mb-6">
-        Verification & Integrity
-      </h2>
-
-      <p class="text-[#475569] mb-6">
-        Each attestation includes a unique identifier, a cryptographic hash and a verification link.
-      </p>
-
-      <ul class="space-y-4 text-sm text-[#475569]">
-        <li class="p-4 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl">
-          A verification page validates the hash and confirms document integrity
-        </li>
-        <li class="p-4 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl">
-          A QR code on the PDF points to the verification page
-        </li>
-        <li class="p-4 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl">
-          No personal data is stored server-side — verification is stateless
-        </li>
-      </ul>
-    </section>
-
-    <section id="legal" class="bg-[#F8FAFC] py-20 px-6 md:px-12 rounded-xl">
-      <h2 class="text-2xl font-black text-[#0B3A63] mb-6">
-        Legal & Regulatory Notes
-      </h2>
-
-      <div class="bg-[#FFF8E7] border border-[#FCD34D] text-[#92400E] rounded-xl p-6 text-sm leading-relaxed shadow-sm">
-        Under EU sustainability rules, SMEs cannot be required to produce audited or certified carbon reports.  
-        Simplified estimates must be accepted under:
-        <ul class="list-disc ml-6 mt-2">
-          <li>CSRD Directive (EU) 2022/2464</li>
-          <li>ESRS E1 — Appendix B</li>
-          <li>ESRS General Requirements — Article 6 (Proportionality)</li>
-        </ul>
-      </div>
-    </section>
-
-    <div class="text-center mt-10">
-      <a href="/#assessment"
-         class="inline-block bg-[#1FB6C1] text-white px-8 py-4 rounded-xl font-bold hover:bg-[#17A2AC]">
-        Generate my CO₂ attestation
-      </a>
-    </div>
-
-    <div class="text-center mt-4">
-      <a href="/verify" class="text-[#1FB6C1] font-semibold hover:text-[#0B3A63]">
-        Verify an attestation →
-      </a>
-    </div>
-
-    <div class="text-center mt-6 mb-14">
-      <a href="#top" class="text-[#1FB6C1] hover:text-[#0B3A63] font-semibold">
-        Back to top ↑
-      </a>
-    </div>
-
-  </div>
-</div>
+      <style jsx>{`
+        #calculation, #factors, #limitations, #legal {
+          scroll-margin-top: 120px;
+        }
+      `}</style>
+    </>
+  );
+}
