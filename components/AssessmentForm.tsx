@@ -34,7 +34,6 @@ export default function AssessmentForm() {
 
     setResults(calculation);
 
-    // Store ALL inputs + results
     localStorage.setItem(
       "certif-scope-report",
       JSON.stringify({
@@ -59,13 +58,37 @@ export default function AssessmentForm() {
     });
 
     const data = await res.json();
+    if (data.url) window.location.href = data.url;
+  };
 
-    if (data.url) {
-      window.location.href = data.url;
+  // TEST ATTESTATION GENERATION (NO PAYMENT)
+  const handleTestAttestation = async () => {
+    const report = JSON.parse(localStorage.getItem("certif-scope-report") || "{}");
+
+    if (!report.companyName) {
+      alert("Please calculate your footprint first.");
+      return;
+    }
+
+    const res = await fetch("/api/test-attestation", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(report)
+    });
+
+    const data = await res.json();
+
+    if (data.pdfBase64) {
+      const link = document.createElement("a");
+      link.href = "data:application/pdf;base64," + data.pdfBase64;
+      link.download = "test-attestation.pdf";
+      link.click();
+    } else {
+      alert("Error generating test PDF");
     }
   };
 
-  // Auto-scroll to results
+  // Auto scroll to results
   useEffect(() => {
     if (results && resultsRef.current) {
       resultsRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -209,21 +232,24 @@ export default function AssessmentForm() {
               {results.total} tCO₂e
             </p>
 
+            {/* PAYMENT BUTTON */}
             <button
-              onClick={() => {
-                if (!results) {
-                  alert("Please calculate your footprint first.");
-                  return;
-                }
-                handleStripe();
-              }}
-              className="w-full bg-[#1FB6C1] text-white font-bold py-4 rounded-xl"
+              onClick={handleStripe}
+              className="w-full bg-[#1FB6C1] text-white font-bold py-4 rounded-xl mb-3"
             >
               Download official attestation (€99)
+            </button>
+
+            {/* TEST BUTTON */}
+            <button
+              onClick={handleTestAttestation}
+              className="w-full bg-orange-500 text-white font-bold py-4 rounded-xl"
+            >
+              TEST — Generate attestation (no payment)
             </button>
           </div>
         </div>
       )}
     </div>
   );
-      }
+        }
