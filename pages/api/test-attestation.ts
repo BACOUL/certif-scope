@@ -2,7 +2,6 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import chromium from "chrome-aws-lambda";
 import puppeteer from "puppeteer-core";
 import crypto from "crypto";
-import { v4 as uuidv4 } from "uuid";
 import QRCode from "qrcode";
 import { attestationTemplate } from "../../lib/attestationTemplate";
 
@@ -25,57 +24,27 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   try {
     const report = req.body;
-
     if (!report) {
       return res.status(400).json({ error: "Missing report data" });
     }
 
-    const attestationId = uuidv4();
-
-    const tempHTML = fillTemplate(attestationTemplate, {
-      ATTESTATION_ID: attestationId,
-      ISSUE_DATE_UTC: new Date().toISOString(),
-      COMPANY_NAME: report.companyName || "N/A",
-      BUSINESS_SECTOR: report.sector || "N/A",
-      COUNTRY: "France",
-      ASSESSMENT_PERIOD: "FY2024",
-      SCOPE_1: String(report.scope1 || 0),
-      SCOPE_2: String(report.scope2 || 0),
-      SCOPE_3: String(report.scope3 || 0),
-      TOTAL: String(report.total || 0),
-      METHODOLOGY_VERSION: "v3",
-      GENERATION_TIMESTAMP: new Date().toISOString(),
-      QR_CODE: ""
-    });
-
+    // 1) Chromium executable path
     const executablePath =
       process.env.NODE_ENV === "development"
-        ? undefined
+        ? null
         : await chromium.executablePath;
 
     const browser = await puppeteer.launch({
       args: chromium.args,
-      executablePath,
-      headless: true,
+      executablePath: executablePath || undefined,
+      headless: chromium.headless,
     });
 
     const page = await browser.newPage();
-    await page.setContent(tempHTML, { waitUntil: "networkidle0" });
 
-    const firstPdf = await page.pdf({
-      format: "a4",
-      printBackground: true,
-      margin: { top: "10mm", right: "10mm", bottom: "10mm", left: "10mm" },
-    });
-
-    const pdfHash = computeHash(firstPdf);
-
-    const verifyUrl = `https://certif-scope.com/verify?id=${attestationId}&hash=${pdfHash}`;
-
-    const qrCode = await QRCode.toDataURL(verifyUrl);
-
-    const finalHTML = fillTemplate(attestationTemplate, {
-      ATTESTATION_ID: attestationId,
+    // 2) Create HTML without QR
+    const firstHTML = fillTemplate(attestationTemplate, {
+      ATTESTATION_ID: "TEST-ID",
       ISSUE_DATE_UTC: new Date().toISOString(),
       COMPANY_NAME: report.companyName || "N/A",
       BUSINESS_SECTOR: report.sector || "N/A",
@@ -87,31 +56,49 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       TOTAL: String(report.total || 0),
       METHODOLOGY_VERSION: "v3",
       GENERATION_TIMESTAMP: new Date().toISOString(),
-      QR_CODE: `<img src="${qrCode}" style="width:140px"/>`,
+      QR_CODE: "" // important — pas <img>
+    });
+
+    await page.setContent(firstHTML, { waitUntil: "networkidle0" });
+    const tmpPDF = await page.pdf({ format: "a4", printBackground: true });
+    const hash = computeHash(tmpPDF);
+
+    // 3) QR code
+    const qrDataURL = await QRCode.toDataURL(`https://certif-scope.com/test?hash=${hash}`);
+
+    // 4) Final HTML with QR
+    const finalHTML = fillTemplate(attestationTemplate, {
+      ATTESTATION_ID: "TEST-ID",
+      ISSUE_DATE_UTC: new Date().toISOString(),
+      COMPANY_NAME: report.companyName || "N/A",
+      BUSINESS_SECTOR: report.sector || "N/A",
+      COUNTRY: "France",
+      ASSESSMENT_PERIOD: "FY2024",
+      SCOPE_1: String(report.scope1 || 0),
+      SCOPE_2: String(report.scope2 || 0),
+      SCOPE_3: String(report.scope3 || 0),
+      TOTAL: String(report.total || 0),
+      METHODOLOGY_VERSION: "v3",
+      GENERATION_TIMESTAMP: new Date().toISOString(),
+      QR_CODE: qrDataURL // DATA URL direct, pas de <img>
     });
 
     await page.setContent(finalHTML, { waitUntil: "networkidle0" });
-    const finalPdf = await page.pdf({
+    const finalPDF = await page.pdf({
       format: "a4",
       printBackground: true,
-      margin: { top: "10mm", right: "10mm", bottom: "10mm", left: "10mm" },
     });
 
     await browser.close();
 
-    return res.status(200).json({
-      id: attestationId,
-      hash: pdfHash,
-      verifyUrl,
-      pdfBase64: finalPdf.toString("base64"),
-      test: true,
+    res.status(200).json({
+      pdfBase64: finalPDF.toString("base64"),
+      hash,
+      ok: true,
     });
 
   } catch (err: any) {
-    console.error("TEST-ATT-ERROR:", err);
-    return res.status(500).json({
-      error: "Test attestation generation failed",
-      details: err.message
-    });
+    console.log("TEST-PDF-ERROR:", err);
+    return res.status(500).json({ error: "PDF generation failed" });
   }
-      }
+}
