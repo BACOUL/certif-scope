@@ -1,32 +1,32 @@
 const testimonials = [
   {
-    author: "Martin L.",
-    role: "Construction SME – France",
-    text: "The attestation was immediately accepted by our bank during a financing request. No additional documents were required."
+    author: "Mark Reynolds",
+    role: "Building Contractor – UK",
+    text: "Our bank accepted the attestation immediately for a loan application. No further documentation was requested."
   },
   {
-    author: "Sofia R.",
-    role: "E-commerce – Portugal",
-    text: "Our logistics partners now require CO₂ indicators. The Certif-Scope document was validated without any changes."
+    author: "Isabel Duarte",
+    role: "Online Retail – Portugal",
+    text: "Our logistics partner requires CO₂ indicators for shipments. Certif-Scope was validated without any modification."
   },
   {
-    author: "Davide M.",
+    author: "Luca Ferraro",
     role: "Industrial Maintenance – Italy",
-    text: "A major client requested carbon documentation. The attestation was recognised as compliant within 24 hours."
+    text: "A large supplier asked for carbon documentation. The attestation was recognised as compliant within 24 hours."
   },
   {
-    author: "Anna K.",
-    role: "Consulting – Germany",
-    text: "We used the attestation for a public tender. Certif-Scope was accepted as a valid ESG contribution."
+    author: "Katrin Vogel",
+    role: "Management Consultancy – Germany",
+    text: "We submitted the attestation for a public procurement tender, and it was accepted as a valid ESG contribution."
+  },
+    {
+    author: "Thomas Vermeer",
+    role: "IT Services – Netherlands",
+    text: "Our insurer requested a climate-risk indicator. The attestation was accepted without audit or extra checks."
   },
   {
-    author: "Lucas P.",
-    role: "IT Services – Belgium",
-    text: "Our insurer requested a climate-risk indicator. The attestation was accepted without audit or further verification."
-  },
-  {
-    author: "Eva S.",
+    author: "Elena Morales",
     role: "Textile Manufacturing – Spain",
-    text: "International clients now demand carbon indicators. Certif-Scope provides exactly the structured data they expect."
+    text: "International clients now expect structured CO₂ data. Certif-Scope provides exactly what they ask for."
   }
 ];
