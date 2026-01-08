@@ -4,39 +4,33 @@ export default function Document() {
   return (
     <Html lang="en">
       <Head>
-        {/* Primary Meta Tags */}
-        <meta
-          name="description"
-          content="Instant carbon footprint attestation for SMEs — compliant with EU proportionality rules. Generate Scope 1, 2, 3 estimations instantly."
-        />
 
-        {/* Open Graph / Facebook */}
-        <meta property="og:type" content="website" />
-        <meta property="og:title" content="Certif-Scope — Instant SME CO₂ Attestation" />
-        <meta
-          property="og:description"
-          content="Generate and verify SME carbon footprint attestations. EU-compliant, instant, verifiable by hash + QR."
-        />
-        <meta property="og:url" content="https://certif-scope.com/" />
-        <meta property="og:image" content="https://certif-scope.com/og-image.png" />
+        {/* ===== GLOBAL FAVICON ===== */}
+        <link rel="icon" href="/favicon.ico" />
 
-        {/* Twitter */}
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Certif-Scope — Instant CO₂ Attestation" />
-        <meta
-          name="twitter:description"
-          content="Instant CO₂ attestation for SMEs — verifiable, structured, EU-compliant."
-        />
-        <meta name="twitter:image" content="https://certif-scope.com/og-image.png" />
+        {/* ===== PRECONNECT FOR PERFORMANCE ===== */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
 
-        {/* Canonical URL */}
+        {/* ===== PRELOAD CRITICAL ASSET ===== */}
+        <link rel="preload" href="/og-image.png" as="image" />
+
+        {/* ===== CANONICAL ===== */}
         <link rel="canonical" href="https://certif-scope.com/" />
 
-        {/* Favicons */}
-        <link rel="icon" href="/favicon.ico" />
+        {/* ===== OPEN GRAPH DEFAULTS ===== */}
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content="Certif-Scope" />
+        <meta property="og:image" content="https://certif-scope.com/og-image.png" />
+        <meta property="og:url" content="https://certif-scope.com/" />
+
+        {/* ===== TWITTER DEFAULTS ===== */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:image" content="https://certif-scope.com/og-image.png" />
+
       </Head>
 
-      <body>
+      <body suppressHydrationWarning={true}>
         <Main />
         <NextScript />
       </body>
