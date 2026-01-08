@@ -1,6 +1,64 @@
+import Head from "next/head";
+
 export default function Methodology() {
   return (
     <>
+      <Head>
+        <title>Methodology & CO₂ Calculation Framework — Certif-Scope</title>
+
+        <meta
+          name="description"
+          content="Detailed explanation of Certif-Scope’s standardized calculation logic. Spend-based Scope 1–2–3 estimation aligned with GHG Protocol, ADEME Base, and EU proportionality rules."
+        />
+
+        <link rel="canonical" href="https://certif-scope.com/methodology" />
+        <meta name="robots" content="index, follow" />
+
+        {/* OG / SOCIAL */}
+        <meta property="og:title" content="Methodology & Calculation Framework — Certif-Scope" />
+        <meta
+          property="og:description"
+          content="Complete breakdown of how Certif-Scope calculates CO₂ emissions for SMEs using spend-based GHG Protocol factors."
+        />
+        <meta property="og:type" content="article" />
+        <meta property="og:url" content="https://certif-scope.com/methodology" />
+        <meta property="og:image" content="https://certif-scope.com/og-image.png" />
+
+        {/* TWITTER */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Certif-Scope Methodology" />
+        <meta
+          name="twitter:description"
+          content="Spend-based calculation model for Scope 1, Scope 2, Scope 3 using recognized European emission factors."
+        />
+        <meta name="twitter:image" content="https://certif-scope.com/og-image.png" />
+
+        {/* STRUCTURED DATA */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "TechArticle",
+              headline: "Methodology & Calculation Framework",
+              description:
+                "Explanation of Certif-Scope’s standardized carbon footprint estimation based on spend-based GHG Protocol factors.",
+              author: {
+                "@type": "Organization",
+                name: "Certif-Scope"
+              },
+              publisher: {
+                "@type": "Organization",
+                name: "Certif-Scope"
+              },
+              inLanguage: "en"
+            }),
+          }}
+        />
+      </Head>
+
+      {/* ===================== PAGE CONTENT ===================== */}
+
       <div className="w-full min-h-screen bg-white text-[#334155] font-sans" id="top">
 
         {/* HEADER */}
@@ -63,11 +121,9 @@ export default function Methodology() {
             <a href="#legal" className="text-[#1FB6C1] hover:text-[#0B3A63]">Legal Disclaimer</a>
           </div>
 
-          {/* SECTION: CALCULATION LOGIC */}
+          {/* CALCULATION LOGIC */}
           <section id="calculation" className="bg-[#F8FAFC] py-16 px-6 md:px-12 rounded-xl">
-            <h2 className="text-2xl font-black text-[#0B3A63] mb-8">
-              1. Calculation Logic
-            </h2>
+            <h2 className="text-2xl font-black text-[#0B3A63] mb-8">1. Calculation Logic</h2>
 
             <p className="text-[#475569] mb-6">
               Certif-Scope applies a spend-based CO₂e conversion aligned with GHG Protocol guidelines. 
@@ -107,11 +163,9 @@ export default function Methodology() {
             </div>
           </section>
 
-          {/* SECTION: EMISSION FACTORS */}
+          {/* FACTORS */}
           <section id="factors" className="py-16 px-6 md:px-12 rounded-xl">
-            <h2 className="text-2xl font-black text-[#0B3A63] mb-8">
-              2. Emission Factors
-            </h2>
+            <h2 className="text-2xl font-black text-[#0B3A63] mb-8">2. Emission Factors</h2>
 
             <p className="text-[#475569] mb-6">
               Factors are sourced from ADEME Base Empreinte<sup>®</sup>, European averages and recognized monetary ratios.
@@ -141,11 +195,9 @@ export default function Methodology() {
             </table>
           </section>
 
-          {/* SECTION: SCOPES */}
+          {/* SCOPES */}
           <section id="scopes" className="bg-[#F8FAFC] py-16 px-6 md:px-12 rounded-xl">
-            <h2 className="text-2xl font-black text-[#0B3A63] mb-8">
-              3. Scopes Explained
-            </h2>
+            <h2 className="text-2xl font-black text-[#0B3A63] mb-8">3. Scopes Explained</h2>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
 
@@ -167,11 +219,9 @@ export default function Methodology() {
             </div>
           </section>
 
-          {/* SECTION: LIMITATIONS */}
+          {/* LIMITATIONS */}
           <section id="limitations" className="py-16 px-6 md:px-12 rounded-xl">
-            <h2 className="text-2xl font-black text-[#0B3A63] mb-6">
-              4. Purpose & Limitations
-            </h2>
+            <h2 className="text-2xl font-black text-[#0B3A63] mb-6">4. Purpose & Limitations</h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {[
@@ -205,11 +255,9 @@ export default function Methodology() {
             </div>
           </section>
 
-          {/* SECTION: PRIVACY */}
+          {/* PRIVACY */}
           <section id="privacy" className="bg-[#ECFDF5] py-16 px-6 md:px-12 rounded-xl">
-            <h2 className="text-2xl font-black text-[#065F46] mb-6">
-              5. Data Privacy & Integrity
-            </h2>
+            <h2 className="text-2xl font-black text-[#065F46] mb-6">5. Data Privacy & Integrity</h2>
 
             <p className="text-sm text-[#065F46] mb-4">
               All calculations are performed locally in the browser. No financial data is stored.
@@ -223,11 +271,9 @@ export default function Methodology() {
             </ul>
           </section>
 
-          {/* SECTION: LEGAL */}
+          {/* LEGAL */}
           <section id="legal" className="py-16 px-6 md:px-12 rounded-xl">
-            <h2 className="text-2xl font-black text-[#0B3A63] mb-6">
-              6. Legal Disclaimer
-            </h2>
+            <h2 className="text-2xl font-black text-[#0B3A63] mb-6">6. Legal Disclaimer</h2>
 
             <p className="text-[#475569] mb-4">
               This methodological estimation is provided “as is”. Certif-Scope assumes no liability for inaccuracies in user-provided financial inputs.
@@ -238,6 +284,8 @@ export default function Methodology() {
             </p>
 
             <p className="text-xs text-[#94A3B8]">
+              For inquiries: contact@certif-scope.com  
+              <br />
               Any modification invalidates the document.
             </p>
           </section>
@@ -253,4 +301,4 @@ export default function Methodology() {
       </div>
     </>
   );
-          }
+      }
