@@ -3,25 +3,20 @@ import Link from "next/link";
 import Head from "next/head";
 import dynamic from "next/dynamic";
 
-const AssessmentForm = dynamic(
-  () => import("../components/AssessmentForm"),
+// Dynamic import for the assessment form
+const AssessmentWrapper = dynamic(
+  () => import("../components/AssessmentWrapper"),
   { ssr: false, loading: () => <p className="text-center">Loading…</p> }
 );
 
-const testimonials = [
-  { author: "Maria Santos", role: "Operations Manager — Portugal", text: "We submitted this attestation to our bank and procurement partners. It was accepted instantly and simplified onboarding." },
-  { author: "Lukas Schneider", role: "Industrial Supplier — Germany", text: "Our clients requested Scope 1–2–3 data. Certif-Scope gave us a structured report without needing a full carbon audit." },
-  { author: "Elena Rossi", role: "Consultant — Italy", text: "Perfect for SMEs under pressure to deliver ESG documentation. Clear, fast, and compliant with proportionality rules." },
-  { author: "Jean Dupont", role: "Contractor — France", text: "Public tenders now require carbon indicators. This attestation was accepted without any issues." },
-  { author: "Sofia Almeida", role: "E-commerce — Portugal", text: "Having a verifiable attestation improved trust with B2B partners and reduced repetitive ESG questionnaires." },
-  { author: "David Green", role: "Logistics — UK", text: "Simple, precise and recognised by financial institutions. Exactly what SMEs need today." },
-  { author: "Mark Reynolds", role: "Building Contractor – UK", text: "Our bank accepted the attestation immediately for a loan application. No further documentation was requested." },
-  { author: "Isabel Duarte", role: "Online Retail – Portugal", text: "Our logistics partner requires CO₂ indicators for shipments. Certif-Scope was validated without any modification." },
-  { author: "Luca Ferraro", role: "Industrial Maintenance – Italy", text: "A large supplier asked for carbon documentation. The attestation was recognised as compliant within 24 hours." },
-  { author: "Katrin Vogel", role: "Management Consultancy – Germany", text: "We submitted the attestation for a public procurement tender, and it was accepted as a valid ESG contribution." },
-  { author: "Thomas Vermeer", role: "IT Services – Netherlands", text: "Our insurer requested a climate-risk indicator. The attestation was accepted without audit or extra checks." },
-  { author: "Elena Morales", role: "Textile Manufacturing – Spain", text: "International clients now expect structured CO₂ data. Certif-Scope provides exactly what they ask for." }
-];
+// Modular sections
+import Hero from "../components/Hero";
+import Trusted from "../components/Trusted";
+import HowItWorks from "../components/HowItWorks";
+import ComparisonTable from "../components/ComparisonTable";
+import PdfMockup from "../components/PdfMockup";
+import SecurityBlock from "../components/SecurityBlock";
+import TestimonialsSlider from "../components/TestimonialsSlider";
 
 export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -29,17 +24,19 @@ export default function Home() {
   return (
     <div id="top" className="min-h-screen bg-[#F8FAFC] font-sans text-[#1E293B]">
 
+      {/* SEO */}
       <Head>
         <title>Certif-Scope — Instant Carbon Footprint Attestation for SMEs</title>
         <meta
           name="description"
-          content="Generate an instant, verifiable carbon footprint attestation (Scope 1 · Scope 2 · Scope 3) for SMEs."
+          content="Generate an instant, verifiable carbon footprint attestation (Scope 1 · Scope 2 · Scope 3) for SMEs across Europe."
         />
         <meta name="robots" content="index, follow" />
         <link rel="canonical" href="https://certif-scope.com/" />
-        <link rel="preload" href="/og-image.png" as="image" />
+        <link rel="preload" href="/sample-attestation.png" as="image" />
       </Head>
 
+      {/* HEADER */}
       <header className="bg-white border-b border-slate-200 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
 
@@ -48,6 +45,7 @@ export default function Home() {
             <span className="text-[#1FB6C1]">Scope</span>
           </Link>
 
+          {/* Desktop Menu */}
           <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-[#475569]">
             <Link href="/why-required">Why Required</Link>
             <Link href="/methodology">Methodology</Link>
@@ -62,6 +60,7 @@ export default function Home() {
             Start Assessment
           </a>
 
+          {/* Mobile Menu Button */}
           <button
             className="md:hidden text-[#0B3A63]"
             aria-label="Toggle menu"
@@ -75,6 +74,7 @@ export default function Home() {
           </button>
         </div>
 
+        {/* MOBILE MENU */}
         {menuOpen && (
           <div className="md:hidden bg-white border-t border-slate-200 px-6 py-6">
             <nav className="flex flex-col gap-4 text-sm font-semibold text-[#475569]">
@@ -87,59 +87,40 @@ export default function Home() {
         )}
       </header>
 
+      {/* MAIN CONTENT */}
       <main role="main">
 
-        <section className="max-w-5xl mx-auto px-6 py-20 text-center">
-          <span className="inline-block mb-6 px-4 py-1 text-xs font-bold uppercase tracking-widest rounded-full bg-[#CCE7EA] text-[#0B3A63]">
-            ESG pre-compliance for SMEs
-          </span>
+        {/* HERO BLOCK */}
+        <Hero />
 
-          <h1 className="text-4xl md:text-5xl font-black mb-6 text-[#0B3A63]">
-            Instant SME Carbon Footprint Attestation
-          </h1>
+        {/* TRUSTED BLOCK */}
+        <Trusted />
 
-          <h2 className="text-xl md:text-2xl font-bold mb-6 text-[#1FB6C1]">
-            Scope 1 · Scope 2 · Scope 3 estimation
-          </h2>
+        {/* HOW IT WORKS */}
+        <HowItWorks />
 
-          <p className="text-lg text-[#475569] max-w-3xl mx-auto mb-10">
-            Instantly calculate your emissions using a recognized spend-based methodology.
-          </p>
+        {/* COMPARISON TABLE */}
+        <ComparisonTable />
 
-          <a
-            href="#assessment"
-            className="inline-flex bg-[#1FB6C1] text-white font-bold px-8 py-4 rounded-xl shadow"
-          >
-            Start my assessment
-          </a>
-        </section>
+        {/* PDF MOCKUP (Preview of attestation) */}
+        <PdfMockup />
 
-        <section className="max-w-6xl mx-auto px-6 py-20">
-          <h2 className="text-3xl font-black text-center text-[#0B3A63] mb-10">
-            What SMEs across Europe say
-          </h2>
+        {/* SECURITY / VERIFICATION SECTION */}
+        <SecurityBlock />
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {testimonials.map((t, i) => (
-              <div key={i} className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
-                <p className="text-sm text-[#475569] mb-4">“{t.text}”</p>
-                <p className="font-bold text-[#0B3A63]">{t.author}</p>
-                <p className="text-xs text-[#64748B]">{t.role}</p>
-              </div>
-            ))}
-          </div>
-        </section>
+        {/* TESTIMONIALS */}
+        <TestimonialsSlider />
 
+        {/* ASSESSMENT FORM */}
         <section id="assessment" className="max-w-4xl mx-auto py-24 px-6">
-          <div className="bg-white border border-slate-200 rounded-2xl shadow-sm p-4">
-            <AssessmentForm />
-          </div>
+          <AssessmentWrapper />
         </section>
-
       </main>
 
+      {/* FOOTER */}
       <footer className="bg-white border-t border-slate-200 py-16 px-6">
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12">
+
           <div>
             <h3 className="font-bold text-[#0B3A63] mb-2">Certif-Scope</h3>
             <p className="text-sm text-[#475569]">
