@@ -178,24 +178,7 @@ export const attestationTemplate = `
       border-left: 3px solid var(--blue-dark);
     }
 
-    .page-num {
-      position: absolute;
-      bottom: 0;
-      right: 0;
-      font-size: 10px;
-      color: var(--text-muted);
-    }
-
-    ul { margin-top: 5px; padding-left: 20px; }
-    li { margin-bottom: 4px; }
-
     .container { max-width: 760px; margin: 0 auto; padding: 0 20px; }
-
-    @media print {
-      .watermark { display:none; }
-      body { background: white; color: #000; }
-      .qr-box img { page-break-inside: avoid; }
-    }
   </style>
 </head>
 
@@ -227,10 +210,10 @@ export const attestationTemplate = `
   <div class="section">
     <h2>1. Entity Identification</h2>
     <table style="margin-top:10px; border:none;">
-        <tr style="border:none;"><td style="border:none; padding:4px 0;"><strong>Company Name:</strong></td><td style="border:none; padding:4px 0;">{{COMPANY_NAME}}</td></tr>
-        <tr style="border:none;"><td style="border:none; padding:4px 0;"><strong>Business Sector:</strong></td><td style="border:none; padding:4px 0;">{{BUSINESS_SECTOR}}</td></tr>
-        <tr style="border:none;"><td style="border:none; padding:4px 0;"><strong>Country:</strong></td><td style="border:none; padding:4px 0;">{{COUNTRY}}</td></tr>
-        <tr style="border:none;"><td style="border:none; padding:4px 0;"><strong>Assessment Period:</strong></td><td style="border:none; padding:4px 0;">{{ASSESSMENT_PERIOD}}</td></tr>
+        <tr><td><strong>Company Name:</strong></td><td>{{COMPANY_NAME}}</td></tr>
+        <tr><td><strong>Business Sector:</strong></td><td>{{BUSINESS_SECTOR}}</td></tr>
+        <tr><td><strong>Country:</strong></td><td>{{COUNTRY}}</td></tr>
+        <tr><td><strong>Assessment Period:</strong></td><td>{{ASSESSMENT_PERIOD}}</td></tr>
     </table>
   </div>
 
@@ -266,7 +249,7 @@ export const attestationTemplate = `
         <li>Emission factors updated — Methodology v{{METHODOLOGY_VERSION}}</li>
       </ul>
     </div>
-    
+
     <div class="chart-section" style="margin-top:25px;">
       <h3>Visual Breakdown</h3>
       
@@ -293,14 +276,14 @@ export const attestationTemplate = `
         </div>
         <div class="chart-value">{{SCOPE_3}} t</div>
       </div>
-      
+
       <div style="font-size:10px; color:#94A3B8; margin-top:8px; text-align:right;">* Bars represent relative contribution to total footprint</div>
     </div>
   </div>
 
   <div class="section">
     <h2>3. Emissions Detail</h2>
-    <table role="table" aria-label="Détail des émissions">
+    <table>
       <thead>
         <tr>
           <th width="20%">Scope</th>
@@ -341,9 +324,9 @@ export const attestationTemplate = `
       <li><strong>Scope 2:</strong> Electricity expenses × emission factor</li>
       <li><strong>Scope 3:</strong> Annual revenue × sector intensity coefficient</li>
     </ul>
-    
-    <p style="font-size:13px; color:var(--text-muted); margin-top:10px;">
-      <em>Source of emission factors: ADEME Base Empreinte® and recognized monetary ratios for the specific business sector.</em>
+
+    <p style="font-size:13px; color:var(--text-muted);">
+      <em>Source of emission factors: ADEME Base Empreinte® and recognized monetary ratios (GHG Protocol).</em>
     </p>
 
     <h3>5.2 Purpose & Limitations</h3>
@@ -354,35 +337,16 @@ export const attestationTemplate = `
         <li>Internal awareness & baseline setting</li>
     </ul>
     <p>
-      It does not replace a physical carbon audit (activity-based) required for regulatory CSRD reporting for large entities.
+      It does not replace a physical carbon audit required for CSRD regulatory reporting.
     </p>
 
     <div class="section">
       <h3>5.3 Emission Factors Used</h3>
       <table>
-        <thead>
-          <tr>
-            <th>Category</th>
-            <th>Coefficient</th>
-            <th>Source</th>
-          </tr>
-        </thead>
         <tbody>
-          <tr>
-            <td>Scope 1 — Fuel</td>
-            <td>0.0002 tCO₂e/€</td>
-            <td>ADEME Base Empreinte® v2023.1</td>
-          </tr>
-          <tr>
-            <td>Scope 2 — Electricity</td>
-            <td>0.0001 tCO₂e/€</td>
-            <td>ADEME Base Empreinte® v2023.1</td>
-          </tr>
-          <tr>
-            <td>Scope 3 — Sector Screening</td>
-            <td>0.00005 tCO₂e/€</td>
-            <td>Sector Monetary Ratios 2023 (GHG Protocol)</td>
-          </tr>
+          <tr><td>Scope 1 — Fuel</td><td>0.0002 tCO₂e/€</td><td>ADEME Base Empreinte</td></tr>
+          <tr><td>Scope 2 — Electricity</td><td>0.0001 tCO₂e/€</td><td>ADEME Base Empreinte</td></tr>
+          <tr><td>Scope 3 — Sector Screening</td><td>0.00005 tCO₂e/€</td><td>GHG Protocol Monetary Ratios</td></tr>
         </tbody>
       </table>
     </div>
@@ -391,41 +355,35 @@ export const attestationTemplate = `
 
   <div class="section">
     <h2>6. Data Privacy & Integrity</h2>
-    <p>
-      <strong>Privacy-First:</strong> All raw financial data processing is performed locally on the client-side. Certif-Scope does not store the user's revenue or expense data.
-    </p>
-    <p>
-      <strong>Authenticity:</strong> This document is cryptographically hashed. The unique hash displayed above ensures the integrity of the emitted values.
-    </p>
+    <p><strong>Privacy-first:</strong> All raw data stays client-side. Certif-Scope stores no financial inputs.</p>
+    <p><strong>Authenticity:</strong> A SHA-256 hash ensures integrity and detects any modification.</p>
   </div>
 
   <div class="section">
     <h2>7. Legal Disclaimer</h2>
     <p style="font-size:12px; color:var(--text-muted); text-align:justify;">
-      This attestation is a methodological estimation provided "as is". Certif-Scope (and its parent entity) assumes no liability for the accuracy of the financial inputs provided by the user. This document is not a certified audit under ISO 14064 standards nor a regulatory declaration. It is intended for informational and voluntary compliance purposes only.
+      This attestation is provided "as is". Certif-Scope assumes no liability for inaccuracies in user input.
+      It is not an ISO-14064 audit nor a CSRD-compliant declaration.
     </p>
-    <p style="font-size:10px;color:#94A3B8; margin-top:5px;">Any modification invalidates the document.</p>
   </div>
 
   <div class="footer">
-    <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+    <div style="display:flex; justify-content:space-between;">
       <div>
         <strong>Certif-Scope</strong> — Independent ESG Service<br>
         Generated by Certif-Scope v1.0<br>
-        Jurisdiction: France (EU)<br>
-        Support: contact@certif-scope.com<br>
-        <div style="margin-top:6px;">Prepared for: {{COMPANY_NAME}}</div>
-        <div style="font-size:9px;color:#94A3B8;">Prepared on: {{PREPARED_ON}}</div>
+        Prepared on: {{PREPARED_ON}}<br>
+        For: {{COMPANY_NAME}}
       </div>
       <div style="text-align:right;">
-        <div style="margin-bottom:4px;">Issued by Certif-Scope Automated Engine</div>
-        <div style="font-size:9px; text-transform:uppercase; color:#94A3B8;">Non-human signature</div>
+        <div>Issued by automated engine</div>
+        <div style="font-size:9px;">Non-human signature</div>
         <div style="margin-top:8px;">ID: {{ATTESTATION_ID}}</div>
       </div>
     </div>
-    <div style="text-align:center; margin-top:20px;">
-        <div style="font-size:10px;color:#64748B; margin-top:6px;">Verify: https://certif-scope.com/verify?id={{ATTESTATION_ID}}</div>
-        <div style="font-size:9px;margin-top:4px;color:#94A3B8;">Privacy policy: https://certif-scope.com/privacy</div>
+
+    <div style="text-align:center; margin-top:20px; font-size:10px;">
+      Verify: https://certif-scope.com/verify?id={{ATTESTATION_ID}}
     </div>
   </div>
 
@@ -433,6 +391,8 @@ export const attestationTemplate = `
 </body>
 </html>
 `;
+
+
 
 export function fillAttestationTemplate(data) {
   const total = Number(data.total || 0);
@@ -448,12 +408,12 @@ export function fillAttestationTemplate(data) {
   const shortHash = fullHash.substring(0, 8);
 
   const map = {
-    ATTESTATION_ID: data.attestationId || "",
+    ATTESTATION_ID: data.attestationId,
     ISSUE_DATE_UTC: (data.issueDate || new Date().toISOString()).split("T")[0],
-    COMPANY_NAME: data.companyName || "",
-    BUSINESS_SECTOR: data.sector || "",
-    COUNTRY: data.country || "France",
-    ASSESSMENT_PERIOD: data.period || new Date().getFullYear().toString(),
+    COMPANY_NAME: data.companyName,
+    BUSINESS_SECTOR: data.sector,
+    COUNTRY: data.country,
+    ASSESSMENT_PERIOD: data.period,
     SCOPE_1: s1.toFixed(2),
     SCOPE_2: s2.toFixed(2),
     SCOPE_3: s3.toFixed(2),
@@ -462,26 +422,20 @@ export function fillAttestationTemplate(data) {
     SCOPE_2_PERCENT: pct2,
     SCOPE_3_PERCENT: pct3,
     METHODOLOGY_VERSION: data.methodologyVersion || "3.1",
-
-    // Added fallback to new Date().toISOString() as per your updated logic
-    GENERATION_TIMESTAMP: data.generationTimestamp || new Date().toISOString(),
-
-    // Added fallback to || new Date().toISOString() as per your updated logic
-    PREPARED_ON: (data.preparedOn || data.issueDate || new Date().toISOString()).split("T")[0],
-    
-    QR_CODE: data.qrCodeUrl
-      ? `<img src="${data.qrCodeUrl}" width="120" height="120" alt="QR Code" />`
-      : "",
-    HASH: fullHash
+    PREPARED_ON: (data.preparedOn || new Date().toISOString()).split("T")[0],
+    QR_CODE: data.qrCodeUrl ? `<img src="${data.qrCodeUrl}" />` : "",
+    HASH: fullHash,
   };
 
   let html = attestationTemplate;
 
+  // Replace all placeholders
   for (const key in map) {
-    html = html.replace(new RegExp(`{{${key}}}`, "g"), String(map[key]));
+    html = html.replace(new RegExp(`{{${key}}}`, "g"), map[key]);
   }
 
+  // Hash short separately
   html = html.replace(/{{HASH_SHORT}}/g, shortHash);
 
   return html;
-}
+                                        }
