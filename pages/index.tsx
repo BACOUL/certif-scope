@@ -30,10 +30,10 @@ export default function Home() {
         <meta name="robots" content="index, follow, max-image-preview:large" />
 
         <link rel="canonical" href="https://certif-scope.com/en/" />
-        <link rel="alternate" href="https://certif-scope.com/en/" hreflang="en" />
-        <link rel="alternate" href="https://certif-scope.com/fr/" hreflang="fr" />
-        <link rel="alternate" href="https://certif-scope.com/de/" hreflang="de" />
-        <link rel="alternate" href="https://certif-scope.com/" hreflang="x-default" />
+        <link rel="alternate" href="https://certif-scope.com/en/" hrefLang="en" />
+        <link rel="alternate" href="https://certif-scope.com/fr/" hrefLang="fr" />
+        <link rel="alternate" href="https://certif-scope.com/de/" hrefLang="de" />
+        <link rel="alternate" href="https://certif-scope.com/" hrefLang="x-default" />
 
         <meta property="og:title" content="Certif-Scope — Instant SME Carbon Attestation" />
         <meta
@@ -212,26 +212,28 @@ export default function Home() {
       </section>
 
       <section className="max-w-4xl mx-auto px-6 py-20">
-        <h2 className="text-3xl font-black text-center text-[#0B3A63] mb-12">FAQ — Carbon Attestation for SMEs</h2>
+        <h2 className="text-3xl font-black text-center text-[#0B3A63] mb-12">
+          FAQ — Carbon Attestation for SMEs
+        </h2>
 
         <div className="space-y-6 text-[#475569]">
           <details className="bg-white border border-slate-200 rounded-xl p-4">
-            <summary className="font-bold text-[#0B3A63] cursor-pointer">Is the attestation accepted by banks?</summary>
+            <summary className="font-bold text='#0B3A63] cursor-pointer">Is the attestation accepted by banks?</summary>
             <p className="mt-2 text-sm">Yes. Most European banks require a carbon indicator as part of ESG due diligence.</p>
           </details>
 
           <details className="bg-white border border-slate-200 rounded-xl p-4">
-            <summary className="font-bold text-[#0B3A63] cursor-pointer">Does it include Scope 3 emissions?</summary>
+            <summary className="font-bold text='#0B3A63] cursor-pointer">Does it include Scope 3 emissions?</summary>
             <p className="mt-2 text-sm">Yes. The spend-based methodology includes Scope 3 emissions factors.</p>
           </details>
 
           <details className="bg-white border border-slate-200 rounded-xl p-4">
-            <summary className="font-bold text-[#0B3A63] cursor-pointer">Is this compliant with ESG requirements?</summary>
+            <summary className="font-bold text='#0B3A63] cursor-pointer">Is this compliant with ESG requirements?</summary>
             <p className="mt-2 text-sm">Yes. It follows EU proportionality principles for SMEs.</p>
           </details>
 
           <details className="bg-white border border-slate-200 rounded-xl p-4">
-            <summary className="font-bold text-[#0B3A63] cursor-pointer">Do SMEs need a certified carbon audit?</summary>
+            <summary className="font-bold text='#0B3A63] cursor-pointer">Do SMEs need a certified carbon audit?</summary>
             <p className="mt-2 text-sm">No. A full audit is only required in specific regulated sectors.</p>
           </details>
         </div>
@@ -247,9 +249,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12">
           <div>
             <h3 className="font-bold text-[#0B3A63] mb-2">Certif-Scope</h3>
-            <p className="text-sm text-[#475569]">
-              Instant verifiable carbon footprint attestation for SMEs.
-            </p>
+            <p className="text-sm text-[#475569]">Instant verifiable carbon footprint attestation for SMEs.</p>
           </div>
 
           <div>
@@ -270,4 +270,4 @@ export default function Home() {
       </footer>
     </div>
   );
-                    }
+}
