@@ -75,6 +75,41 @@ export default function Home() {
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               "@context": "https://schema.org",
+              "@type": "BreadcrumbList",
+              "itemListElement": [
+                {
+                  "@type": "ListItem",
+                  "position": 1,
+                  "name": "Home",
+                  "item": "https://certif-scope.com/"
+                }
+              ]
+            })
+          }}
+        />
+
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              "name": "Certif-Scope",
+              "url": "https://certif-scope.com/",
+              "potentialAction": {
+                "@type": "SearchAction",
+                "target": "https://certif-scope.com/search?q={query}",
+                "query-input": "required name=query"
+              }
+            })
+          }}
+        />
+
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
               "@type": "FAQPage",
               "mainEntity": [
                 {
@@ -82,7 +117,7 @@ export default function Home() {
                   "name": "Is the attestation accepted by banks?",
                   "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": "Yes. Most European banks require a carbon indicator for financing applications. Our attestation provides the required fields."
+                    "text": "Yes. Most European banks require a carbon indicator for financing applications."
                   }
                 },
                 {
@@ -106,7 +141,7 @@ export default function Home() {
                   "name": "Do SMEs need a full certified carbon audit?",
                   "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": "No. SMEs can use this simplified method unless legally required to perform a certified audit."
+                    "text": "No full audit is required unless legally mandated for specific sectors."
                   }
                 }
               ]
@@ -117,6 +152,7 @@ export default function Home() {
 
       <header className="bg-white border-b border-slate-200 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+
           <Link href="/" className="text-xl font-black">
             <span className="text-[#0B3A63]">Certif-</span>
             <span className="text-[#1FB6C1]">Scope</span>
@@ -129,8 +165,11 @@ export default function Home() {
             <Link href="/legal">Legal</Link>
           </nav>
 
-          <a href="#assessment" className="hidden md:inline-flex bg-[#1FB6C1] text-white text-xs font-bold px-5 py-3 rounded-lg">
-            Start Assessment
+          <a
+            href="#assessment"
+            className="hidden md:inline-flex bg-[#1FB6C1] text-white text-xs font-bold px-5 py-3 rounded-lg"
+          >
+            Generate Attestation
           </a>
 
           <button className="md:hidden text-[#0B3A63]" onClick={() => setMenuOpen(!menuOpen)}>
@@ -145,10 +184,10 @@ export default function Home() {
         {menuOpen && (
           <div className="md:hidden bg-white border-t border-slate-200 px-6 py-6">
             <nav className="flex flex-col gap-4 text-sm font-semibold text-[#475569]">
-              <Link href="/why-required">Why Required</Link>
-              <Link href="/methodology">Methodology</Link>
-              <Link href="/verify">Verify</Link>
-              <Link href="/legal">Legal</Link>
+              <Link href="/why-required" onClick={() => setMenuOpen(false)}>Why Required</Link>
+              <Link href="/methodology" onClick={() => setMenuOpen(false)}>Methodology</Link>
+              <Link href="/verify" onClick={() => setMenuOpen(false)}>Verify</Link>
+              <Link href="/legal" onClick={() => setMenuOpen(false)}>Legal</Link>
             </nav>
           </div>
         )}
@@ -167,13 +206,46 @@ export default function Home() {
           Generate a verifiable carbon footprint attestation instantly. Trusted by European banks, procurement departments and insurers.
         </p>
 
-        <a href="#assessment" className="inline-flex bg-[#1FB6C1] text-white font-bold px-8 py-4 rounded-xl shadow">
-          Start my assessment
+        <a
+          href="#assessment"
+          className="inline-flex bg-[#1FB6C1] text-white font-bold px-8 py-4 rounded-xl shadow text-lg"
+        >
+          Generate my verified CO₂ attestation
         </a>
 
         <div className="mt-8 flex flex-col items-center gap-2">
           <Link href="/sample-pdf" className="text-sm underline text-[#475569]">View sample attestation</Link>
           <Link href="/verify" className="text-sm underline text-[#475569]">Verify an attestation</Link>
+        </div>
+      </section>
+
+      <section className="max-w-6xl mx-auto px-6 py-20">
+        <h2 className="text-3xl font-black text-center text-[#0B3A63] mb-12">
+          How it works
+        </h2>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 text-center">
+
+          <div className="bg-white border border-slate-200 rounded-xl p-8 shadow-sm">
+            <h3 className="font-bold text-[#0B3A63] mb-2">1. Enter your spending</h3>
+            <p className="text-[#475569] text-sm">
+              Add your annual expenses per category. No documents needed.
+            </p>
+          </div>
+
+          <div className="bg-white border border-slate-200 rounded-xl p-8 shadow-sm">
+            <h3 className="font-bold text-[#0B3A63] mb-2">2. Instant calculation</h3>
+            <p className="text-[#475569] text-sm">
+              Our engine applies recognized emission factors (Scope 1–2–3).
+            </p>
+          </div>
+
+          <div className="bg-white border border-slate-200 rounded-xl p-8 shadow-sm">
+            <h3 className="font-bold text-[#0B3A63] mb-2">3. Download your attestation</h3>
+            <p className="text-[#475569] text-sm">
+              Receive a ready-to-send PDF accepted by banks & procurement.
+            </p>
+          </div>
         </div>
       </section>
 
@@ -211,31 +283,58 @@ export default function Home() {
         </div>
       </section>
 
+      <section className="max-w-6xl mx-auto px-6 py-20">
+        <h2 className="text-3xl font-black text-center text-[#0B3A63] mb-10">
+          Methodology overview
+        </h2>
+
+        <p className="text-center text-[#475569] max-w-3xl mx-auto mb-10">
+          Certif-Scope uses a spend-based calculation aligned with the GHG Protocol.
+          Emissions are derived from monetary activity and standardized emission factors
+          covering Scope 1, Scope 2, and Scope 3. This method is recognized for SMEs
+          under proportionality rules across EU procurement and ESG screening.
+        </p>
+
+        <ul className="grid grid-cols-1 md:grid-cols-3 gap-6 text-[#475569] text-sm">
+          <li className="p-6 bg-white border border-slate-200 rounded-xl shadow-sm">
+            Based on internationally recognized emission factors
+          </li>
+          <li className="p-6 bg-white border border-slate-200 rounded-xl shadow-sm">
+            Includes Supplier + Upstream + Operational emissions
+          </li>
+          <li className="p-6 bg-white border border-slate-200 rounded-xl shadow-sm">
+            Fully aligned with SME proportionality requirements
+          </li>
+        </ul>
+      </section>
+
       <section className="max-w-4xl mx-auto px-6 py-20">
         <h2 className="text-3xl font-black text-center text-[#0B3A63] mb-12">
           FAQ — Carbon Attestation for SMEs
         </h2>
 
         <div className="space-y-6 text-[#475569]">
+
           <details className="bg-white border border-slate-200 rounded-xl p-4">
-            <summary className="font-bold text='#0B3A63] cursor-pointer">Is the attestation accepted by banks?</summary>
+            <summary className="font-bold text-[#0B3A63] cursor-pointer">Is the attestation accepted by banks?</summary>
             <p className="mt-2 text-sm">Yes. Most European banks require a carbon indicator as part of ESG due diligence.</p>
           </details>
 
           <details className="bg-white border border-slate-200 rounded-xl p-4">
-            <summary className="font-bold text='#0B3A63] cursor-pointer">Does it include Scope 3 emissions?</summary>
+            <summary className="font-bold text-[#0B3A63] cursor-pointer">Does it include Scope 3 emissions?</summary>
             <p className="mt-2 text-sm">Yes. The spend-based methodology includes Scope 3 emissions factors.</p>
           </details>
 
           <details className="bg-white border border-slate-200 rounded-xl p-4">
-            <summary className="font-bold text='#0B3A63] cursor-pointer">Is this compliant with ESG requirements?</summary>
+            <summary className="font-bold text-[#0B3A63] cursor-pointer">Is this compliant with ESG requirements?</summary>
             <p className="mt-2 text-sm">Yes. It follows EU proportionality principles for SMEs.</p>
           </details>
 
           <details className="bg-white border border-slate-200 rounded-xl p-4">
-            <summary className="font-bold text='#0B3A63] cursor-pointer">Do SMEs need a certified carbon audit?</summary>
+            <summary className="font-bold text-[#0B3A63] cursor-pointer">Do SMEs need a certified carbon audit?</summary>
             <p className="mt-2 text-sm">No. A full audit is only required in specific regulated sectors.</p>
           </details>
+
         </div>
       </section>
 
@@ -249,7 +348,9 @@ export default function Home() {
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12">
           <div>
             <h3 className="font-bold text-[#0B3A63] mb-2">Certif-Scope</h3>
-            <p className="text-sm text-[#475569]">Instant verifiable carbon footprint attestation for SMEs.</p>
+            <p className="text-sm text-[#475569]">
+              Instant verifiable carbon footprint attestation for SMEs.
+            </p>
           </div>
 
           <div>
