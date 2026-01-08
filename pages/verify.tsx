@@ -18,7 +18,6 @@ export default function VerifyPage() {
     if (qid) setId(qid);
     if (qhash) setHash(qhash);
 
-    // Auto-verify from QR code
     if (qid && qhash && /^[a-f0-9]{64}$/i.test(qhash)) {
       verify(qid, qhash);
     }
@@ -47,31 +46,25 @@ export default function VerifyPage() {
     setResult(null);
 
     try {
-      const origin =
-        window.location.hostname === "certif-scope.com"
-          ? "https://certif-scope.com"
-          : "https://certif-scope.com";
-
-      const sources = [
-        `${origin}/attestations.json`,
-        "/attestations.json",
-        "https://raw.githubusercontent.com/BACOUL/certif-scope/main/public/attestations.json"
-      ];
+      const GH = "https://raw.githubusercontent.com/BACOUL/certif-scope/main/attestations.json";
+      const LOCAL = "/attestations.json";
 
       let registry: any = null;
 
-      for (const src of sources) {
+      try {
+        const r = await fetch(GH, { cache: "no-store" });
+        if (r.ok) registry = await r.json();
+      } catch {}
+
+      if (!registry) {
         try {
-          const r = await fetch(src, { cache: "no-store" });
-          if (r.ok) {
-            registry = await r.json();
-            break;
-          }
+          const r2 = await fetch(LOCAL, { cache: "no-store" });
+          if (r2.ok) registry = await r2.json();
         } catch {}
       }
 
-      if (!registry || !Array.isArray(registry.attestations)) {
-        setError("Verification service unavailable (registry not found).");
+      if (!registry || !registry.attestations) {
+        setError("Verification service unavailable (registry missing).");
         setLoading(false);
         return;
       }
@@ -187,7 +180,6 @@ export default function VerifyPage() {
 
                   <p className="text-sm text-[#475569] text-center mb-4">
                     This attestation is officially registered and the hash matches exactly.
-                    The document has not been modified.
                   </p>
 
                   <div className="text-sm text-[#475569] space-y-1 text-center">
@@ -224,4 +216,4 @@ export default function VerifyPage() {
       </div>
     </>
   );
-}
+               }
