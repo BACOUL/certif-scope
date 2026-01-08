@@ -1,152 +1,68 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
-import puppeteer from 'puppeteer-core';
-import chromium from 'chrome-aws-lambda';
-import crypto from 'crypto';
-import QRCode from 'qrcode';
-import { fillAttestationTemplate } from '../../lib/attestationTemplate';
-import { calculateCarbonFootprint } from '../../lib/carbonEngine';
-import { v4 as uuidv4 } from 'uuid';
+import type { NextApiRequest, NextApiResponse } from "next";
+import { calculateCarbonFootprint } from "../../lib/carbonEngine";
+import { fillAttestationTemplate } from "../../lib/attestation/renderer";
+import crypto from "crypto";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
-  }
-
   try {
-    const { companyName, sector, country, period, revenue, fuelSpent, electricitySpent } = req.body;
-
-    if (!companyName || !sector || !revenue) {
-      return res.status(400).json({ error: 'Missing required fields' });
-    }
-
-    // CARBON ENGINE
-    const calc = calculateCarbonFootprint({
+    const {
+      year,
       sector,
-      revenue: Number(revenue),
-      fuelSpent: Number(fuelSpent || 0),
-      electricitySpent: Number(electricitySpent || 0)
-    });
-
-    const attestationId = uuidv4();
-    const now = new Date();
-
-    // DOMAIN
-    const origin =
-      process.env.NEXT_PUBLIC_BASE_URL ||
-      (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null) ||
-      (req.headers.host ? `https://${req.headers.host}` : null) ||
-      "http://localhost:3000";
-
-    const s1 = calc.scope1;
-    const s2 = calc.scope2;
-    const s3 = calc.scope3;
-    const total = calc.total;
-
-    // ================= FIRST PASS (NO QR, NO HASH) =================
-    const htmlInitial = fillAttestationTemplate({
-      attestationId,
-      issueDate: now.toISOString(),
-      preparedOn: now.toISOString(),
+      fuelLiters,
+      electricityKwh,
+      freightKm,
+      businessTravelKm,
+      purchasedGoodsEuro,
       companyName,
-      sector,
-      country: country || "France",
-      period: period || `${now.getFullYear()}`,
-      scope1: s1,
-      scope2: s2,
-      scope3: s3,
-      total,
-      qrCodeUrl: "",
-      hash: ""
-    });
+      country
+    } = req.body;
 
-    const execPath =
-      process.env.NODE_ENV === "development"
-        ? undefined
-        : await chromium.executablePath;
+    // Build input for carbon engine v5
+    const input = {
+      year: Number(year),
+      sector: sector,
+      fuelLiters: Number(fuelLiters) || 0,
+      electricityKwh: Number(electricityKwh) || 0,
+      freightKm: Number(freightKm) || 0,
+      businessTravelKm: Number(businessTravelKm) || 0,
+      purchasedGoodsEuro: Number(purchasedGoodsEuro) || 0
+    };
 
-    const browser1 = await puppeteer.launch({
-      args: chromium.args,
-      executablePath: execPath,
-      headless: chromium.headless
-    });
+    const calc = calculateCarbonFootprint(input);
 
-    const page1 = await browser1.newPage();
-    await page1.setContent(htmlInitial, { waitUntil: "networkidle0" });
+    const attestationId = crypto.randomUUID();
+    const issueDate = new Date().toISOString();
+    const hash = crypto
+      .createHash("sha256")
+      .update(JSON.stringify({ attestationId, calc }))
+      .digest("hex");
 
-    const tmpPdf = await page1.pdf({
-      format: "a4",
-      printBackground: true,
-      margin: { top: "15mm", bottom: "15mm", left: "15mm", right: "15mm" }
-    });
-
-    await browser1.close();
-
-    // HASH
-    const pdfHash = crypto.createHash("sha256").update(tmpPdf).digest("hex");
-    const hashShort = pdfHash.substring(0, 8);
-
-    // QR
-    const verifyUrl = `${origin}/verify?id=${attestationId}&hash=${pdfHash}`;
-    const qrDataUrl = await QRCode.toDataURL(verifyUrl);
-
-    // ================= SECOND PASS (WITH QR + HASH) =================
-    const htmlFinal = fillAttestationTemplate({
+    const html = fillAttestationTemplate({
       attestationId,
-      issueDate: now.toISOString(),
-      preparedOn: now.toISOString(),
-      companyName,
-      sector,
+      issueDate,
+      preparedOn: issueDate,
+      companyName: companyName || "Unknown Company",
+      sector: sector,
       country: country || "France",
-      period: period || `${now.getFullYear()}`,
-      scope1: s1,
-      scope2: s2,
-      scope3: s3,
-      total,
-      qrCodeUrl: qrDataUrl,
-      hash: pdfHash
+      period: year || new Date().getFullYear(),
+
+      scope1: calc.scope1,
+      scope2: calc.scope2,
+      scope3: calc.scope3,
+      total: calc.total,
+
+      methodologyVersion: calc.methodology_version,
+      hash
     });
 
-    const browser2 = await puppeteer.launch({
-      args: chromium.args,
-      executablePath: execPath,
-      headless: chromium.headless
+    res.status(200).json({
+      attestationId,
+      hash,
+      result: calc,
+      html
     });
 
-    const page2 = await browser2.newPage();
-    await page2.setContent(htmlFinal, { waitUntil: "networkidle0" });
-
-    const finalPdf = await page2.pdf({
-      format: "a4",
-      printBackground: true,
-      margin: { top: "15mm", bottom: "15mm", left: "15mm", right: "15mm" }
-    });
-
-    await browser2.close();
-
-    // REGISTER
-    const reg = await fetch(`${origin}/api/register-attestation`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id: attestationId, hash: pdfHash })
-    });
-
-    if (!reg.ok) {
-      console.error("REGISTRY_ERROR:", await reg.text());
-    }
-
-    return res.status(200).json({
-      id: attestationId,
-      hash: pdfHash,
-      hashShort,
-      verifyUrl,
-      pdfBase64: finalPdf.toString("base64")
-    });
-
-  } catch (err: any) {
-    console.error("ATTESTATION_ERROR:", err);
-    return res.status(500).json({
-      error: "Attestation generation failed",
-      details: err.message
-    });
+  } catch (e) {
+    res.status(500).json({ error: "Internal error", details: String(e) });
   }
-      }
+}
