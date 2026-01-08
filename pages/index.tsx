@@ -15,19 +15,20 @@ export default function Home() {
   return (
     <div id="top" className="min-h-screen bg-[#F8FAFC] text-[#1E293B]">
       <Head>
-        <title>Certif-Scope — Certified CO₂ Attestation for SMEs (Scope 1 · Scope 2 · Scope 3)</title>
+        <title>
+          Certif-Scope — Certified CO₂ Attestation for SMEs (Scope 1 · Scope 2 · Scope 3)
+        </title>
 
         <meta
           name="description"
           content="Generate a certified carbon footprint attestation instantly. Full Scope 1, Scope 2 and Scope 3 emissions. Accepted by banks, procurement and insurers."
         />
-
         <meta
           name="keywords"
           content="certified carbon report, CO2 attestation SME, scope 1 2 3 emissions, ESG documentation, procurement compliance, carbon certificate"
         />
-
         <meta name="robots" content="index, follow" />
+
         <link rel="canonical" href="https://certif-scope.com/en/" />
 
         <link rel="alternate" href="https://certif-scope.com/en/" hrefLang="en" />
@@ -104,8 +105,7 @@ export default function Home() {
         </h2>
 
         <p className="text-lg text-[#475569] max-w-3xl mx-auto mb-10">
-          Generate a certified carbon footprint attestation instantly.  
-          Trusted by European banks, procurement teams and insurers.
+          Trusted by banks, procurement teams and insurers.
         </p>
 
         <div className="flex flex-col md:flex-row justify-center gap-4 mt-6">
@@ -126,7 +126,7 @@ export default function Home() {
 
         </div>
 
-        <div className="mt-6 flex flex-col items-center">
+        <div className="mt-6">
           <Link href="/sample-pdf" className="text-sm underline text-[#1FB6C1] font-medium">
             View sample attestation
           </Link>
@@ -134,49 +134,45 @@ export default function Home() {
 
       </section>
 
-      {/* DIFFERENTIATION BLOCK */}
+      {/* DIFFERENTIATION – FUSIONNÉE */}
       <section className="max-w-6xl mx-auto px-6 py-20">
         <h2 className="text-3xl font-black text-center text-[#0B3A63] mb-12">
-          What makes Certif-Scope different?
+          Why companies choose Certif-Scope over simple calculators
         </h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-[#475569]">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 text-[#475569]">
 
           <div className="p-6 bg-white border border-slate-200 rounded-xl shadow-sm">
-            <h3 className="font-bold text-[#0B3A63] mb-2">Built for SMEs</h3>
-            <p>No audit, no consultant, no documents required. Designed for simplicity and speed.</p>
+            <h3 className="font-bold text-[#0B3A63] mb-2">A true attestation</h3>
+            <p>
+              Unique ID, verification link and tamper-proof integrity.  
+              Accepted by banks and large buyers.
+            </p>
           </div>
 
           <div className="p-6 bg-white border border-slate-200 rounded-xl shadow-sm">
-            <h3 className="font-bold text-[#0B3A63] mb-2">Accepted by institutions</h3>
-            <p>Attestations recognised by banks, procurement and insurance partners.</p>
+            <h3 className="font-bold text-[#0B3A63] mb-2">EU compliant</h3>
+            <p>
+              GHG Protocol, Proportionality Rule for SMEs, supply-chain CO₂ screening required by buyers.
+            </p>
           </div>
 
           <div className="p-6 bg-white border border-slate-200 rounded-xl shadow-sm">
-            <h3 className="font-bold text-[#0B3A63] mb-2">Includes Scope 3</h3>
-            <p>Full screening-based method aligned with international guidance.</p>
+            <h3 className="font-bold text-[#0B3A63] mb-2">Full Scope 3 included</h3>
+            <p>
+              Spend-based method, no supplier survey, fully automatic.
+            </p>
+          </div>
+
+          <div className="p-6 bg-white border border-slate-200 rounded-xl shadow-sm">
+            <h3 className="font-bold text-[#0B3A63] mb-2">Private & secure</h3>
+            <p>
+              No document upload.  
+              Calculations processed locally on your device.
+            </p>
           </div>
 
         </div>
-      </section>
-
-      {/* WHY SMEs USE IT */}
-      <section className="max-w-7xl mx-auto px-6 py-20">
-        <h2 className="text-3xl font-black text-center text-[#0B3A63] mb-10">
-          Why European SMEs Use Certif-Scope
-        </h2>
-
-        <ul className="grid grid-cols-1 md:grid-cols-3 gap-6 text-[#475569] text-lg">
-          <li className="p-6 bg-white border border-slate-200 rounded-xl shadow-sm">
-            Accepted by banks for financing applications.
-          </li>
-          <li className="p-6 bg-white border border-slate-200 rounded-xl shadow-sm">
-            Valid for procurement documentation & supplier onboarding.
-          </li>
-          <li className="p-6 bg-white border border-slate-200 rounded-xl shadow-sm">
-            Used by insurers requiring climate-risk indicators.
-          </li>
-        </ul>
       </section>
 
       {/* HOW IT WORKS */}
@@ -187,49 +183,17 @@ export default function Home() {
 
           <div className="bg-white border border-slate-200 rounded-xl p-8 shadow-sm">
             <h3 className="font-bold text-[#0B3A63] mb-2">1. Enter your data</h3>
-            <p className="text-[#475569] text-sm">
-              Add annual values per category. No documents required.
-            </p>
+            <p className="text-[#475569] text-sm">Add your yearly activity data.</p>
           </div>
 
           <div className="bg-white border border-slate-200 rounded-xl p-8 shadow-sm">
             <h3 className="font-bold text-[#0B3A63] mb-2">2. Instant calculation</h3>
-            <p className="text-[#475569] text-sm">
-              Our engine applies recognized Scope 1–2–3 factors.
-            </p>
+            <p className="text-[#475569] text-sm">Our engine applies recognized factors.</p>
           </div>
 
           <div className="bg-white border border-slate-200 rounded-xl p-8 shadow-sm">
-            <h3 className="font-bold text-[#0B3A63] mb-2">3. Download your attestation</h3>
-            <p className="text-[#475569] text-sm">
-              Certified PDF accepted by banks & procurement.
-            </p>
-          </div>
-
-        </div>
-      </section>
-
-      {/* REGULATORY BLOCK */}
-      <section className="max-w-6xl mx-auto px-6 py-20">
-        <h2 className="text-3xl font-black text-center text-[#0B3A63] mb-12">
-          Meets real regulatory expectations
-        </h2>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-[#475569]">
-
-          <div className="p-6 bg-white border border-slate-200 rounded-xl shadow-sm">
-            <h3 className="font-bold text-[#0B3A63] mb-2">Proportionality Rule</h3>
-            <p>SMEs may use simplified screening instead of audits under EU ESG principles.</p>
-          </div>
-
-          <div className="p-6 bg-white border border-slate-200 rounded-xl shadow-sm">
-            <h3 className="font-bold text-[#0B3A63] mb-2">Supply-chain Requirements</h3>
-            <p>Large buyers request CO₂ indicators from SME suppliers as standard practice.</p>
-          </div>
-
-          <div className="p-6 bg-white border border-slate-200 rounded-xl shadow-sm">
-            <h3 className="font-bold text-[#0B3A63] mb-2">Banking Due Diligence</h3>
-            <p>Financial institutions require basic CO₂ data for risk scoring and eligibility.</p>
+            <h3 className="font-bold text-[#0B3A63] mb-2">3. Download attestation</h3>
+            <p className="text-[#475569] text-sm">Certified PDF with verification link.</p>
           </div>
 
         </div>
@@ -258,11 +222,9 @@ export default function Home() {
           Methodology Overview
         </h2>
 
-        <p className="text-center text-[#475569] max-w-3xl mx-auto mb-10">
-          Certif-Scope uses a spend-based calculation aligned with the GHG Protocol.
-          Emissions are derived from monetary activity and standardized emission factors
-          covering Scope 1, Scope 2, and Scope 3. This method is recognized for SMEs
-          under proportionality rules across EU procurement and ESG screening.
+        <p className="text-center text-[#475569] max-w-3xl mx-auto">
+          The calculation follows the GHG Protocol using a recognized spend-based method covering Scope 1, Scope 2, and Scope 3.  
+          Results are accepted by banks, procurement teams and insurers as part of ESG screening.
         </p>
       </section>
 
@@ -275,18 +237,39 @@ export default function Home() {
         <div className="space-y-6 text-[#475569]">
 
           <details className="bg-white border border-slate-200 rounded-xl p-4">
-            <summary className="font-bold text-[#0B3A63] cursor-pointer">Is the attestation accepted by banks?</summary>
-            <p className="mt-2 text-sm">Yes. Most European banks require a carbon indicator.</p>
+            <summary className="font-bold text-[#0B3A63] cursor-pointer">
+              Is the attestation accepted by banks?
+            </summary>
+            <p className="mt-2 text-sm">
+              Yes. Most European financial institutions require a carbon indicator.
+            </p>
           </details>
 
           <details className="bg-white border border-slate-200 rounded-xl p-4">
-            <summary className="font-bold text-[#0B3A63] cursor-pointer">Does it include Scope 3 emissions?</summary>
-            <p className="mt-2 text-sm">Yes, using recognized spend-based factors.</p>
+            <summary className="font-bold text-[#0B3A63] cursor-pointer">
+              Why is Scope 3 included?
+            </summary>
+            <p className="mt-2 text-sm">
+              SMEs must provide supply-chain indicators to buyers and procurement.
+            </p>
           </details>
 
           <details className="bg-white border border-slate-200 rounded-xl p-4">
-            <summary className="font-bold text-[#0B3A63] cursor-pointer">Is it compliant with ESG requirements?</summary>
-            <p className="mt-2 text-sm">Yes, aligned with EU proportionality rules.</p>
+            <summary className="font-bold text-[#0B3A63] cursor-pointer">
+              Is it ESG compliant?
+            </summary>
+            <p className="mt-2 text-sm">
+              Yes. Fully aligned with GHG Protocol and EU proportionality principles.
+            </p>
+          </details>
+
+          <details className="bg-white border border-slate-200 rounded-xl p-4">
+            <summary className="font-bold text-[#0B3A63] cursor-pointer">
+              Is my data secure?
+            </summary>
+            <p className="mt-2 text-sm">
+              All processing occurs locally on your device. No document upload required.
+            </p>
           </details>
 
         </div>
