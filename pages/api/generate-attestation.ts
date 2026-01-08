@@ -30,7 +30,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const attestationId = uuidv4();
     const now = new Date();
 
-    // ROBUST DOMAIN RESOLUTION
+    // DOMAIN
     const origin =
       process.env.NEXT_PUBLIC_BASE_URL ||
       (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null) ||
@@ -42,10 +42,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const s3 = calc.scope3;
     const total = calc.total;
 
-    const pct1 = total > 0 ? ((s1 / total) * 100).toFixed(1) : "0";
-    const pct2 = total > 0 ? ((s2 / total) * 100).toFixed(1) : "0";
-    const pct3 = total > 0 ? ((s3 / total) * 100).toFixed(1) : "0";
-
     // ================= FIRST PASS (NO QR, NO HASH) =================
     const htmlInitial = fillAttestationTemplate({
       attestationId,
@@ -53,15 +49,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       preparedOn: now.toISOString(),
       companyName,
       sector,
-      country: country || "N/A",
+      country: country || "France",
       period: period || `${now.getFullYear()}`,
       scope1: s1,
       scope2: s2,
       scope3: s3,
       total,
-      scope1Percent: pct1,
-      scope2Percent: pct2,
-      scope3Percent: pct3,
       qrCodeUrl: "",
       hash: ""
     });
@@ -88,11 +81,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     await browser1.close();
 
-    // HASH COMPUTATION
+    // HASH
     const pdfHash = crypto.createHash("sha256").update(tmpPdf).digest("hex");
     const hashShort = pdfHash.substring(0, 8);
 
-    // QR CODE GENERATION
+    // QR
     const verifyUrl = `${origin}/verify?id=${attestationId}&hash=${pdfHash}`;
     const qrDataUrl = await QRCode.toDataURL(verifyUrl);
 
@@ -103,15 +96,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       preparedOn: now.toISOString(),
       companyName,
       sector,
-      country: country || "N/A",
+      country: country || "France",
       period: period || `${now.getFullYear()}`,
       scope1: s1,
       scope2: s2,
       scope3: s3,
       total,
-      scope1Percent: pct1,
-      scope2Percent: pct2,
-      scope3Percent: pct3,
       qrCodeUrl: qrDataUrl,
       hash: pdfHash
     });
@@ -133,7 +123,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     await browser2.close();
 
-    // REGISTER ATTESTATION
+    // REGISTER
     const reg = await fetch(`${origin}/api/register-attestation`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -142,7 +132,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     if (!reg.ok) {
       console.error("REGISTRY_ERROR:", await reg.text());
-      // But we still return the PDF even if registry fails
     }
 
     return res.status(200).json({
@@ -160,4 +149,4 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       details: err.message
     });
   }
-  }
+      }
