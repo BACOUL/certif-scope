@@ -45,7 +45,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const pct2 = total > 0 ? ((s2 / total) * 100).toFixed(1) : "0";
     const pct3 = total > 0 ? ((s3 / total) * 100).toFixed(1) : "0";
 
-    const tempHTML = fillTemplate(attestationTemplate, {
+    // === FIRST PASS — PDF → hash ===
+    const htmlInitial = fillTemplate(attestationTemplate, {
       ATTESTATION_ID: attestationId,
       ISSUE_DATE_UTC: issueDate,
       COMPANY_NAME: report.companyName || "N/A",
@@ -67,22 +68,31 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       HASH_SHORT: ""
     });
 
-    const pdf1 = await fetch(`https://chrome.browserless.io/pdf?token=${BROWSERLESS_KEY}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        html: tempHTML,
-        options: { printBackground: true, format: "A4" }
-      })
-    }).then(r => r.arrayBuffer());
+    const pdf1Resp = await fetch(
+      `https://chrome.browserless.io/pdf?token=${BROWSERLESS_KEY}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          html: htmlInitial,
+          options: { printBackground: true, format: "A4" }
+        })
+      }
+    );
 
-    const hash = computeHash(Buffer.from(pdf1));
+    if (!pdf1Resp.ok) {
+      throw new Error("Browserless PDF generation failed");
+    }
+
+    const pdf1Buffer = Buffer.from(await pdf1Resp.arrayBuffer());
+    const hash = computeHash(pdf1Buffer);
     const hashShort = hash.substring(0, 8) + "...";
 
     const verifyUrl = `https://certif-scope.com/verify?id=${attestationId}&hash=${hash}`;
     const qrDataURL = await QRCode.toDataURL(verifyUrl);
 
-    const finalHTML = fillTemplate(attestationTemplate, {
+    // === SECOND PASS — PDF with QR + hash ===
+    const htmlFinal = fillTemplate(attestationTemplate, {
       ATTESTATION_ID: attestationId,
       ISSUE_DATE_UTC: issueDate,
       COMPANY_NAME: report.companyName || "N/A",
@@ -104,28 +114,37 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       HASH_SHORT: hashShort
     });
 
-    const pdf2 = await fetch(`https://chrome.browserless.io/pdf?token=${BROWSERLESS_KEY}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        html: finalHTML,
-        options: { printBackground: true, format: "A4" }
-      })
-    }).then(r => r.arrayBuffer());
+    const pdf2Resp = await fetch(
+      `https://chrome.browserless.io/pdf?token=${BROWSERLESS_KEY}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          html: htmlFinal,
+          options: { printBackground: true, format: "A4" }
+        })
+      }
+    );
 
-    res.status(200).json({
+    if (!pdf2Resp.ok) {
+      throw new Error("Final PDF generation failed");
+    }
+
+    const pdf2Buffer = Buffer.from(await pdf2Resp.arrayBuffer());
+
+    return res.status(200).json({
       id: attestationId,
       hash,
       hashShort,
       verifyUrl,
-      pdfBase64: Buffer.from(pdf2).toString("base64")
+      pdfBase64: pdf2Buffer.toString("base64")
     });
 
   } catch (error: any) {
     console.error("BROWSERLESS_ERROR", error);
-    res.status(500).json({
+    return res.status(500).json({
       error: "PDF generation failed",
       details: error?.message || String(error)
     });
   }
-      }
+                               }
