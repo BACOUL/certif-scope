@@ -19,6 +19,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(400).json({ error: 'Missing required fields' });
     }
 
+    // CARBON ENGINE — validated inputs
     const calc = calculateCarbonFootprint({
       sector,
       revenue: Number(revenue),
@@ -29,10 +30,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const attestationId = uuidv4();
     const now = new Date();
 
-    // Ensure correct domain in production
+    // DOMAIN HANDLING (robust)
     const origin =
       process.env.NEXT_PUBLIC_BASE_URL ||
-      `https://${req.headers.host}`;
+      (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null) ||
+      (req.headers.host ? `https://${req.headers.host}` : null) ||
+      "http://localhost:3000";
 
     const s1 = calc.scope1;
     const s2 = calc.scope2;
@@ -43,7 +46,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const pct2 = total > 0 ? ((s2 / total) * 100).toFixed(1) : "0";
     const pct3 = total > 0 ? ((s3 / total) * 100).toFixed(1) : "0";
 
-    // FIRST PDF — no hash, no QR
+    // ================= FIRST PASS ================
     const htmlInitial = fillAttestationTemplate({
       attestationId,
       issueDate: now.toISOString(),
@@ -51,7 +54,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       companyName,
       sector,
       country: country || "N/A",
-      period: period || "N/A",
+      period: period || `${now.getFullYear()}`,
       scope1: s1,
       scope2: s2,
       scope3: s3,
@@ -63,14 +66,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       hash: ""
     });
 
-    const executablePath =
+    const execPath =
       process.env.NODE_ENV === "development"
         ? undefined
         : await chromium.executablePath;
 
     const browser1 = await puppeteer.launch({
       args: chromium.args,
-      executablePath,
+      executablePath: execPath,
       headless: chromium.headless
     });
 
@@ -85,14 +88,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     await browser1.close();
 
-    // Compute SHA-256 hash
+    // HASH GENERATION (final hash based on raw pdf)
     const pdfHash = crypto.createHash("sha256").update(tmpPdf).digest("hex");
-    const hashShort = pdfHash.substring(0, 8) + "...";
+    const hashShort = pdfHash.substring(0, 8);
 
+    // QR — encoded URL
     const verifyUrl = `${origin}/verify?id=${attestationId}&hash=${pdfHash}`;
     const qrDataUrl = await QRCode.toDataURL(verifyUrl);
 
-    // SECOND PDF — with QR + hash
+    // ================= SECOND PASS ================
     const htmlFinal = fillAttestationTemplate({
       attestationId,
       issueDate: now.toISOString(),
@@ -100,7 +104,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       companyName,
       sector,
       country: country || "N/A",
-      period: period || "N/A",
+      period: period || `${now.getFullYear()}`,
       scope1: s1,
       scope2: s2,
       scope3: s3,
@@ -114,7 +118,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const browser2 = await puppeteer.launch({
       args: chromium.args,
-      executablePath,
+      executablePath: execPath,
       headless: chromium.headless
     });
 
@@ -129,7 +133,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     await browser2.close();
 
-    // Register attestation
+    // REGISTER ATTESTATION
     const reg = await fetch(`${origin}/api/register-attestation`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -150,6 +154,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   } catch (err: any) {
     console.error("ATTESTATION_ERROR:", err);
-    return res.status(500).json({ error: "Attestation generation failed", details: err.message });
+    return res.status(500).json({
+      error: "Attestation generation failed",
+      details: err.message
+    });
   }
-}
+      }
