@@ -29,10 +29,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const attestationId = uuidv4();
     const now = new Date();
 
+    // Ensure correct domain in production
     const origin =
-      req.headers.origin ||
       process.env.NEXT_PUBLIC_BASE_URL ||
-      "https://certif-scope.com";
+      `https://${req.headers.host}`;
 
     const s1 = calc.scope1;
     const s2 = calc.scope2;
@@ -43,7 +43,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const pct2 = total > 0 ? ((s2 / total) * 100).toFixed(1) : "0";
     const pct3 = total > 0 ? ((s3 / total) * 100).toFixed(1) : "0";
 
-    // FIRST PASS — NO QR, NO HASH
+    // FIRST PDF — no hash, no QR
     const htmlInitial = fillAttestationTemplate({
       attestationId,
       issueDate: now.toISOString(),
@@ -85,13 +85,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     await browser1.close();
 
+    // Compute SHA-256 hash
     const pdfHash = crypto.createHash("sha256").update(tmpPdf).digest("hex");
     const hashShort = pdfHash.substring(0, 8) + "...";
 
     const verifyUrl = `${origin}/verify?id=${attestationId}&hash=${pdfHash}`;
     const qrDataUrl = await QRCode.toDataURL(verifyUrl);
 
-    // SECOND PASS — WITH QR + HASH
+    // SECOND PDF — with QR + hash
     const htmlFinal = fillAttestationTemplate({
       attestationId,
       issueDate: now.toISOString(),
@@ -128,11 +129,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     await browser2.close();
 
-    await fetch(`${origin}/api/register-attestation`, {
+    // Register attestation
+    const reg = await fetch(`${origin}/api/register-attestation`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ id: attestationId, hash: pdfHash })
     });
+
+    if (!reg.ok) {
+      console.error("REGISTRY_ERROR", await reg.text());
+    }
 
     return res.status(200).json({
       id: attestationId,
