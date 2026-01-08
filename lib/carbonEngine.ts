@@ -1,62 +1,84 @@
 export type CarbonInput = {
-  sector: "services" | "retail" | "construction" | "manufacturing" | "transport";
-  revenue: number;
-  fuelSpent: number;
-  electricitySpent: number;
+  year: number; // année déclarative
+  sector:
+    | "services"
+    | "retail"
+    | "construction"
+    | "manufacturing"
+    | "transport";
+
+  // Données énergétiques annuelles
+  fuelLiters: number;          // litres de diesel/essence consommés (Scope 1)
+  electricityKwh: number;      // kWh consommés (Scope 2)
+
+  // Scope 3 minimum (PME-friendly)
+  freightKm: number;           // km de livraison / logistique externalisée
+  businessTravelKm: number;    // déplacements professionnels
+  purchasedGoodsEuro: number;  // achats de biens et services (€)
 };
 
 /**
- * Carbon estimation engine — v3
+ * Carbon estimation engine — v5 (PME Pro)
  *
- * Unified model used by:
- * - front-end preview
- * - backend attestation generation
- * - PDF rendering
+ * Facteurs d’émissions inspirés :
+ * - ADEME Base Carbone (approx)
+ * - DEFRA UK GHG conversion factors
+ * - EPA simplified methodology
  *
- * Includes methodology versioning and coefficient transparency.
+ * Valeurs simplifiées pour usage PME sans audit.
  */
 export function calculateCarbonFootprint(input: CarbonInput) {
+  // Sécurisation des valeurs
+  const fuel = Math.max(0, Number(input.fuelLiters) || 0);
+  const kwh = Math.max(0, Number(input.electricityKwh) || 0);
+  const freight = Math.max(0, Number(input.freightKm) || 0);
+  const travel = Math.max(0, Number(input.businessTravelKm) || 0);
+  const purchases = Math.max(0, Number(input.purchasedGoodsEuro) || 0);
 
-  const revenue = Math.max(0, Number(input.revenue) || 0);
-  const fuel = Math.max(0, Number(input.fuelSpent) || 0);
-  const electricity = Math.max(0, Number(input.electricitySpent) || 0);
-
-  // Normalized coefficient table (exposed in attestation)
+  // Coefficients (version PME simplifiée)
   const coefficients = {
-    scope1_fuel: 0.0002,
-    scope2_electricity: 0.0001,
-    scope3_revenue: 0.00005
+    scope1_fuel_liter: 2.68,     // kg CO₂ / litre diesel (approx)
+    scope2_elec_kwh: 0.06,       // kg CO₂ / kWh (mix européen)
+    scope3_freight_km: 0.18,     // kg CO₂ par km de livraison
+    scope3_travel_km: 0.14,      // kg CO₂ par km déplacement pro
+    scope3_purchased_eur: 0.45,  // kg CO₂ / € dépensé (moyenne multi-secteurs)
   };
 
-  // Emissions (raw)
-  const rawScope1 = fuel * coefficients.scope1_fuel;
-  const rawScope2 = electricity * coefficients.scope2_electricity;
-  const rawScope3 = revenue * coefficients.scope3_revenue;
+  // Calculs
+  const scope1 = fuel * coefficients.scope1_fuel_liter;
+  const scope2 = kwh * coefficients.scope2_elec_kwh;
+  const scope3 =
+    freight * coefficients.scope3_freight_km +
+    travel * coefficients.scope3_travel_km +
+    purchases * coefficients.scope3_purchased_eur;
 
-  const totalRaw = rawScope1 + rawScope2 + rawScope3;
+  const total = scope1 + scope2 + scope3;
 
-  // Rounded outputs
-  const scope1 = Number(rawScope1.toFixed(2));
-  const scope2 = Number(rawScope2.toFixed(2));
-  const scope3 = Number(rawScope3.toFixed(2));
-  const total = Number(totalRaw.toFixed(2));
+  // Arrondis
+  const rounded = {
+    scope1: Number(scope1.toFixed(2)),
+    scope2: Number(scope2.toFixed(2)),
+    scope3: Number(scope3.toFixed(2)),
+    total: Number(total.toFixed(2)),
+  };
 
-  // Consistency warning for unrealistic inputs
+  // Warnings intelligents
   const warnings: string[] = [];
 
-  if (revenue > 1000000 && (fuel === 0 || electricity === 0)) {
-    warnings.push(
-      "Declared revenue is very high while energy expenses are zero — results may be underestimated."
-    );
+  if (fuel === 0 && input.sector === "transport") {
+    warnings.push("Transport sector with zero fuel usage is unusual — check data.");
+  }
+
+  if (purchases === 0 && (input.sector === "retail" || input.sector === "manufacturing")) {
+    warnings.push("Purchases are normally significant in this sector — results may be underestimated.");
   }
 
   return {
-    scope1,
-    scope2,
-    scope3,
-    total,
-    methodology_version: "v3",
+    year: input.year,
+    sector: input.sector,
+    ...rounded,
     coefficients,
+    methodology_version: "v5-PME",
     warnings
   };
 }
