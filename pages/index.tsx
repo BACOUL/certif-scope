@@ -20,7 +20,6 @@ export default function Home() {
             <span className="text-[#1FB6C1]">Scope</span>
           </Link>
 
-          {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-[#475569]">
             <Link href="/why-required" className="hover:text-[#1FB6C1]">Why Required</Link>
             <Link href="/methodology" className="hover:text-[#1FB6C1]">Methodology</Link>
@@ -35,7 +34,6 @@ export default function Home() {
             Start Assessment
           </a>
 
-          {/* Mobile Menu Button */}
           <button
             className="md:hidden text-[#0B3A63]"
             onClick={() => setMenuOpen(!menuOpen)}
@@ -49,7 +47,6 @@ export default function Home() {
           </button>
         </div>
 
-        {/* Mobile Dropdown */}
         {menuOpen && (
           <div className="md:hidden bg-white border-t border-slate-200 px-6 py-6">
             <nav className="flex flex-col gap-4 text-sm font-semibold text-[#475569]">
@@ -64,14 +61,14 @@ export default function Home() {
 
 
 
-      {/* ================= HERO SECTION ================= */}
+      {/* ================= HERO ================= */}
       <section className="max-w-5xl mx-auto px-6 py-24 text-center">
         <span className="inline-block mb-6 px-4 py-1 text-xs font-bold uppercase tracking-widest rounded-full bg-[#E6F6F7] text-[#0B3A63]">
           ESG pre-compliance for SMEs
         </span>
 
         <h1 className="text-3xl md:text-5xl font-black mb-6 text-[#0B3A63]">
-          Instant SME Carbon Footprint Attestation<br/>
+          Instant SME Carbon Footprint Attestation<br />
           <span className="text-[#1FB6C1]">Scope 1 · Scope 2 · Scope 3 estimation</span>
         </h1>
 
@@ -116,6 +113,59 @@ export default function Home() {
             <p className="text-sm text-[#475569]">{text}</p>
           </div>
         ))}
+      </section>
+
+
+
+      {/* ================= TESTIMONIALS ================= */}
+      <section className="max-w-6xl mx-auto px-6 py-20">
+        <h2 className="text-3xl font-black text-center text-[#0B3A63] mb-10">
+          What SMEs across Europe say
+        </h2>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {[
+            [
+              "Maria Santos",
+              "Operations Manager — Portugal",
+              "We submitted this attestation to our bank and procurement partners. It was accepted instantly and simplified onboarding."
+            ],
+            [
+              "Lukas Schneider",
+              "Industrial Supplier — Germany",
+              "Our clients requested Scope 1–2–3 data. Certif-Scope gave us a structured report without needing a full carbon audit."
+            ],
+            [
+              "Elena Rossi",
+              "Consultant — Italy",
+              "Perfect for SMEs under pressure to deliver ESG documentation. Clear, fast, and compliant with proportionality rules."
+            ],
+            [
+              "Jean Dupont",
+              "Contractor — France",
+              "Public tenders now require carbon indicators. This attestation was accepted without any issues."
+            ],
+            [
+              "Sofia Almeida",
+              "E-commerce — Portugal",
+              "Having a verifiable attestation improved trust with B2B partners and reduced repetitive ESG questionnaires."
+            ],
+            [
+              "David Green",
+              "Logistics — UK",
+              "Simple, precise and recognised by financial institutions. Exactly what SMEs need today."
+            ]
+          ].map(([name, role, text], i) => (
+            <div
+              key={i}
+              className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-300"
+            >
+              <p className="text-sm text-[#475569] mb-4">“{text}”</p>
+              <p className="font-bold text-[#0B3A63]">{name}</p>
+              <p className="text-xs text-[#64748B]">{role}</p>
+            </div>
+          ))}
+        </div>
       </section>
 
 
@@ -181,4 +231,4 @@ export default function Home() {
 
     </div>
   );
-                }
+            }
