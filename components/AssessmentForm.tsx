@@ -2,12 +2,14 @@ import { useState } from "react";
 
 export default function AssessmentForm() {
   const [year, setYear] = useState(new Date().getFullYear());
+  const [loading, setLoading] = useState(false);
+  const [result, setResult] = useState<any>(null);
+
   const [data, setData] = useState({
     sector: "services",
+    fuel: "",
     electricity: "",
     gas: "",
-    diesel: "",
-    gasoline: "",
     train: "",
     flight: "",
     hotel: "",
@@ -16,74 +18,79 @@ export default function AssessmentForm() {
     logistics: ""
   });
 
-  const [result, setResult] = useState<any>(null);
-
-  const factors = {
-    electricity: 0.059,
-    gas: 0.204,
-    diesel: 2.68,
-    gasoline: 2.31,
-    train: 0.012,
-    flight: 0.255,
-    hotel: 6.5,
-    it: 0.25,
-    services: 0.18,
-    logistics: 0.7
-  };
-
-  const handleChange = (field: string, value: string) => {
-    setData((prev) => ({ ...prev, [field]: value }));
-  };
+  const change = (field: string, value: string) =>
+    setData({ ...data, [field]: value });
 
   const calculate = () => {
-    const scope1 =
-      (parseFloat(data.diesel) || 0) * factors.diesel +
-      (parseFloat(data.gasoline) || 0) * factors.gasoline;
+    const f = (n: string, factor: number) => (parseFloat(n) || 0) * factor;
 
-    const scope2 =
-      (parseFloat(data.electricity) || 0) * factors.electricity +
-      (parseFloat(data.gas) || 0) * factors.gas;
-
+    const scope1 = f(data.fuel, 2.68);
+    const scope2 = f(data.electricity, 0.059) + f(data.gas, 0.204);
     const scope3 =
-      (parseFloat(data.train) || 0) * factors.train +
-      (parseFloat(data.flight) || 0) * factors.flight +
-      (parseFloat(data.hotel) || 0) * factors.hotel +
-      (parseFloat(data.it) || 0) * factors.it +
-      (parseFloat(data.services) || 0) * factors.services +
-      (parseFloat(data.logistics) || 0) * factors.logistics;
-
-    const total = scope1 + scope2 + scope3;
+      f(data.train, 0.012) +
+      f(data.flight, 0.255) +
+      f(data.hotel, 6.5) +
+      f(data.it, 0.25) +
+      f(data.services, 0.18) +
+      f(data.logistics, 0.7);
 
     setResult({
       year,
       scope1: Math.round(scope1),
       scope2: Math.round(scope2),
       scope3: Math.round(scope3),
-      total: Math.round(total)
+      total: Math.round(scope1 + scope2 + scope3)
     });
+  };
+
+  const generateAttestation = async () => {
+    if (!result) return alert("You must calculate emissions first.");
+    setLoading(true);
+
+    const res = await fetch("/api/generate-attestation", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        year,
+        sector: data.sector,
+        fuelLiters: data.fuel,
+        electricityKwh: data.electricity,
+        freightKm: data.logistics,
+        businessTravelKm: data.flight,
+        purchasedGoodsEuro: data.services,
+        companyName: "Your Company",
+        country: "Unknown"
+      })
+    });
+
+    const out = await res.json();
+    setLoading(false);
+
+    if (!out?.html) return alert("Error generating attestation.");
+
+    const blob = new Blob([out.html], { type: "text/html" });
+    const url = URL.createObjectURL(blob);
+    window.open(url, "_blank");
   };
 
   return (
     <div className="space-y-10">
 
-      {/* HEADER */}
       <div>
-        <h2 className="text-2xl font-bold text-[#0B3A63] mb-2">Carbon Assessment (SME)</h2>
+        <h2 className="text-2xl font-bold text-[#0B3A63]">Carbon Assessment (SME)</h2>
         <p className="text-sm text-[#475569]">
-          Enter only the data you have available. Estimates are acceptable.
+          Provide annual values. Estimates are acceptable. Only fill what you know.
         </p>
       </div>
 
-      {/* FORM GRID */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-
         <div>
           <label className="font-semibold text-sm">Reporting Year</label>
           <input
             type="number"
             value={year}
             onChange={(e) => setYear(parseInt(e.target.value))}
-            className="w-full mt-1 p-2 border rounded"
+            className="w-full p-2 border rounded mt-1"
           />
         </div>
 
@@ -91,8 +98,8 @@ export default function AssessmentForm() {
           <label className="font-semibold text-sm">Business Sector</label>
           <select
             value={data.sector}
-            onChange={(e) => handleChange("sector", e.target.value)}
-            className="w-full mt-1 p-2 border rounded"
+            onChange={(e) => change("sector", e.target.value)}
+            className="w-full p-2 border rounded mt-1"
           >
             <option value="services">Services</option>
             <option value="retail">Retail</option>
@@ -100,75 +107,81 @@ export default function AssessmentForm() {
             <option value="manufacturing">Manufacturing</option>
             <option value="transport">Transport</option>
           </select>
+          <p className="text-xs text-slate-500 mt-1">
+            Choose the closest business category.
+          </p>
         </div>
 
         <div>
-          <label className="font-semibold text-sm">Fuel Used (litres)</label>
+          <label className="font-semibold text-sm">Fuel used (litres)</label>
           <input
             type="number"
-            value={data.diesel}
-            onChange={(e) => handleChange("diesel", e.target.value)}
-            className="w-full mt-1 p-2 border rounded"
+            className="w-full p-2 border rounded mt-1"
+            value={data.fuel}
+            onChange={(e) => change("fuel", e.target.value)}
           />
+          <p className="text-xs text-slate-500">Diesel + gasoline for internal fleet.</p>
         </div>
 
         <div>
-          <label className="font-semibold text-sm">Electricity Consumed (kWh)</label>
+          <label className="font-semibold text-sm">Electricity (kWh)</label>
           <input
             type="number"
+            className="w-full p-2 border rounded mt-1"
             value={data.electricity}
-            onChange={(e) => handleChange("electricity", e.target.value)}
-            className="w-full mt-1 p-2 border rounded"
+            onChange={(e) => change("electricity", e.target.value)}
           />
+          <p className="text-xs text-slate-500">Office / workshop electricity bills.</p>
         </div>
 
         <div>
           <label className="font-semibold text-sm">Natural Gas (kWh)</label>
           <input
             type="number"
+            className="w-full p-2 border rounded mt-1"
             value={data.gas}
-            onChange={(e) => handleChange("gas", e.target.value)}
-            className="w-full mt-1 p-2 border rounded"
+            onChange={(e) => change("gas", e.target.value)}
           />
+          <p className="text-xs text-slate-500">Heating fuel for buildings.</p>
         </div>
 
         <div>
           <label className="font-semibold text-sm">Train Travel (km)</label>
           <input
             type="number"
+            className="w-full p-2 border rounded mt-1"
             value={data.train}
-            onChange={(e) => handleChange("train", e.target.value)}
-            className="w-full mt-1 p-2 border rounded"
+            onChange={(e) => change("train", e.target.value)}
           />
         </div>
 
         <div>
-          <label className="font-semibold text-sm">Air Travel (km)</label>
+          <label className="font-semibold text-sm">Flight Travel (km)</label>
           <input
             type="number"
+            className="w-full p-2 border rounded mt-1"
             value={data.flight}
-            onChange={(e) => handleChange("flight", e.target.value)}
-            className="w-full mt-1 p-2 border rounded"
+            onChange={(e) => change("flight", e.target.value)}
           />
         </div>
 
         <div>
-          <label className="font-semibold text-sm">Hotel Nights</label>
+          <label className="font-semibold text-sm">Hotel nights</label>
           <input
             type="number"
+            className="w-full p-2 border rounded mt-1"
             value={data.hotel}
-            onChange={(e) => handleChange("hotel", e.target.value)}
-            className="w-full mt-1 p-2 border rounded"
+            onChange={(e) => change("hotel", e.target.value)}
           />
         </div>
 
         <div>
-          <label className="font-semibold text-sm">IT Equipment (€)</label>
+          <label className="font-semibold text-sm">IT equipment (€)</label>
           <input
             type="number"
+            className="w-full p-2 border rounded mt-1"
             value={data.it}
-            onChange={(e) => handleChange("it", e.target.value)}
-            className="w-full mt-1 p-2 border rounded"
+            onChange={(e) => change("it", e.target.value)}
           />
         </div>
 
@@ -176,9 +189,9 @@ export default function AssessmentForm() {
           <label className="font-semibold text-sm">External Services (€)</label>
           <input
             type="number"
+            className="w-full p-2 border rounded mt-1"
             value={data.services}
-            onChange={(e) => handleChange("services", e.target.value)}
-            className="w-full mt-1 p-2 border rounded"
+            onChange={(e) => change("services", e.target.value)}
           />
         </div>
 
@@ -186,15 +199,14 @@ export default function AssessmentForm() {
           <label className="font-semibold text-sm">Goods Logistics (€)</label>
           <input
             type="number"
+            className="w-full p-2 border rounded mt-1"
             value={data.logistics}
-            onChange={(e) => handleChange("logistics", e.target.value)}
-            className="w-full mt-1 p-2 border rounded"
+            onChange={(e) => change("logistics", e.target.value)}
           />
         </div>
 
       </div>
 
-      {/* SUBMIT */}
       <button
         onClick={calculate}
         className="w-full bg-[#1FB6C1] text-white py-3 rounded-lg font-bold"
@@ -202,14 +214,23 @@ export default function AssessmentForm() {
         Calculate Emissions
       </button>
 
-      {/* RESULT */}
       {result && (
-        <div className="mt-10 bg-[#0B3A63] text-white p-6 rounded-xl space-y-3">
+        <div className="bg-[#0B3A63] text-white p-6 rounded-xl space-y-2 mt-8">
           <h3 className="text-xl font-bold">Results – Year {result.year}</h3>
-          <p>Total CO₂e: {result.total} kg/year</p>
-          <p>Scope 1: {result.scope1} kg</p>
-          <p>Scope 2: {result.scope2} kg</p>
-          <p>Scope 3: {result.scope3} kg</p>
+
+          <div>Total CO₂e: <b>{result.total} kg/year</b></div>
+          <div>Scope 1: {result.scope1} kg</div>
+          <div>Scope 2: {result.scope2} kg</div>
+          <div>Scope 3: {result.scope3} kg</div>
+
+          <div className="mt-4">
+            <button
+              onClick={generateAttestation}
+              className="w-full bg-white text-[#0B3A63] font-bold py-2 rounded-lg"
+            >
+              {loading ? "Generating..." : "Generate Attestation (PDF)"}
+            </button>
+          </div>
         </div>
       )}
 
