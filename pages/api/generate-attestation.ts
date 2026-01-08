@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { calculateCarbonFootprint } from "../../lib/carbonEngine";
-import { fillAttestationTemplate } from "../../lib/attestation/renderer";
+import { fillAttestationTemplate } from "../../lib/renderAttestation";
 import crypto from "crypto";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -17,7 +17,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       country
     } = req.body;
 
-    // Build input for carbon engine v5
     const input = {
       year: Number(year),
       sector: sector,
@@ -32,6 +31,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const attestationId = crypto.randomUUID();
     const issueDate = new Date().toISOString();
+
     const hash = crypto
       .createHash("sha256")
       .update(JSON.stringify({ attestationId, calc }))
@@ -41,7 +41,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       attestationId,
       issueDate,
       preparedOn: issueDate,
-      companyName: companyName || "Unknown Company",
+
+      companyName: companyName || "Unknown",
       sector: sector,
       country: country || "France",
       period: year || new Date().getFullYear(),
