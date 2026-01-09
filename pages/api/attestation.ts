@@ -30,19 +30,29 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       process.env.NEXT_PUBLIC_BASE_URL ||
       "http://localhost:3000";
 
-    const scopes = report.scopes || {};
-    const total = Object.values(scopes).reduce((acc: number, v: any) => acc + Number(v || 0), 0);
+    const s1 = Number(report.scope1 || 0);
+    const s2 = Number(report.scope2 || 0);
+    const s3 = Number(report.scope3 || 0);
+    const total = Number(report.total || 0);
 
+    // === DATA PASSED TO TEMPLATE ===
     const dataInitial = {
       attestationId,
       issueDate: now.toISOString(),
       companyName: report.companyName || "N/A",
       sector: report.sector || "N/A",
-      year: report.year || `${now.getFullYear()}`,
       country: report.country || "France",
-      scopes,
+
+      period: report.period || `${now.getFullYear()}`,
+      methodologyVersion: "3.1",
+
+      scope1: s1,
+      scope2: s2,
+      scope3: s3,
       total,
+
       preparedOn: now.toISOString(),
+
       qrCodeUrl: "",
       hash: ""
     };
@@ -78,8 +88,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const dataFinal = {
       ...dataInitial,
-      hash: pdfHash,
-      qrCodeUrl: qrDataUrl
+      qrCodeUrl: qrDataUrl,
+      hash: pdfHash
     };
 
     const htmlFinal = renderAttestation(dataFinal);
@@ -101,6 +111,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     await browser2.close();
 
+    // Register
     await fetch(`${baseUrl}/api/register-attestation`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -122,4 +133,4 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       details: err.message
     });
   }
-      }
+}
