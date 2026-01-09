@@ -1,8 +1,7 @@
 import { useState } from "react";
-import Link from "next/link";
 import Head from "next/head";
+import Link from "next/link";
 import dynamic from "next/dynamic";
-import { testimonials } from "../components/testimonials";
 
 const AssessmentForm = dynamic(() => import("../components/AssessmentForm"), {
   ssr: false,
@@ -15,41 +14,21 @@ export default function Home() {
   return (
     <div id="top" className="min-h-screen bg-[#F8FAFC] text-[#1E293B]">
       <Head>
-        <title>Certif-Scope — Certified CO₂ Attestation for SMEs (Scope 1 · Scope 2 · Scope 3)</title>
-
-        <meta
-          name="description"
-          content="Instant certified carbon attestation including Scope 1, Scope 2 and Scope 3. Accepted by banks, procurement and insurers."
-        />
-
-        <meta
-          name="keywords"
-          content="carbon attestation, CO2 certificate SME, scope 1 2 3, ESG compliance, supplier onboarding, procurement carbon documentation"
-        />
-
-        <meta name="robots" content="index, follow, max-image-preview:large" />
-        <link rel="canonical" href="https://certif-scope.com/en/" />
-
-        <link rel="alternate" href="https://certif-scope.com/en/" hrefLang="en" />
-        <link rel="alternate" href="https://certif-scope.com/fr/" hrefLang="fr" />
-        <link rel="alternate" href="https://certif-scope.com/de/" hrefLang="de" />
-        <link rel="alternate" href="https://certif-scope.com/" hrefLang="x-default" />
-
+        <title>Certif-Scope — Certified CO₂ Attestation for SMEs</title>
+        <meta name="description" content="Official CO₂ attestation including Scope 1, Scope 2 and Scope 3 for SMEs across Europe. Trusted by banks, procurement and insurers." />
+        <meta name="keywords" content="carbon attestation, CO2 certificate SME, scope 1 2 3, ESG compliance, procurement carbon screening, tender supplier documentation" />
+        <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large" />
+        <link rel="canonical" href="https://certif-scope.com/" />
         <meta property="og:title" content="Certified CO₂ Attestation for SMEs" />
         <meta property="og:description" content="Instant CO₂ attestation trusted by banks, procurement and insurers." />
         <meta property="og:image" content="/og-image.png" />
         <meta property="og:type" content="website" />
-
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:image" content="/og-image.png" />
-
-        <meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large" />
       </Head>
 
       {/* HEADER */}
       <header className="bg-white border-b border-slate-200 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-
           <Link href="/" className="text-xl font-black">
             <span className="text-[#0B3A63]">Certif-</span>
             <span className="text-[#1FB6C1]">Scope</span>
@@ -62,10 +41,7 @@ export default function Home() {
             <Link href="/legal">Legal</Link>
           </nav>
 
-          <a
-            href="#assessment"
-            className="hidden md:inline-flex bg-[#1FB6C1] text-white text-xs font-bold px-5 py-3 rounded-lg"
-          >
+          <a href="#assessment" className="hidden md:inline-flex bg-[#1FB6C1] text-white text-xs font-bold px-5 py-3 rounded-lg">
             Generate Attestation
           </a>
 
@@ -93,7 +69,7 @@ export default function Home() {
       {/* HERO */}
       <section className="max-w-6xl mx-auto px-6 pt-16 pb-20 text-center">
         <h1 className="text-4xl md:text-5xl font-black text-[#0B3A63] mb-4 leading-tight">
-          Instant Certified Carbon Attestation for SMEs
+          Instant Certified CO₂ Attestation for SMEs
         </h1>
 
         <h2 className="text-lg md:text-xl font-semibold text-[#1FB6C1] mb-4">
@@ -101,21 +77,15 @@ export default function Home() {
         </h2>
 
         <p className="text-lg text-[#475569] max-w-3xl mx-auto mb-10">
-          Trusted for financing, procurement and insurance compliance.
+          Recognised for financing, procurement, insurance and supplier onboarding across Europe.
         </p>
 
         <div className="flex flex-col md:flex-row justify-center gap-4 mt-6">
-          <a
-            href="#assessment"
-            className="bg-[#1FB6C1] text-white font-bold px-8 py-4 rounded-xl shadow text-lg"
-          >
+          <a href="#assessment" className="bg-[#1FB6C1] text-white font-bold px-8 py-4 rounded-xl shadow text-lg">
             Generate Attestation
           </a>
 
-          <Link
-            href="/verify"
-            className="bg-[#0B3A63] text-white font-bold px-8 py-4 rounded-xl shadow text-lg"
-          >
+          <Link href="/verify" className="bg-[#0B3A63] text-white font-bold px-8 py-4 rounded-xl shadow text-lg">
             Verify Attestation
           </Link>
         </div>
@@ -127,159 +97,125 @@ export default function Home() {
         </div>
       </section>
 
-      {/* DIFFERENTIATION — NO REDUNDANCY */}
+      {/* LONG REGULATORY EXPLANATION */}
       <section className="max-w-7xl mx-auto px-6 py-20">
         <h2 className="text-3xl font-black text-center text-[#0B3A63] mb-12">
-          Why companies choose Certif-Scope over simple calculators
+          Why SMEs across Europe increasingly need a CO₂ attestation
         </h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 text-[#475569]">
+        <div className="prose max-w-none text-[#475569] leading-relaxed space-y-6">
 
-          <div className="p-6 bg-white border border-slate-200 rounded-xl shadow-sm">
-            <h3 className="font-bold text-[#0B3A63] mb-3">A true attestation</h3>
-            <ul className="text-sm space-y-1">
-              <li>Unique ID</li>
-              <li>Tamper-proof file</li>
-              <li>Verification link</li>
-              <li>Accepted by banks & buyers</li>
-            </ul>
-          </div>
+          <p>
+            Across Europe, SMEs are increasingly asked to provide transparent CO₂ data. This growing requirement is not a direct legal obligation, but a structural effect created by banks, insurers, procurement departments and large corporate buyers who now demand environmental data from all suppliers—regardless of size. This dynamic is driven by EU policies such as the Corporate Sustainability Reporting Directive (CSRD), the EU Taxonomy and sector-specific due diligence rules. Even if SMEs are not obligated to perform a full carbon audit, they are indirectly required to demonstrate environmental responsibility through screening-level CO₂ estimates.
+          </p>
 
-          <div className="p-6 bg-white border border-slate-200 rounded-xl shadow-sm">
-            <h3 className="font-bold text-[#0B3A63] mb-3">EU-compliant</h3>
-            <ul className="text-sm space-y-1">
-              <li>GHG Protocol aligned</li>
-              <li>SME proportionality rule</li>
-              <li>Supply-chain CO₂ screening</li>
-            </ul>
-          </div>
+          <p>
+            As a result, businesses offering services or products to larger companies face an immediate need to produce a baseline estimation of Scope 1, Scope 2 and Scope 3 emissions. Buyers increasingly refuse onboarding without a carbon document. Banks are now integrating environmental metrics into financing risk models. Insurers evaluate exposure based on sectoral intensity. Public procurement tenders require proof of sustainability alignment. In all cases, the SME must provide a structured and verifiable CO₂ estimation.
+          </p>
 
-          <div className="p-6 bg-white border border-slate-200 rounded-xl shadow-sm">
-            <h3 className="font-bold text-[#0B3A63] mb-3">Full Scope 3</h3>
-            <ul className="text-sm space-y-1">
-              <li>Spend-based method</li>
-              <li>No supplier survey</li>
-              <li>Automatic estimation</li>
-            </ul>
-          </div>
-
-          <div className="p-6 bg-white border border-slate-200 rounded-xl shadow-sm">
-            <h3 className="font-bold text-[#0B3A63] mb-3">Private & secure</h3>
-            <ul className="text-sm space-y-1">
-              <li>No document upload</li>
-              <li>Local processing</li>
-              <li>Minimal data footprint</li>
-            </ul>
-          </div>
-
+          <p>
+            Certif-Scope is designed specifically for this need: a fast, standardised, verifiable attestation that covers the three scopes, without requiring a full consultancy audit or intrusive data collection. The document is tamper-proof, uniquely identified, and includes a cryptographic hash ensuring file integrity. It does not replace a full audit but fulfils the immediate requirement of presenting an institutional-ready CO₂ baseline for administrative, financial or commercial validation.
+          </p>
         </div>
       </section>
 
-      {/* HOW IT WORKS — SIMPLIFIED */}
-      <section className="max-w-6xl mx-auto px-6 py-20">
-        <h2 className="text-3xl font-black text-center text-[#0B3A63] mb-12">How it works</h2>
+      {/* USE CASES — LONG */}
+      <section className="max-w-7xl mx-auto px-6 py-20">
+        <h2 className="text-3xl font-black text-center text-[#0B3A63] mb-12">
+          Practical use cases across industries
+        </h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 text-center">
-          <div className="bg-white border border-slate-200 rounded-xl p-8 shadow-sm">
-            <h3 className="font-bold text-[#0B3A63] mb-2">1. Enter your data</h3>
-            <p className="text-[#475569] text-sm">
-              Annual energy, travel and spend.
-            </p>
-          </div>
+        <div className="prose max-w-none text-[#475569] space-y-8 leading-relaxed">
 
-          <div className="bg-white border border-slate-200 rounded-xl p-8 shadow-sm">
-            <h3 className="font-bold text-[#0B3A63] mb-2">2. Instant calculation</h3>
-            <p className="text-[#475569] text-sm">
-              Scope 1 • Scope 2 • Scope 3 computed instantly.
-            </p>
-          </div>
+          <h3 className="text-2xl font-bold text-[#0B3A63]">Banking and financing</h3>
+          <p>
+            Financial institutions increasingly require environmental indicators for new financing applications. SMEs that lack structured CO₂ documentation may face delays, additional administrative reviews or less favourable financing conditions. Certif-Scope provides a recognised document that can be included in financing files, due diligence processes and refinancing applications.
+          </p>
 
-          <div className="bg-white border border-slate-200 rounded-xl p-8 shadow-sm">
-            <h3 className="font-bold text-[#0B3A63] mb-2">3. Download certified attestation</h3>
-            <p className="text-[#475569] text-sm">
-              PDF + unique verification link.
-            </p>
-          </div>
+          <h3 className="text-2xl font-bold text-[#0B3A63]">Procurement and supplier onboarding</h3>
+          <p>
+            Large corporations screen suppliers based on environmental impact. Without a CO₂ attestation, onboarding may be rejected. Certif-Scope provides a compliant document for supplier qualification portals, procurement checklists and ESG compliance forms.
+          </p>
+
+          <h3 className="text-2xl font-bold text-[#0B3A63]">Insurance and risk assessment</h3>
+          <p>
+            Insurers integrate sustainability metrics into policy pricing. A verified CO₂ attestation helps an SME qualify for better coverage and demonstrates risk transparency. Certif-Scope’s verified structure provides insurers with a consistent screening basis.
+          </p>
+
+          <h3 className="text-2xl font-bold text-[#0B3A63]">Public tenders and EU funding</h3>
+          <p>
+            Many public tenders now require environmental documentation at submission stage. Certif-Scope provides a rapid way for SMEs to supply verified CO₂ metrics without needing a full audit, which is often costly and time-consuming.
+          </p>
         </div>
       </section>
 
-      {/* TESTIMONIALS */}
+      {/* METHODOLOGY LONG */}
       <section className="max-w-7xl mx-auto px-6 py-20">
         <h2 className="text-3xl font-black text-center text-[#0B3A63] mb-12">
-          Testimonials from European SMEs
+          Methodology explained in detail
         </h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {testimonials.map((t, i) => (
-            <div key={i} className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
-              <p className="text-sm text-[#475569] mb-4">“{t.text}”</p>
-              <p className="font-bold text-[#0B3A63]">{t.author}</p>
-              <p className="text-xs text-[#64748B]">{t.role}</p>
-            </div>
+        <div className="prose max-w-none text-[#475569] space-y-8 leading-relaxed">
+          <p>
+            Certif-Scope applies a proportional and standardised methodology aligned with recognised frameworks, including GHG Protocol principles and monetary-based emission factors derived from ADEME and sector averages. The objective is not to replace a full audit but to provide a structured screening appropriate for SMEs.
+          </p>
+
+          <h3 className="text-2xl font-bold text-[#0B3A63]">Scope 1 — Direct emissions</h3>
+          <p>
+            Scope 1 corresponds to direct emissions from fuel consumption or gas heating. Certif-Scope converts annual expenditures into CO₂ equivalents using recognised factors. This method is particularly relevant for SMEs without precise meter data.
+          </p>
+
+          <h3 className="text-2xl font-bold text-[#0B3A63]">Scope 2 — Electricity-related emissions</h3>
+          <p>
+            Electricity consumption is converted using regional intensity coefficients. This ensures a coherent baseline even when energy documentation is incomplete.
+          </p>
+
+          <h3 className="text-2xl font-bold text-[#0B3A63]">Scope 3 — Value chain emissions</h3>
+          <p>
+            Scope 3 estimation uses sector-specific averages based on annual revenue. This approach is globally recognised for screening-level assessments and avoids heavy data collection from suppliers.
+          </p>
+
+          <h3 className="text-2xl font-bold text-[#0B3A63]">Sources of emission factors</h3>
+          <ul>
+            <li>ADEME Base Empreinte® 2023.1</li>
+            <li>GHG Protocol recognised sector averages</li>
+            <li>EU sustainability documentation guidelines</li>
+          </ul>
+
+          <h3 className="text-2xl font-bold text-[#0B3A63]">Limitations</h3>
+          <p>
+            This attestation is intended for screening and compliance support. It is not an ISO-certified audit. It does not replace CSRD reporting obligations for large undertakings.
+          </p>
+        </div>
+      </section>
+
+      {/* FAQ LONG */}
+      <section className="max-w-7xl mx-auto px-6 py-20">
+        <h2 className="text-3xl font-black text-center text-[#0B3A63] mb-12">
+          Frequently Asked Questions
+        </h2>
+
+        <div className="space-y-8 text-[#475569]">
+
+          {[
+            { q: "Is this accepted by banks?", a: "Yes. The attestation includes a verification link, unique ID and tamper-proof hash." },
+            { q: "Why include Scope 3?", a: "EU procurement requires suppliers to screen indirect emissions. Without Scope 3 the document would be rejected by buyers." },
+            { q: "Does Certif-Scope store my financial data?", a: "No. All calculations are performed locally. No raw financial data is transmitted to the server." },
+            { q: "Is this compliant with GHG Protocol?", a: "Yes, using the SME-appropriate spend-based approach recognised for screening." },
+            { q: "Is this valid for public tenders?", a: "Yes. It provides the baseline-level CO₂ information required in most EU tender documentation." },
+            { q: "Is this legally binding?", a: "It is an official attestation but not an ISO audit nor a CSRD declaration." },
+            { q: "Can the file be verified independently?", a: "Yes. Each attestation is cryptographically hashed and verifiable through a dedicated portal." }
+          ].map((item, i) => (
+            <details key={i} className="bg-white border border-slate-200 rounded-xl p-4">
+              <summary className="font-bold text-[#0B3A63] cursor-pointer">{item.q}</summary>
+              <p className="mt-2 text-sm">{item.a}</p>
+            </details>
           ))}
+
         </div>
       </section>
 
-      {/* METHODOLOGY */}
-      <section className="max-w-6xl mx-auto px-6 py-20">
-        <h2 className="text-3xl font-black text-center text-[#0B3A63] mb-10">
-          Methodology Overview
-        </h2>
-
-        <p className="text-center text-[#475569] max-w-3xl mx-auto">
-          Certif-Scope uses a GHG Protocol aligned spend-based model covering
-          Scope 1, Scope 2 and Scope 3. This proportional approach is recognised
-          for SMEs across EU procurement, tenders and financing.
-        </p>
-      </section>
-
-      {/* FAQ — SHORTENED */}
-      <section className="max-w-4xl mx-auto px-6 py-20">
-        <h2 className="text-3xl font-black text-center text-[#0B3A63] mb-12">
-          FAQ
-        </h2>
-
-        <div className="space-y-6 text-[#475569]">
-
-          <details className="bg-white border border-slate-200 rounded-xl p-4">
-            <summary className="font-bold text-[#0B3A63] cursor-pointer">
-              Is this accepted by banks?
-            </summary>
-            <p className="mt-2 text-sm">
-              Yes, the attestation includes a verification link and unique ID.
-            </p>
-          </details>
-
-          <details className="bg-white border border-slate-200 rounded-xl p-4">
-            <summary className="font-bold text-[#0B3A63] cursor-pointer">
-              Why Scope 3 is included?
-            </summary>
-            <p className="mt-2 text-sm">
-              EU requirements include screening indirect emissions for suppliers.
-            </p>
-          </details>
-
-          <details className="bg-white border border-slate-200 rounded-xl p-4">
-            <summary className="font-bold text-[#0B3A63] cursor-pointer">
-              Is this compliant?
-            </summary>
-            <p className="mt-2 text-sm">
-              Yes, aligned with GHG Protocol and SME proportionality rules.
-            </p>
-          </details>
-
-          <details className="bg-white border border-slate-200 rounded-xl p-4">
-            <summary className="font-bold text-[#0B3A63] cursor-pointer">
-              Is my data secured?
-            </summary>
-            <p className="mt-2 text-sm">
-              All calculations occur locally. No raw documents uploaded.
-            </p>
-          </details>
-        </div>
-      </section>
-
-      {/* FORM */}
+      {/* ASSESSMENT FORM */}
       <section id="assessment" className="max-w-4xl mx-auto py-24 px-6">
         <div className="bg-white border border-slate-200 rounded-2xl shadow-sm p-4">
           <AssessmentForm />
@@ -289,6 +225,7 @@ export default function Home() {
       {/* FOOTER */}
       <footer className="bg-white border-t border-slate-200 py-16 px-6">
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12">
+
           <div>
             <h3 className="font-bold text-[#0B3A63] mb-2">Certif-Scope</h3>
             <p className="text-sm text-[#475569]">
@@ -310,8 +247,9 @@ export default function Home() {
             <h3 className="font-bold text-[#0B3A63] mb-2">Contact</h3>
             <p className="text-sm text-[#475569]">contact@certif-scope.com</p>
           </div>
+
         </div>
       </footer>
     </div>
   );
-              }
+      }
