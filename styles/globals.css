@@ -1,12 +1,6 @@
-/* Basic global reset */
-* {
+/* Global styles */
+html, body {
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  background: #F8FAFC;
-  color: #1E293B;
   font-family: sans-serif;
 }
