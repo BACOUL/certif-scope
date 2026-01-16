@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>CO₂e Attestation — Certif-Scope</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 24mm;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+        Roboto, Helvetica, Arial, sans-serif;
+      color: #0B3A63;
+      line-height: 1.45;
+      background: #ffffff;
+    }
+
+    h1, h2, h3 {
+      margin: 0;
+      font-weight: 700;
+    }
+
+    p {
+      margin: 0;
+      color: #1f2937;
+      font-size: 14px;
+    }
+
+    .muted {
+      color: #6b7280;
+      font-size: 12px;
+    }
+
+    .section {
+      margin-top: 22px;
+    }
+
+    .divider {
+      height: 1px;
+      background: #e5e7eb;
+      margin: 18px 0;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .logo {
+      font-size: 18px;
+      font-weight: 800;
+      color: #0B3A63;
+    }
+
+    .title {
+      margin-top: 10px;
+    }
+
+    .title h1 {
+      font-size: 26px;
+    }
+
+    .title p {
+      margin-top: 6px;
+      font-size: 14px;
+      color: #374151;
+    }
+
+    .box {
+      border: 1px solid #e5e7eb;
+      padding: 14px;
+      border-radius: 6px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .label {
+      font-size: 11px;
+      color: #6b7280;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .value {
+      font-size: 14px;
+      color: #111827;
+      margin-top: 2px;
+    }
+
+    .co2-box {
+      text-align: center;
+      border: 1px solid #15B097;
+      border-radius: 8px;
+      padding: 18px;
+      margin-top: 18px;
+    }
+
+    .co2-box h2 {
+      font-size: 14px;
+      color: #0B3A63;
+      margin-bottom: 6px;
+    }
+
+    .co2-value {
+      font-size: 34px;
+      font-weight: 800;
+      color: #15B097;
+    }
+
+    .co2-unit {
+      font-size: 14px;
+      color: #0B3A63;
+    }
+
+    ul {
+      margin: 8px 0 0 16px;
+      padding: 0;
+      font-size: 13px;
+      color: #374151;
+    }
+
+    .footer {
+      margin-top: 26px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .qr {
+      text-align: center;
+    }
+
+    .qr img {
+      width: 110px;
+      height: 110px;
+    }
+
+    .verify-text {
+      font-size: 12px;
+      color: #374151;
+    }
+
+    .legal {
+      font-size: 11px;
+      color: #6b7280;
+      margin-top: 14px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="logo">Certif-Scope</div>
+    <div class="muted">
+      Issued on: {{issued_date}}<br />
+      Attestation ID: {{attestation_id}}
+    </div>
+  </div>
+
+  <div class="title">
+    <h1>CO₂e Attestation (Indicative)</h1>
+    <p>Standardized supplier carbon indicator</p>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- SUPPLIER INFO -->
+  <div class="section box">
+    <div class="grid">
+      <div>
+        <div class="label">Supplier name</div>
+        <div class="value">{{supplier_name}}</div>
+      </div>
+      <div>
+        <div class="label">Country</div>
+        <div class="value">{{country}}</div>
+      </div>
+      <div>
+        <div class="label">Business activity</div>
+        <div class="value">{{activity}}</div>
+      </div>
+      <div>
+        <div class="label">Reference year</div>
+        <div class="value">{{reference_year}}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CO2 VALUE -->
+  <div class="co2-box">
+    <h2>Indicative CO₂e estimate</h2>
+    <div class="co2-value">
+      {{co2_value}} <span class="co2-unit">tCO₂e</span>
+    </div>
+    <p class="muted" style="margin-top:6px;">
+      Indicative estimate based on a spend-based methodology
+    </p>
+  </div>
+
+  <!-- METHODOLOGY -->
+  <div class="section">
+    <h3>Methodology overview</h3>
+    <p>
+      This estimate is calculated using a spend-based approach, based on
+      supplier-provided annual spending data and standardized emission factors.
+      No physical activity data is required. No Scope 1, Scope 2 or Scope 3
+      allocation is performed.
+    </p>
+  </div>
+
+  <!-- WHAT THIS IS NOT -->
+  <div class="section">
+    <h3>What this attestation is not</h3>
+    <ul>
+      <li>a certification</li>
+      <li>an audit</li>
+      <li>a regulatory carbon report</li>
+      <li>CSRD or ESRS reporting</li>
+      <li>a Scope 1, Scope 2 or Scope 3 inventory</li>
+    </ul>
+  </div>
+
+  <!-- LEGAL -->
+  <div class="section">
+    <h3>Legal scope and limits</h3>
+    <p>
+      This document is provided for indicative purposes only. Data accuracy and
+      completeness remain the sole responsibility of the supplier. Certif-Scope
+      does not audit, verify or certify the underlying data.
+    </p>
+  </div>
+
+  <!-- VERIFICATION -->
+  <div class="footer">
+    <div class="verify-text">
+      <strong>Verification</strong><br />
+      This attestation was issued by Certif-Scope.<br />
+      Authenticity can be verified using the QR code or Attestation ID on the
+      official verification page:<br />
+      https://certif-scope.com/verify
+    </div>
+
+    <div class="qr">
+      <img src="{{qr_code_data_url}}" alt="Verification QR code" />
+    </div>
+  </div>
+
+  <!-- LANGUAGE CLAUSE -->
+  <div class="legal">
+    In case of discrepancy between language versions, the English version shall
+    prevail.
+  </div>
+
+</body>
+</html>
