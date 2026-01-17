@@ -1,9 +1,7 @@
-// src/app/api/stripe/webhook/route.ts
-
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
 
-export const runtime = "nodejs";
+export const runtime = "nodejs"; // OBLIGATOIRE (pas edge)
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
@@ -11,17 +9,13 @@ export async function POST(req: Request) {
   const sig = req.headers.get("stripe-signature");
 
   if (!sig) {
-    return NextResponse.json(
-      { error: "Missing Stripe signature" },
-      { status: 400 }
-    );
+    return new NextResponse("Missing signature", { status: 400 });
   }
 
   let event: Stripe.Event;
 
   try {
-    const body = await req.text();
-
+    const body = await req.text(); // 🔴 RAW BODY
     event = stripe.webhooks.constructEvent(
       body,
       sig,
@@ -29,40 +23,16 @@ export async function POST(req: Request) {
     );
   } catch (err: any) {
     console.error("Webhook signature verification failed:", err.message);
-    return NextResponse.json(
-      { error: "Invalid signature" },
-      { status: 400 }
-    );
+    return new NextResponse(`Webhook Error: ${err.message}`, { status: 400 });
   }
 
+  // ✅ EVENT OK
   if (event.type === "checkout.session.completed") {
     const session = event.data.object as Stripe.Checkout.Session;
 
-    const metadata = session.metadata || {};
+    console.log("✅ Checkout completed:", session.id);
 
-    const attestationPayload = {
-      attestationId: crypto.randomUUID(),
-      companyName: metadata.company_name,
-      companyId: metadata.company_id || null,
-      year: metadata.year,
-      country: metadata.country,
-      expenses: metadata.expenses
-        ? JSON.parse(metadata.expenses)
-        : {},
-      totalCo2e: metadata.total_co2e,
-      paymentIntent: session.payment_intent,
-      paidAt: new Date().toISOString(),
-    };
-
-    /*
-      🔒 V1 — À FAIRE ICI (PROCHAINE ÉTAPE)
-      - Génération PDF
-      - Signature serveur
-      - Stockage fichier (ou génération à la volée)
-      - Création page /verify/:id
-    */
-
-    console.log("Attestation payload:", attestationPayload);
+    // 👉 ici plus tard : génération attestation
   }
 
   return NextResponse.json({ received: true });
