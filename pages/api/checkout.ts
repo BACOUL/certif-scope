@@ -1,56 +1,43 @@
-import type { NextApiRequest, NextApiResponse } from "next";
+import { NextResponse } from "next/server";
 import Stripe from "stripe";
 
-if (!process.env.STRIPE_SECRET_KEY) {
-  throw new Error("STRIPE_SECRET_KEY is missing in environment variables");
-}
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-  apiVersion: "2025-12-15.clover",
-});
-
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method !== "POST") {
-    return res.status(405).json({ error: "Method not allowed" });
-  }
-
+export async function POST(req: Request) {
   try {
     const origin =
-      req.headers.origin ||
+      req.headers.get("origin") ||
       process.env.NEXT_PUBLIC_BASE_URL ||
-      "https://certif-scope.com";
+      "http://localhost:3000";
 
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
-
-      client_reference_id: req.body?.companyName || "certif-scope",
 
       line_items: [
         {
           price_data: {
             currency: "eur",
-            unit_amount: 9900,
+            unit_amount: 8900,
             product_data: {
-              name: "Carbon Footprint Official Attestation",
+              name: "CO₂e Attestation — Certif-Scope",
+              description:
+                "Standardized spend-based CO₂e attestation (PDF)",
             },
           },
           quantity: 1,
         },
       ],
 
-      allow_promotion_codes: false,
-
-      payment_intent_data: {
-        description: "Certif-Scope Carbon Attestation",
-      },
-
       success_url: `${origin}/success`,
-      cancel_url: `${origin}/cancel`,
+      cancel_url: `${origin}/generate`,
     });
 
-    return res.status(200).json({ id: session.id });
-  } catch (err: any) {
-    console.error("STRIPE ERROR:", err);
-    return res.status(500).json({ error: "Stripe error", details: err.message });
+    return NextResponse.json({ url: session.url });
+  } catch (error: any) {
+    console.error("Stripe checkout error:", error);
+    return NextResponse.json(
+      { error: error.message },
+      { status: 500 }
+    );
   }
 }
